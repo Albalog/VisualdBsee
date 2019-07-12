@@ -1,0 +1,13 @@
+ATTENZIONE
+----------
+
+Il file WININT.OBJ serve per utilizzo di Crystal Report in 
+dBsee for Xbase++, ed e' stato scaricato dal sito di Alaska 
+Software; il codice sorgente del file WININT.OBJ non Š disponibile.
+
+Questo file serve solo per far includere il file WININT.OBJ 
+nel link della libreria dBsee for Xbase++
+
+Questo file DEVE avere sempre data/ora precedente alla data/ora
+del file WININT.OBJ
+

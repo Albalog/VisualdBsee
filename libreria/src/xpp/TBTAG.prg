@@ -1,0 +1,5 @@
+FUNCTION tbDisTag(oBrw); RETURN oBrw:tbDisTag()
+FUNCTION tbGetTag(oBrw); RETURN oBrw:tbGetTag()
+FUNCTION tbDelTag(oBrw); RETURN oBrw:tbDelTag()
+FUNCTION tbTagAll(oBrw); RETURN oBrw:tbTagAll()
+FUNCTION tbTag(oBrw, lDown); RETURN oBrw:tbTag(lDown)

@@ -1,0 +1,37 @@
+[PROJECT]
+    COMPILE       = xpp
+    COMPILE_FLAGS = /M /W /N /ES /Q /NOD /COFF /PRE              /i%CUR%INCLUDE /i%CUR%EXTRA_CH /D_XBASE15_ /D_XBASE16_ /D_XBASE17_ /D_XBASE18_ /D_XBASE182_ /D_XBASE190_ %DEFINES%
+    LINKER        = ALINK
+    LINK_FLAGS    =
+    RC_COMPILE    = ARC
+    RC_FLAGS      = /v
+    OBJ_DIR       = %CUR%%REL%\obj
+    DEBUG         = no
+    GUI           = yes
+    PROJECT.XPJ
+
+[PROJECT.XPJ]
+    // Š .exe invece che .lib altrimenti pbuild la ignora
+    %CUR%%REL%\VDBSEE1X.exe
+
+[%CUR%%REL%\VDBSEE1X.exe]
+    LINKER        = %CUR%makelib.bat
+//english.obj
+//english1.obj
+//dblangen.obj
+//    MESSAGGI\DBLANGIT.PRG
+//    MESSAGGI\ITALIANO.PRG
+//    MESSAGGI\ITALIAN1.PRG
+
+//   %REL%\DBLANG.LIB
+   <<FILELIST("%CUR%EXTRAOBJ\*.obj")>>
+   <<FILELIST("%CUR%C_OBJ\*.obj")>>
+   <<FILELIST("%CUR%CFUNC\*.prg")>>
+   <<FILELIST("%CUR%BASE\*.prg")>>
+   <<FILELIST("%CUR%VDB\*.prg")>>
+   <<FILELIST("%CUR%XPP\*.prg")>>
+   <<FILELIST("%CUR%S2\*.prg")>>
+   <<FILELIST("%CUR%SUPPORT\*.prg")>>
+   <<FILELIST("%CUR%CLIPSUPP\*.prg")>>
+   <<FILELIST("%CUR%XML\*.prg")>>
+

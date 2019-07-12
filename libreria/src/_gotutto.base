@@ -1,0 +1,82 @@
+::@echo off
+
+SET DMMCLP=%CLIPPERCMD%
+SET DMMXPP=%XPPCMDLINE%
+SET DMMLOG=log.log
+
+SET CLIPPERCMD=
+SET XPPCMDLINE=
+
+if exist %DMMLOG% del %DMMLOG%
+
+cd base
+%setreldate%
+cd..
+
+:: eventualmente crea cartelle inesistenti
+if not exist %rel%\omf md %rel%\omf
+if not exist %rel%\obj md %rel%\obj
+
+echo *******************
+echo ** Inizio DBLANG **
+echo *******************
+strtran dblang.base dblang.xpj rel=%rel% defines=%defines% cur=%cur%
+pbuild dblang.xpj %2 %3 %4 >> %DMMLOG%
+if ERRORLEVEL 1 GOTO :error
+ del dblang.xpj > nul
+aimplib %REL%\DBLANGIT.DEF /omf /o%REL%\omf\dblang.lib
+
+if "%1" == "/DYNAMIC" goto :dynamic
+if "%1" == "/STATIC"  goto :static
+
+:dynamic
+echo ********************
+echo ** Inizio DYNAMIC  *
+echo ********************
+:: creo file fittizio UUID.LIB serve per link VDBSEE1*.DLL
+:: deve essere nella cartella corrente e anche in quella di output
+lib.exe /out:uuid.lib %CUR%c_obj\_dfxor.obj
+copy uuid.lib %rel% > nul
+strtran dynamic.base dynamic.xpj rel=%rel% defines=%defines% cur=%cur% lib="%lib%" xpprel=%xpprel%
+SET XX=%CD%
+copy dynamic.xpj %cur%%rel%\dynamic.xpj
+cd %cur%%rel%
+@echo on
+pbuild dynamic.xpj %2 %3 %4 >> %DMMLOG%
+@echo off
+echo %CD%
+del %DMMLOG%
+del dynamic.xpj
+cd %XX%
+if ERRORLEVEL 1 GOTO :error
+del dynamic.xpj > nul
+aimplib %REL%\VDBSEE1S.DEF /omf /o%REL%\omf\VDBSEE1S.lib
+aimplib %REL%\VDBSEE1O.DEF /omf /o%REL%\omf\VDBSEE1O.lib
+del uuid.lib
+goto exit
+
+:static
+echo *******************
+echo ** Inizio STATIC **
+echo *******************
+copy makelib.base makelib.bat  > nul
+strtran static.base    static.xpj   rel=%rel% defines=%defines% cur=%cur%
+pbuild static.xpj %2 %3 %4 >> %DMMLOG%
+if ERRORLEVEL 1 GOTO :error
+ del %cur%static.xpj > nul
+ del %cur%makelib.bat
+goto exit
+
+:error
+echo ***********************************
+echo **           ERRORE              **
+echo ** controlla il file %DMMLOG%    **
+echo ***********************************
+pause
+goto fine
+
+:exit
+
+:fine
+IF NOT "%DMMCLP%" == "%CLIPPERCMD%" SET CLIPPERCMD=%DMMCLP%
+IF NOT "%DMMXPP%" == "%XPPCMDLINE%" SET XPPCMDLINE=%DMMXPP%

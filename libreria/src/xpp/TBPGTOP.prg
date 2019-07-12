@@ -1,0 +1,2 @@
+FUNCTION tbPgTop(oWin); S2FU(); RETURN NIL
+FUNCTION tbPgBottom(oWin); S2FU(); RETURN NIL

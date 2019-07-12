@@ -1,0 +1,2 @@
+FUNCTION dfByte2Hex(n)
+RETURN PADL(dfNum2Base(n%256, "0123456789ABCDEF"), 2, "0")

@@ -1,0 +1,435 @@
+#include <windows.h>
+#include <winspool.h>
+#include "xppdef.h"
+#include "xpppar.h"
+#include "xppcon.h"
+
+// Torna un array con i dati delle porte logiche definite in Windows
+// o NIL se c'Š un errore. Necessita WinSpool.lib per il link.
+
+ContainerHandle PrinterInfo2ArrInit();
+BOOL PrinterInfo2Arr(PRINTER_INFO_2, ContainerHandle );
+
+XPPRET XPPENTRY DFWINPRINTERSGET(XppParamList paramList )
+{
+   DWORD dwNeeded = 0, dwCount = 0, dwBufferLen=0, nInd=0;
+   DWORD dwFlags = PRINTER_ENUM_LOCAL;
+   BOOL bRet;
+   unsigned int uiLen;
+   PRINTER_INFO_2 *pPrinter = NULL;
+   LPTSTR pPrinterName = NULL;
+   ContainerHandle chArray = NULLCONTAINER;
+   ContainerHandle chPrinter = NULLCONTAINER;
+   MomHandle hGlobal = MOM_NULLHANDLE, hPrinterName = MOM_NULLHANDLE;
+
+   if( PCOUNT(paramList)>=1 && XPP_IS_NUM(_partype(paramList,1)) )
+       dwFlags = _parnl( paramList, 1);
+
+   if( PCOUNT(paramList)>=2 && XPP_IS_CHAR(_partype(paramList,2)) )
+   {
+       uiLen = _parclen( paramList, 2 );
+       if (uiLen > 0)
+       {
+          hPrinterName = _momAlloc( sizeof(char)*(uiLen+1) );
+          if( hPrinterName != MOM_NULLHANDLE )
+          {
+             pPrinterName = _momLock( hPrinterName );
+            _parc( pPrinterName, uiLen +1, paramList, 2);
+          }
+       }
+   }
+
+   bRet = EnumPrinters(dwFlags, pPrinterName, 2, (LPBYTE) pPrinter,
+                       dwBufferLen, &dwNeeded, &dwCount );
+
+   if( dwNeeded > 0)
+   {
+      hGlobal = _momAlloc(dwNeeded);
+      if( hGlobal != MOM_NULLHANDLE )
+      {
+        dwBufferLen = dwNeeded;
+        pPrinter = (PRINTER_INFO_2 *)_momLock(hGlobal);
+        bRet = EnumPrinters(dwFlags, pPrinterName, 2, (LPBYTE) pPrinter,
+                            dwBufferLen, &dwNeeded, &dwCount );
+
+      }
+   }
+
+   if (bRet != 0 && pPrinter != NULL)
+   {
+      chArray = _conNewArray(1, dwCount); // num. Stampanti
+      if (chArray != NULLCONTAINER )
+        for (nInd=0; nInd < dwCount; nInd++)
+        {
+          chPrinter = PrinterInfo2ArrInit();
+    
+          if (chPrinter == NULLCONTAINER)
+             break;
+          if (! PrinterInfo2Arr(pPrinter[nInd], chPrinter))
+             break;
+          if (_conArrayPut(chArray, chPrinter, nInd+1, 0) != 0)
+             break;
+          _conRelease( chPrinter );
+        }
+
+   }
+
+   if (pPrinterName != NULL && hPrinterName != MOM_NULLHANDLE) _momUnlock(hPrinterName);
+   if (hPrinterName != MOM_NULLHANDLE) _momFree(hPrinterName);
+
+   if (pPrinter != NULL && hGlobal != MOM_NULLHANDLE) _momUnlock(hGlobal);
+   if (hGlobal != MOM_NULLHANDLE) _momFree(hGlobal);
+
+   if (chArray != NULLCONTAINER)
+   {
+      if (nInd < dwCount)
+        _ret(paramList);
+      else
+        _conReturn( paramList, chArray );
+
+      _conRelease( chArray );
+   }
+   else
+      _ret(paramList);
+}
+
+XPPRET XPPENTRY DFWINPRINTERGET(XppParamList paramList )
+{
+   DWORD dwNeeded = 0, dwBufferLen=0;
+   BOOL bRet=FALSE;
+   PRINTER_INFO_2 *pPrinter = NULL;
+   ContainerHandle chArray = NULLCONTAINER;
+   MomHandle hGlobal = MOM_NULLHANDLE;
+   LONG hPrinter = 0;
+
+   if( PCOUNT(paramList)>=1 && XPP_IS_NUM(_partype(paramList,1)) )
+   {
+       hPrinter = _parnl( paramList, 1);
+       bRet = TRUE;
+   }
+
+dwNeeded=GetDeviceCaps( (HDC) hPrinter, PHYSICALHEIGHT);
+_retnl(paramList, GetLastError());
+
+/*
+   if (bRet == TRUE)
+      bRet = GetPrinter( hPrinter, 2, (LPBYTE) pPrinter,
+                          dwBufferLen, &dwNeeded );
+
+   if( dwNeeded > 0)
+   {
+      hGlobal = _momAlloc(dwNeeded);
+      if( hGlobal != MOM_NULLHANDLE )
+      {
+        dwBufferLen = dwNeeded;
+        pPrinter = (PRINTER_INFO_2 *) _momLock(hGlobal);
+        bRet = GetPrinter((HANDLE) hPrinter, 2, (LPBYTE) pPrinter,
+                          dwBufferLen, &dwNeeded);
+      }
+   }
+
+   if (bRet != 0 && pPrinter != NULL)
+   {
+      chArray = PrinterInfo2ArrInit();
+      bRet    = (chArray != NULLCONTAINER);
+      if (bRet == TRUE)
+        bRet = PrinterInfo2Arr(*pPrinter, chArray);
+   }
+
+   if (pPrinter != NULL && hGlobal != MOM_NULLHANDLE) _momUnlock(hGlobal);
+   if (hGlobal != MOM_NULLHANDLE) _momFree(hGlobal);
+
+   if (chArray != NULLCONTAINER)
+   {
+      if (! bRet)
+        _ret(paramList);
+      else
+        _conReturn( paramList, chArray );
+
+      _conRelease( chArray );
+   }
+   else
+      _ret(paramList);
+*/
+}
+
+
+ContainerHandle PrinterInfo2ArrInit()
+{
+   ContainerHandle chPrinter;
+   chPrinter = _conNewArray(1, 21); // 21 = num. elementi PRINTER_INFO_2
+   return chPrinter;
+}
+
+// Converte una struttura PRINTER_INFO_2 in un array
+BOOL PrinterInfo2Arr(PRINTER_INFO_2 pPI, ContainerHandle chArray)
+{
+   LPDEVMODE pDM = NULL;
+   BOOL bOk = TRUE;
+   ContainerHandle chTmp = NULLCONTAINER;
+   ContainerHandle chDM  = NULLCONTAINER;
+
+   chTmp   = _conNew(NULLCONTAINER);
+
+   if (chArray == NULLCONTAINER  ||  chTmp == NULLCONTAINER)
+      bOk = FALSE;
+
+   if (bOk && pPI.pServerName != NULL)
+   {
+     if (bOk && _conPutC(chTmp, pPI.pServerName) != chTmp)
+       bOk = FALSE;
+     if (bOk && _conArrayPut(chArray, chTmp, 1, 0) != 0)
+       bOk = FALSE;
+   }
+
+   if (bOk && pPI.pPrinterName != NULL)
+   {
+     if (bOk && _conPutC(chTmp, pPI.pPrinterName) != chTmp)
+       bOk = FALSE;
+     if (bOk && _conArrayPut(chArray, chTmp, 2, 0) != 0)
+       bOk = FALSE;
+   }
+
+   if (bOk && pPI.pShareName != NULL)
+   {
+     if (bOk &&_conPutC(chTmp, pPI.pShareName) != chTmp)
+       bOk = FALSE;
+     if (bOk &&_conArrayPut(chArray, chTmp, 3, 0) != 0)
+       bOk = FALSE;
+   }
+
+   if (bOk &&pPI.pPortName != NULL)
+   {
+     if (bOk &&_conPutC(chTmp, pPI.pPortName) != chTmp)
+       bOk = FALSE;
+     if (bOk &&_conArrayPut(chArray, chTmp, 4, 0) != 0)
+       bOk = FALSE;
+   }
+
+   if (bOk &&pPI.pDriverName != NULL)
+   {
+     if (bOk &&_conPutC(chTmp, pPI.pDriverName) != chTmp)
+       bOk = FALSE;
+     if (bOk &&_conArrayPut(chArray, chTmp, 5, 0) != 0)
+       bOk = FALSE;
+   }
+
+   if (bOk &&pPI.pComment != NULL)
+   {
+     if (bOk &&_conPutC(chTmp, pPI.pComment) != chTmp)
+       bOk = FALSE;
+     if (bOk &&_conArrayPut(chArray, chTmp, 6, 0) != 0)
+       bOk = FALSE;
+   }
+
+   if (bOk &&pPI.pLocation != NULL)
+   {
+     if (bOk &&_conPutC(chTmp, pPI.pLocation) != chTmp)
+       bOk = FALSE;
+     if (bOk &&_conArrayPut(chArray, chTmp, 7, 0) != 0)
+       bOk = FALSE;
+   }
+
+
+   if (bOk &&pPI.pDevMode != NULL)
+   {
+      chDM = _conNewArray(1, 26); // 26 = num. elementi DEVMODE
+      pDM = pPI.pDevMode;
+      if (bOk &&_conPutCL(chTmp, pDM->dmDeviceName,
+                    sizeof(pDM->dmDeviceName)) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp, 1, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmSpecVersion) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp, 2, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmDriverVersion) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp, 3, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmSize) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp, 4, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmDriverExtra) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp, 5, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmFields) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp, 6, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmOrientation) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp, 7, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmPaperSize) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp, 8, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmPaperLength) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp, 9, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmPaperWidth) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,10, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmScale) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,11, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmCopies) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,12, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmDefaultSource) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,13, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmPrintQuality) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,14, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmColor) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,15, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmDuplex) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,16, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmYResolution) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,17, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmTTOption) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,18, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmCollate) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,19, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutCL(chTmp, pDM->dmFormName,
+                    sizeof(pDM->dmFormName)) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,20, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmLogPixels) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,21, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmBitsPerPel) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,22, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmPelsWidth) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,23, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmPelsHeight) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,24, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmDisplayFlags) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,25, 0) != 0)
+        bOk = FALSE;
+      if (bOk &&_conPutNL(chTmp, pDM->dmDisplayFrequency) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chDM, chTmp,26, 0) != 0)
+        bOk = FALSE;
+
+      if (bOk &&_conArrayPut(chArray, chDM,  8, 0) != 0)
+        bOk = FALSE;
+   }
+
+   if (bOk &&pPI.pSepFile != NULL)
+   {
+     if (bOk &&_conPutC(chTmp, pPI.pSepFile) != chTmp)
+       bOk = FALSE;
+     if (bOk &&_conArrayPut(chArray, chTmp,  9, 0) != 0)
+       bOk = FALSE;
+   }
+
+   if (bOk &&pPI.pPrintProcessor != NULL)
+   {
+     if (bOk &&_conPutC(chTmp, pPI.pPrintProcessor) != chTmp)
+       bOk = FALSE;
+     if (bOk &&_conArrayPut(chArray, chTmp, 10, 0) != 0)
+       bOk = FALSE;
+   }
+
+
+   if (bOk &&pPI.pDatatype != NULL)
+   {
+     if (bOk &&_conPutC(chTmp, pPI.pDatatype) != chTmp)
+       bOk = FALSE;
+     if (bOk &&_conArrayPut(chArray, chTmp, 11, 0) != 0)
+       bOk = FALSE;
+   }
+
+   if (bOk &&pPI.pParameters != NULL)
+   {
+     if (bOk &&_conPutC(chTmp, pPI.pParameters) != chTmp)
+       bOk = FALSE;
+     if (bOk &&_conArrayPut(chArray, chTmp, 12, 0) != 0)
+       bOk = FALSE;
+   }
+
+   if (bOk &&pPI.pSecurityDescriptor != NULL)
+   {
+      if (bOk &&_conPutCL(chTmp, (char *) pPI.pSecurityDescriptor,
+                    sizeof(SECURITY_DESCRIPTOR)) != chTmp)
+        bOk = FALSE;
+      if (bOk &&_conArrayPut(chArray, chTmp, 13, 0) != 0)
+        bOk = FALSE;
+   }
+
+   if (bOk &&_conPutNL(chTmp, pPI.Attributes) != chTmp)
+     bOk = FALSE;
+   if (bOk &&_conArrayPut(chArray, chTmp, 14, 0) != 0)
+     bOk = FALSE;
+
+   if (bOk &&_conPutNL(chTmp, pPI.Priority) != chTmp)
+     bOk = FALSE;
+   if (bOk &&_conArrayPut(chArray, chTmp, 15, 0) != 0)
+     bOk = FALSE;
+
+   if (bOk &&_conPutNL(chTmp, pPI.DefaultPriority) != chTmp)
+     bOk = FALSE;
+   if (bOk &&_conArrayPut(chArray, chTmp, 16, 0) != 0)
+     bOk = FALSE;
+
+   if (bOk &&_conPutNL(chTmp, pPI.StartTime) != chTmp)
+     bOk = FALSE;
+   if (bOk &&_conArrayPut(chArray, chTmp, 17, 0) != 0)
+     bOk = FALSE;
+
+   if (bOk &&_conPutNL(chTmp, pPI.UntilTime) != chTmp)
+     bOk = FALSE;
+   if (bOk &&_conArrayPut(chArray, chTmp, 18, 0) != 0)
+     bOk = FALSE;
+
+   if (bOk &&_conPutNL(chTmp, pPI.Status) != chTmp)
+     bOk = FALSE;
+   if (bOk &&_conArrayPut(chArray, chTmp, 19, 0) != 0)
+     bOk = FALSE;
+
+   if (bOk &&_conPutNL(chTmp, pPI.cJobs) != chTmp)
+     bOk = FALSE;
+   if (bOk &&_conArrayPut(chArray, chTmp, 20, 0) != 0)
+     bOk = FALSE;
+
+   if (bOk &&_conPutNL(chTmp, pPI.AveragePPM) != chTmp)
+     bOk = FALSE;
+   if (bOk &&_conArrayPut(chArray, chTmp, 21, 0) != 0)
+     bOk = FALSE;
+
+   if (chTmp != NULLCONTAINER)     _conRelease( chTmp );
+   if (chDM  != NULLCONTAINER)     _conRelease( chDM  );
+
+   return bOk;
+}

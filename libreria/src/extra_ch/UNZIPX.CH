@@ -1,0 +1,6 @@
+#define WIZ_UNZIP_CB_ID_SOUND    1
+#define WIZ_UNZIP_CB_ID_PRINT    2
+#define WIZ_UNZIP_CB_ID_SVC      3
+#define WIZ_UNZIP_CB_ID_PWD      4
+#define WIZ_UNZIP_CB_ID_REPLACE  5
+#define WIZ_UNZIP_CB_ID_MESSAGE  6

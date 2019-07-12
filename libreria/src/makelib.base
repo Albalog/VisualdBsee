@@ -1,0 +1,8 @@
+@echo off
+rem file per makelib che ignora i
+rem parametri "errati" passati da pbuild
+rem /PM:PM /DE e .exe->.lib
+::C:\dBseeWin\1.6.x\VDb_LIB\uti\
+macro.exe "cFile:=strtran('%1', '@', ''), cRead := memoread(cfile), cRead:=strtran(cRead, '/DE', ''), cRead:=strtran(cRead, '/PM:PM', ''), cRead:=strtran(cRead, '.exe', '.lib'), cRead:=strtran(cRead, '.EXE', '.lib'), memowrit(cFile, cRead)" > nul
+::C:\dBseeWin\1.6.x\VDb_LIB\uti\
+lib.exe %1

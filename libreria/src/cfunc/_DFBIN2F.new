@@ -1,0 +1,51 @@
+//  DA FINIRE!
+
+//*****************************************************************************
+//Progetto       : Generato dBsee 4.0
+//Descrizione    : Utility per le configurazioni
+//Programmatore  : Baccan Matteo
+//*****************************************************************************
+
+//#include <extend.api>
+//#include <fm.api>
+//#include <string.h>
+#include <windows.h>
+#include <xppdef.h>
+#include <xpppar.h>
+#include <xppcon.h>
+#include "dBsee4x.h"
+//CLIPPER dfBin2Fp(){
+XPPRET XPPENTRY DFBIN2FP( XppParamList paramList ){
+   LONG nPar1Len = _parclen( paramList, 1 );
+
+   MomHandle hNew1 = _momAlloc( sizeof(char)*(nPar1Len+1) );
+   char *fpStr = _momLock( hNew1 );
+
+   _parc( fpStr, nPar1Len+1, paramList, 1 );
+
+   char cValue[8];
+
+   cValue[0]=cPar[0];
+   cValue[1]=cPar[1];
+   cValue[2]=cPar[2];
+   cValue[3]=cPar[3];
+   cValue[4]=cPar[4];
+   cValue[5]=cPar[5];
+   cValue[6]=cPar[6];
+   cValue[7]=cPar[7];
+   cValue[0]=cPar[0];
+
+   _retnd(paramList, (DOUBLE) cValue)
+
+   // _asm{
+   //   push word ptr (cValue+6)
+   //   push word ptr (cValue+4)
+   //   push word ptr (cValue+2)
+   //   push word ptr (cValue  )
+   //   call _retnd
+   //   add  sp,8
+   // }
+
+   _momUnlock(hNew1);
+   _momFree(hNew1);
+}

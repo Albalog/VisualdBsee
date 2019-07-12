@@ -1,0 +1,54 @@
+[PROJECT]
+    COMPILE       = xpp
+    COMPILE_FLAGS = /M /W /N /ES /Q /NOD /COFF /PRE /DLL:DYNAMIC /i%CUR%INCLUDE /i%CUR%EXTRA_CH /D_XBASE15_ /D_XBASE16_ /D_XBASE17_ /D_XBASE18_ /D_XBASE182_ /D_XBASE190_ %DEFINES%
+//    COMPILE       = xppvdb
+//    COMPILE_FLAGS = /M/W/N/ES/Q/NOD/COFF/PRE/DLL:DYNAMIC/iINCLUDE/iEXTRA_CH/D_XBASE15_/D_XBASE16_/D_XBASE17_/D_XBASE18_%DEFINES% /VDB:PROFILENODEL
+    LINKER        = ALINK
+    LINK_FLAGS    =
+    RC_COMPILE    = ARC
+    RC_FLAGS      = /v
+    OBJ_DIR       = obj
+    DEBUG         = no
+    GUI           = yes
+    PROJECT.XPJ
+
+[PROJECT.XPJ]
+    VDBSEE1S.DLL
+    VDBSEE1O.DLL
+
+[VDBSEE1O.DLL]
+   // non cambiare l'ordine di queste LIB senno' non funziona bene!
+   VDBSEE1S.LIB
+   DBLANG.LIB
+   //XppRt0.lib
+   //XppRt1.lib
+   //XppUi2.lib
+
+   //--FILELIST("%xpprel%*.lib")--
+
+   %lib%
+
+   <<FILELIST("%CUR%EXTRALIB\*.lib")>>
+   <<FILELIST("%CUR%EXTRAOBJ\*.obj")>>
+   <<FILELIST("%CUR%C_OBJ\*.obj")>>
+   <<FILELIST("%CUR%CFUNC\*.prg")>>
+   <<FILELIST("%CUR%BASE\*.prg")>>
+   <<FILELIST("%CUR%VDB\*.prg")>>
+
+[VDBSEE1S.DLL]
+   // non cambiare l'ordine di queste LIB senno' non funziona bene!
+   VDBSEE1O.LIB
+   DBLANG.LIB
+   //XppRt0.lib
+   //XppRt1.lib
+   //XppUi2.lib
+
+   //--FILELIST("%xpprel%*.lib")--
+
+   %lib%
+
+    <<FILELIST("%CUR%XPP\*.prg")>>
+    <<FILELIST("%CUR%S2\*.prg")>>
+    <<FILELIST("%CUR%SUPPORT\*.prg")>>
+    <<FILELIST("%CUR%CLIPSUPP\*.prg")>>
+    <<FILELIST("%CUR%XML\*.prg")>>

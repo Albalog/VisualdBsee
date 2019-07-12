@@ -1,0 +1,35 @@
+// Ini Compiler        (C) 1993  Italian Software Agency         Version 0.4
+#include "dfSet.ch"
+* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+FUNCTION dfIntFont()
+* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+LOCAL aArr := {}
+AADD( aArr, {[FONTFILE],[ROM8X16.VGF]})
+AADD( aArr, {[SCREENFILE],[ISA.BKG]})
+AADD( aArr, {[BOXCHARACTERS], {199,200,184,226,190,202,201,181}})
+AADD( aArr, {[BUTTONCHARACTERS], {202,202,202,226,200,200,200,181}})
+AADD( aArr, {[LEDBUTTON], {143}})
+AADD( aArr, {[CHECKBOXOFF], {213,233}})
+AADD( aArr, {[CHECKBOXON], {214,235}})
+AADD( aArr, {[DROPDOWNICON], {212,231}})
+AADD( aArr, {[HORIZONTALCURSOR], {220}})
+AADD( aArr, {[HORIZONTALSCROLLBAR], {223}})
+AADD( aArr, {[MAXIMIZEICON], {206,232}})
+AADD( aArr, {[MINIMIZEICON], {203,15}})
+AADD( aArr, {[MOUSECHARACTERS], {221,198,222,205}})
+AADD( aArr, {[RADIOBUTTONOFF], {215,237}})
+AADD( aArr, {[RADIOBUTTONON], {216,239}})
+AADD( aArr, {[SCREENCHARACTERS], {158,159}})
+AADD( aArr, {[SCROLLDOWNARROW], {208,227}})
+AADD( aArr, {[SCROLLLEFTARROW], {210,238}})
+AADD( aArr, {[SCROLLRIGHTARROW], {211,236}})
+AADD( aArr, {[SCROLLUPARROW], {209,229}})
+AADD( aArr, {[SIZINGICON], {204,234}})
+AADD( aArr, {[SYSTEMMENUICON], {207,230}})
+AADD( aArr, {[VERTICALCURSOR], {181,226}})
+AADD( aArr, {[VERTICALSCROLLBAR], {9,243}})
+AADD( aArr, {[ESCAPEICON], {5,6}})
+AADD( aArr, {[HELPICON], {7,8}})
+AADD( aArr, {[HELPONKEYSICON], {11,244}})
+AADD( aArr, {[WRITEICON], {19,20}})
+RETURN aArr
