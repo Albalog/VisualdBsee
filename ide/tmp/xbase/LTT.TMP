@@ -1,0 +1,80 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : LTT
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Append - replace -delete transazioni di
+.* ----------------------------------------------------------------------------
+DO CASE
+   CASE cState == DE_STATE_ADD        ð // Inserimento APPENDE IL RECORD
+
+.foreach tranpos oo_trn->TrnWriMod=="m"
+   .M->nTtrnRec := oo_trn->(recno())
+   .M->cTdbfTgt := tDbfTrnTgt()
+   .M->cTtgtFil := oo_trn->TRNTGTFIL
+   .M->cTCond   := toTrans("trncondadd")
+   .M->nTs      := 0
+   .if !empty(M->cTCond)
+       .M->nTs  := 3
+        IF ÛcTCondÛ
+   .endif
+   .if tNetWork()
+        Ûspace(nTs)+cTdbfTgtÛ->(dfNet(NET_APPEND,0)) ð //  Infiniti tentativi di appendere il record
+   .else
+        Ûspace(nTs)+cTdbfTgtÛ->(dbAppend())          ð //  Append del record
+   .endif
+   .foreach tranmov oo_trn->TRNTGTFIL == cTtgtFil
+        Ûspace(nTs)+cTdbfTgt+"->"+dd_sym->SYM_NAM +" := "+toTrans("trnwrite")Û
+   .next
+   .if tNetWork()
+        Ûspace(nTs)+cTdbfTgtÛ->(dfNet(NET_RECORDUNLOCK)) ð //  Sblocco record dopo APPEND
+   .endif
+   .if !empty(M->cTCond)
+        ENDIF
+   .endif
+   .oo_trn->(dbGoto(nTtrnRec))
+.next
+
+   CASE cState == DE_STATE_MOD        ð // Modifica    REPLACE RECORD
+
+.foreach tranpos oo_trn->TrnWriMod=="m"
+   .M->nTtrnRec := oo_trn->(recno())
+   .M->cTdbfTgt := tDbfTrnTgt()
+   .M->cTtgtFil := oo_trn->TrnTgtFil
+        IF ÛcTdbfTgt+[->(dfS(]+str(dd_ndx->NdxIncN,2)+[,]+toTrans("trnkey")Û))
+   .M->cTCond   := toTrans("trncondmod")
+   .M->nTs      := 0
+   .if !empty(M->cTCond)
+       .M->nTs  := 3
+           IF ÛcTCondÛ
+   .endif
+   .foreach tranmov oo_trn->TrnTgtFil == cTtgtFil
+      .if toTrans("trnappmode")=="1"
+           Ûspace(nTs)+cTdbfTgt+[->]+ dd_sym->Sym_Nam +[ := ]+toTrans("trnwrite")Û
+      .endif
+   .next
+   .if !empty(M->cTCond)
+           ENDIF
+   .endif
+        ENDIF
+   .oo_trn->(dbGoto(nTtrnRec))
+.next
+
+   CASE cState == DE_STATE_DEL        ð // Cancellazione DELETE
+
+.foreach tranpos oo_trn->TrnWriMod="m"
+   .M->cTdbfTgt := tDbfTrnTgt()
+        IF ÛcTdbfTgt+[->(dfS(]+str(dd_ndx->NdxIncN,2)+[,]+toTrans("trnkey")Û))
+   .M->cTCond   := toTrans("trnconddel")
+   .M->nTs      := 0
+   .if !empty(M->cTCond)
+       .M->nTs  := 3
+           IF ÛcTCondÛ
+   .endif
+           Ûspace(nTs)+cTdbfTgtÛDid( .F. )
+   .if !empty(M->cTCond)
+           ENDIF
+   .endif
+        ENDIF
+.next
+
+ENDCASE

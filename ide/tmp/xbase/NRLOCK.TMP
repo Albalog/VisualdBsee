@@ -1,0 +1,11 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : NRLOCK
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Blocco record prima della modifica del record
+.* ----------------------------------------------------------------------------
+.if !Empty(cTdbf)
+IF cState==DE_STATE_MOD                ð // Blocco record in modifica (rete)
+   IF !ÛcTdbfÛ->(dfNet(NET_RECORDLOCK)) ;cState:=DE_STATE_INK ;END
+ENDIF
+.endif

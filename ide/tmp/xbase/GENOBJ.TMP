@@ -1,0 +1,28 @@
+.parameter jjDrvGen, lAsk
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GENOBJ
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Genera l'oggetto corrente
+.* ----------------------------------------------------------------------------
+.msg "Generazione : "+Alltrim(oo_obj->PRG)+"."+Alltrim(oo_obj->EXT)+" - Template : "+tObjTemplate("tmp")+""
+.if ! type("OS()")=="C"
+   .* dBsee
+   .m->lAsk := .T.
+.endif
+.M->cPar1 := Alltrim(oo_obj->PRG)+"."+Alltrim(oo_obj->EXT)
+.M->cPar2 := Trim(oo_obj->OBJDES)
+.if (!lAsk) .OR. (dBMsgDis( "tgenobj" ,0 ,cPar1 , cPar2 ) == 1)
+   .if oo_obj->(dbNet("rec"))
+       .M->nTObjLock := oo_obj->(recno())
+       .dd_dbf->(dbSetOrder(1))
+       .dd_dbf->(dbSeek(oo_obj->DBF))
+.do ÛtObjTemplate("tmp")Û
+       .oo_obj->(dbGoto(nTObjLock))
+       .oo_obj->PRGDATE := date()
+       .oo_obj->PRGTIME := dfTimeStd()
+       .oo_obj->FLGUPD  := ""
+       .oo_obj->(dbNet("url"))
+   .endif
+.endif
+.tUpgradeEnv()

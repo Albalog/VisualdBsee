@@ -1,0 +1,24 @@
+.parameter nTSpace
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : VALID
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Controlli in uscita dalla get.
+.* ----------------------------------------------------------------------------
+.oo_cod->(dbSeek("00"+oo_obj->OBJ+oo_itm->ITM+oo_itm->IGC+"000000"+"000000"+"OO_ITM"+"CHKB"+"I"))
+.do case
+   .case oo_cod->(eof()) .or. empty( oo_cod->memo )
+         .*  NON HO PUNTO INIEZIONE
+         .*----------------------------
+.tPutInj( nTSpace, [.inj CHKB] )
+.do ValidStd with 8
+         .*
+   .case "#jmp" $ Lower(oo_cod->memo)
+         .* SALTA IL CODICE STANDARD
+         .*-----------------------------
+.tPutInj( nTSpace, [.inj CHKB] )
+         .*
+  .otherwise
+.tPutInj( nTSpace ,[.inj CHKB] )
+.do ValidStd with 8
+.endcase

@@ -1,0 +1,32 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : BUILDAPRC
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge ad un array le variabili di calcolo del report
+.* ----------------------------------------------------------------------------
+.foreach reportprc
+   .M->cTvar   := oo_prn->VAR_NAME          ./  nome variabile di calcolo
+   .M->cTtyp   := oo_prn->VAR_C_TYPE        ./  tipologia di calcolo
+   .M->cTFile  := oo_prn->VAR_ALIOWN        ./  file proprietario
+   .M->cTGrp   := oo_prn->GRP               ./  identificatore di gruppo
+   .M->nTpos   := oo_prn->(recno())         ./  recno relativo
+   .M->cCodTyp := oo_prn->TYPCOD            ./  se file ha codice di relazione o di file
+   .M->lTpre  := IF(toReport("preprocessed")=="1", .T., .F.) ./  .T. valore precalcolato
+   .aadd(  aTprc ,{ m->cTvar, m->cTtyp, m->cTFile, m->cTGrp, m->nTpos, m->lTpre, M->cCodTyp } )
+   .do case
+       .case oo_prn->VAR_C_TYPE == "3"     ./  media
+             .aadd(  aTprc ,{ padr(trim(m->cTvar)+"1",10), m->cTtyp, m->cTFile, m->cTGrp, m->nTpos, m->lTpre, m->cCodTyp } )
+             .aadd(  aTprc ,{ padr(trim(m->cTvar)+"2",10), m->cTtyp, m->cTFile, m->cTGrp, m->nTpos, m->lTpre, m->cCodTyp } )
+             .*
+       .case oo_prn->VAR_C_TYPE $ "4-5"    ./  varianza - dev. standard
+             .aadd(  aTprc ,{ padr(trim(m->cTvar)+"1",10), m->cTtyp, m->cTFile, m->cTGrp, m->nTpos, m->lTpre, m->cCodTyp } )
+             .aadd(  aTprc ,{ padr(trim(m->cTvar)+"2",10), m->cTtyp, m->cTFile, m->cTGrp, m->nTpos, m->lTpre, m->cCodTyp } )
+             .aadd(  aTprc ,{ padr(trim(m->cTvar)+"3",10), m->cTtyp, m->cTFile, m->cTGrp, m->nTpos, m->lTpre, m->cCodTyp } )
+             .*
+       .case oo_prn->VAR_C_TYPE == "8"     ./  range
+             .aadd(  aTprc ,{ padr(trim(m->cTvar)+"1",10), m->cTtyp, m->cTFile, m->cTGrp, m->nTpos, m->lTpre, m->cCodTyp } )
+             .aadd(  aTprc ,{ padr(trim(m->cTvar)+"2",10), m->cTtyp, m->cTFile, m->cTGrp, m->nTpos, m->lTpre, m->cCodTyp } )
+             .*
+       .otherwise
+   .endcase
+.next

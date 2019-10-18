@@ -1,0 +1,44 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : UDFGET
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Genera la funzione di controllo get per l'item
+.* ----------------------------------------------------------------------------
+.M->cTsymCod := dd_sym->SYM
+.M->MimmoIdx := 0                             
+.M->cTsym    := ALLTRIM(dd_sym->SYM_NAM)
+.M->nTSymPos := dd_sym->(RECNO())
+.M->cTinf    := dd_sym->SYM_NAM+[, ]+dd_sym->SYM_TYP+[, ]+str(dd_sym->SYM_LEN,3)+[, ]+str(dd_sym->SYM_DEC,3)
+.M->nTpkMode := tItmPrimaryKey( cTnSeek ,dd_sym->SYM )
+*******************************************************************************
+STATIC FUNCTION ÛcTsym+[( nPrePost ) // ]+M->cTinfÛ
+*******************************************************************************
+LOCAL aDbL ,lRet:=.T.
+LOCAL xValKey 
+      .foreach vallookup
+        .M->MimmoIdx++
+LOCAL xValÛMimmoIdxÛ  // UdfGet.Tmp modified by Mimmo 
+      .next
+      .dd_sym->( dbGoto( M->nTSymPos ) )
+.tPutInj( 0 ,[.inj GSF1] )
+DO CASE
+   CASE nPrePost == FORM_PREGET
+
+        .do When with 8
+
+        .tPutInj( 8 ,[.inj EDTA] )
+
+   CASE nPrePost == FORM_POSTGET .OR. nPrePost == FORM_CHKGET
+
+        .do Valid with 8
+
+        .tPutInj( 8 ,[.inj CHKA] )
+
+        IF nPrePost == FORM_POSTGET
+           .tPutInj( 11 ,[.inj GSF5] )
+        ENDIF
+
+ENDCASE
+.tPutInj( 0 ,[.inj GSF9] )
+
+RETURN lRet

@@ -1,0 +1,22 @@
+.parameter cTope ,cTflt
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : PUTCTRL
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Scarica l'operazione richiesta da cTope sul tipo...
+.*                  : control cTflt
+.*                  : nTope = 3 - valorizza i dati
+.*                  : nTope = 4 - scrittura dati
+.* ----------------------------------------------------------------------------
+.M->nTope := if( M->cTope=="wri", 4, 3 )
+.M->nTCnt := 1
+.M->nTlen := Len(aTcontrol)
+.do while nTCnt <= nTlen
+   .if Lower(aTcontrol[nTcnt,2]) $ Lower(cTflt)
+      .M->cTWri := aTcontrol[nTcnt,nTope]
+      .if !Empty( cTWri )
+ÛcTWri+"  ð  // "+aTcontrol[nTcnt,5]Û
+      .endif
+   .endif
+   .M->nTCnt := nTcnt +1
+.enddo

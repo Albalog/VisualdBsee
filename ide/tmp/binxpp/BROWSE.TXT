@@ -1,0 +1,52 @@
+-----------------------------------------
+GESTIONE DI DATA-ENTRY con oggetto BROWSE
+-----------------------------------------
+
+Una base di dati Š una raccolta integrata di dati basata su un software che
+permette di eseguire interrogazioni ed aggiornamenti, garantendo
+l'integrit… e la privatezza. In dBsee gli accessi alla base dati vengono
+realizzati attraverso delle Gestioni di Data Entry. Un sistema di Data
+Entry Š definito come una finestra all'interno della quale sono presenti
+degli elementi grafici che permettono di accedere alla base dati
+dell'applicazione.
+
+Ogni sistema di Data Entry ha sempre associato un file principale. Il
+sistema Š quindi in grado di gestire tutti i dati contenuti nel file
+principale e tutti quelli provenienti da file ad esso relazionati.
+
+In una gestione di Data Entry realizzata attraverso un oggetto di tipo Browse
+vengono visualizzati in ogni istante n record del file principale associato
+alla gestione.  La gestione in tal caso pu• essere pensata come uno
+schedario nella quale vengono visualizzate n schede alla volta.
+
+Questa gestione di Data Entry viene realizzata da una finestra all'interno
+della quale vengono visualizzati dei dati, organizzati su pi— righe e
+colonne. Infatti questa tipologia di gestione viene utilizzata per
+visualizzare i record di un fule o le righe di un array a due dimensioni.
+
+
+Un sistema di Data Entry di tipo Browse si presenta come una finestra
+dotata di un titolo, visualizzato nella parte superiore.  La finestra pu•
+essere spostata sullo schermo tramite il mouse, puntando il cursore dello
+stesso sulla banda del titolo.  Il BROWSE pu• anche essere dimensionato,
+puntando il mouse sull'angolo inferiore destro.
+
+La finestra Š dotata di barre di scorrimento verticali ed orizzontali, che
+permettono di effettuare lo scrolling dei dati visualizzati, utilizzando il
+mouse o i tasti cursore.
+
+In alto a sinistra Š presente un Control Menu Box, che permette di accedere
+al menu della gestione.  Per accedere al menu, premere il mouse sul Control
+Menu Box o utilizzare i tasti Alt-Barra.
+
+Il menu contiene delle opzioni che permettono di stabilire se i dati
+devono essere gestiti in sola visualizzazione, in modifica, in ricerca
+oppure in inserimento.
+
+La pressione del tasto Invio consente di accedere, se previsto
+dall'applicazione, ad una particolare finestra che consente di
+effettuare la modifica o l'inserimento dei dati visualizzati nella
+Browse. A questa particolare finestra viene attribuito il nome di
+Edit Browse.
+
+Per abbandonare la gestione, premere il tasto Esc.

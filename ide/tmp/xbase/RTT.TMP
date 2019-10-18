@@ -1,0 +1,40 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : RTT
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Toglie le transazioni
+.* ----------------------------------------------------------------------------
+.M->cTsign := "-"
+.foreach tranpos oo_trn->TrnWriMod="t"
+   .M->cTdbfTgt := tDbfTrnTgt()
+   .if !empty(toTrans("trnkey"))
+IF ÛcTdbfTgt+[->(dfS(]+str(dd_ndx->NdxIncN,2)+[,]+toTrans("trnkey")Û))
+   .else
+IF ! (ÛcTdbfTgtÛ->(Eof()))
+   .endif
+   .M->cTCond   := toTrans("trncondreplace")
+   .M->nTs      := 0
+   .if !empty(M->cTCond)
+       .M->nTs  := 3
+   IF ÛcTCondÛ
+   .endif
+   .M->cTtrnRec := oo_trn->(recno())
+   .M->cTtgtFil := oo_trn->TrnTgtFil
+   .foreach trantot oo_trn->TrnTgtFil == cTtgtFil
+      .M->cTsign := toTrans("trnoperation")
+      .do case
+         .case empty( cTsign )
+         .case   cTsign == "="
+         .case   len( cTsign ) == 1
+              .M->cTsign := if( cTsign=[+],[-],[+] )
+   Ûspace(nTs)+cTdbfTgt+[->]+dd_sym->Sym_Nam+[ ]+cTsign+[= ]+toTrans("trnwrite")Û
+         .otherwise
+   Ûspace(nTs)+cTdbfTgt+[->]+dd_sym->Sym_Nam+[ := ]+"dfRTT( "+cTsign+", " +toTrans("trnwrite") +", " +cTdbfTgt+[->]+dd_sym->Sym_Nam +" )"Û
+      .endcase
+   .next
+   .if !empty(M->cTCond)
+   ENDIF
+   .endif
+ENDIF
+   .oo_trn->(Dbgoto( cTtrnRec))
+.next

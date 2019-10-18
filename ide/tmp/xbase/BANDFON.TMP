@@ -1,0 +1,25 @@
+.if ! M->lCrystal
+   .M->nTfntRow := 0
+   .M->nTfntCol := 0
+   .M->nTCnt    := 1
+   .M->aFont    := tItmFont(trim(oo_itm->ItmSay),oo_itm->font," ",@nTfntRow,@nTfntCol)
+   .*
+   .if !empty( cTPrintIf )
+IF ÛcTPrintIfÛ
+   .endif
+   .M->cFont := toItem("fontname")
+   .if ! empty(cFont)
+      .if at("(", cFont) == 0
+         .M->cFont := ["]+cFont+["]
+      .endif
+      .M->cFont := ",,,,,, "+cFont
+   .endif
+   .do while nTcnt <= nTfntRow
+Ûspace(ntMrg)ÛdfPrint( ÛnTrow+[, ]+nTcol+[, "]+strtran(aFont[nTcnt],chr(219),"²")+[",, ]+ cTattr+cFontÛ )
+       .M->nTrow := str( oo_itm->ROW+nTcnt , 3 )
+       .M->nTcnt := nTcnt + 1
+   .enddo
+   .if !empty( cTPrintIf )
+ENDIF
+   .endif
+.endif

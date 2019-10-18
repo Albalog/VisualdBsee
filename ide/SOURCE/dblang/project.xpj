@@ -1,0 +1,49 @@
+[PROJECT]
+    COMPILE       = xpp
+    COMPILE_FLAGS = /M/W/N/ES/Q/NOD/COFF/PRE/DLL:DYNAMIC
+    LINKER        = ALINK
+    LINK_FLAGS    = 
+    RC_COMPILE    = ARC
+    RC_FLAGS      = /v
+    DEBUG         = no
+    GUI           = yes
+    PROJECT.XPJ
+
+[PROJECT.XPJ]
+    DBLANG.DLL
+    DBLANGIT.DLL
+    DBLANGBR.DLL
+    DBLANGEN.DLL
+
+[DBLANG.DLL]
+   XppRt0.lib 
+   XppRt1.lib 
+   XppUi2.lib
+   DBLANGIT.PRG
+   ITALIANO.PRG
+   ITALIAN1.PRG
+
+[DBLANGIT.DLL]
+   XppRt0.lib 
+   XppRt1.lib 
+   XppUi2.lib
+   DBLANGIT.PRG
+   ITALIANO.PRG
+   ITALIAN1.PRG
+
+[DBLANGBR.DLL]
+   XppRt0.lib 
+   XppRt1.lib 
+   XppUi2.lib
+   DBLANGBR.PRG
+   BRASIL.PRG
+   BRASIL1.PRG
+
+[DBLANGEN.DLL]
+   XppRt0.lib 
+   XppRt1.lib 
+   XppUi2.lib
+   DBLANGEN.PRG
+   ENGLISH.PRG
+   ENGLISH1.PRG
+

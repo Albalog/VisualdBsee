@@ -1,0 +1,163 @@
+.M->cTini := tInitProc()
+//
+// Project - Definition
+//
+
+[PROJECT]
+    COMPILE       = xppvdb
+    COMPILE_FLAGS = ÛtoExeEnv("compileroption")Û /ES/Q/PRE/O:noncb
+    DEBUG         = ÛIF("/B"$UPPER(toExeEnv("compileroption")) .or. alltrim(toExeEnv("debug"))=="1","yes","no")Û
+    GUI           = yes
+.if !empty(toExeEnv("execompress")) .AND. alltrim(toExeEnv("execompress")) =="1" 
+    LINKER        = upxalink
+.else
+    LINKER        = alink
+.endif
+.M->cTOut := toExeEnv("outputexe")
+    RC_COMPILE    = arc
+    RC_FLAGS      = /v
+    OBJ_FORMAT    = COFF
+    OBJ_DIR       = ÛtOBJPath()Û
+    PROJECT.XPJ
+.M->cLinkerF := ""
+.M->nTObjR1 := oo_obj->(recno())
+.foreach special
+   .if tObjtype() == "scriptlink"
+      .* .M->cLinker     := ALLTRIM(SUBS(toExeEnv("linker",.T.),1,8))
+      .M->cLinkerF := "@" +alltrim(oo_obj->PRG) +"." +oo_obj->EXT
+   .endif
+.next
+.oo_obj->(dbGoto(nTObjR1))
+
+[PROJECT.XPJ]
+    ÛcTiniÛ.EXE
+.M->aPrgObj := ARRAY(0)
+.foreach make oo_bld->EXT=="prg"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   .aadd(aPrgObj,cTPrg)
+    ÛcTprgÛ.DLL
+.next
+.*
+.M->aExtObj := ARRAY(0)
+.foreach link oo_bld->typ=="ext" .and. oo_bld->Wdo == "obj" .and. oo_bld->SECTION $ "0123456789"
+   .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)$"MSGITA.OBJ,CMX52.OBJ,CMXDBT52.OBJ")
+      .M->cPath := ""
+      .if ! empty(toObject("objectpath"))
+         .M->cPath := toObject("objectpath")
+         .if !EMPTY(cPath) .AND. ! right(cPath, 1) == "\"
+            .M->cPath := cPath+"\"
+         .endif
+      .endif
+      .aadd(aExtObj,cPath+alltrim(oo_obj->PRG))
+   .endif
+.next
+.if ! empty(aExtObj)
+   _EXTERN.DLL
+.endif
+.*
+.M->aLib := ARRAY(0)
+.foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION $ "0123456789"
+.M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+   .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)=="CLD.LIB")
+      .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)$"CMX52.LIB")
+        .aadd(aLib, cPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXT)
+      .endif
+   .endif
+.next
+
+[ÛcTiniÛ.EXE]
+   LINK_FLAGS    = /out:Ûif( empty(cTout),"..\EXE\",cTout+"\")+ALLTRIM(oo_exe->ExeName)Û.exe /FORCE:UNRESOLVED
+// Starting procedure
+.if TGenerationDividedfortype()
+Û"   ...\source\Form\_"+cTiniÛ.prg
+.else
+Û"   ...\source\_"+cTiniÛ.prg
+.endif
+   ÛcTiniÛ.lib
+   ÛMstPrgNamÛ.ARC
+.foreach make oo_bld->EXT=="arc"
+Û"   "+alltrim(oo_obj->PRG)Û.ARC
+.next
+
+   dblang.lib
+   vdbsee1o.lib
+   vdbsee1s.lib
+
+.foreach make oo_bld->EXT=="prg"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+[ÛcTprgÛ.DLL]
+   LINK_FLAGS    = /out:Ûif( empty(cTout),"..\EXE\",cTout+"\")+cTPrgÛ.DLL /FORCE:UNRESOLVED
+   .M->cPath := ""
+   .if ! empty(toObject("objectpath"))
+      .M->cPath := "   "+toObject("objectpath")
+      .if !EMPTY(cPath) .AND. ! right(cPath, 1) == "\"
+         .M->cPath := cPath+"\"
+      .endif
+   .else
+     .if TGenerationDividedfortype()
+     .M->cPath := "   ...\source\"+ tsourceGenPath()
+     .else
+     .M->cPath := "   ...\source\"
+     .endif
+   .endif
+ÛM->cPath+cTprgÛ.prg
+.M->nTCnt := 1
+.M->nTlen := Len(aPrgObj)
+.do while nTCnt <= nTlen
+   .if ! aPrgObj[nTCnt] == cTPrg
+   ÛaPrgObj[nTCnt]Û.lib
+   .endif
+   .M->nTCnt := nTCnt+1
+.enddo
+
+   .if ! empty(aExtObj)
+   _EXTERN.LIB
+   .endif
+
+.M->nTCnt := 1
+.M->nTlen := Len(aLib)
+
+.do while nTCnt <= nTlen
+   ÛaLib[nTCnt]Û
+   .M->nTCnt := nTCnt+1
+.enddo
+
+   dblang.lib
+   vdbsee1o.lib
+   vdbsee1s.lib
+
+.next
+
+.if ! empty(aExtObj)
+[_EXTERN.DLL]
+   LINK_FLAGS    = /out:..\EXE\_EXTERN.DLL /FORCE:UNRESOLVED
+
+.M->nTCnt := 1
+.M->nTlen := Len(aExtObj)
+.do while nTCnt <= nTlen
+   ÛaExtObj[nTCnt]Û.obj
+   .M->nTCnt := nTCnt+1
+.enddo
+
+.M->nTCnt := 1
+.M->nTlen := Len(aPrgObj)
+.do while nTCnt <= nTlen
+   ÛaPrgObj[nTCnt]Û.lib
+   .M->nTCnt := nTCnt+1
+.enddo
+
+.M->nTCnt := 1
+.M->nTlen := Len(aLib)
+.do while nTCnt <= nTlen
+   ÛaLib[nTCnt]Û
+   .M->nTCnt := nTCnt+1
+.enddo
+
+   dblang.lib
+   vdbsee1o.lib
+   vdbsee1s.lib
+.endif
+
+   .inj RMK4 Let a Empty Row
+
+.close

@@ -1,0 +1,45 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : UPDFILE
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiorna i file
+.* ----------------------------------------------------------------------------
+.M->ExePath := tExePath()+"\"
+.M->jjDbfRec:=dd_dbf->(recno())
+.if !Empty(aData:=dd_dbf->(tForeachArr("file" ,"dd_dbf->FILE_TYP=='0' ;
+   .and. !empty(dd_dbf->FLGUPD)",{||tDbfList()},aRec:={}, aTag:= {} )))
+   .msg [Ctrl+Barra=Tag/Untag - Ctrl+/=Tag tutti - Ctrl+\=Untag tutti - <Ù=Conferma - Esc=rinuncia]
+   .*.dbMsgErr( "La base dati risulta disallineata//Si consiglia di lanciare l'applicazione con /UPD" )
+   .* NOT Y2K
+   .*.dBwar(0,0,0,0,[AGGIORNAMENTO FILE],[],aData,aTag,1,0,[dbwar],NIL, [ret-esc],[s],[s],0)
+   .*.if M->Act!="esc"
+         .dd_dbf->( dbGoTop() )
+         .do while !dd_dbf->(eof())
+   .*        .if Ascan( aTag, dd_dbf->(recno()) ) == 0   ./  il file non Š taggato
+                 .dd_dbf->( dbNet("rec") )
+                 .dd_dbf->FLGUPD := ""
+                 .dd_dbf->( dbNet("url") )
+   .*        .endif
+             .dd_dbf->( dbSkip( 1 ) )
+         .enddo
+   .*    .M->nCnt := 1
+   .*    .do while nCnt <= len(aTag)
+   .*        .if aTag[nCnt] != 0
+   .*            .nRec := aRec[ aTag[nCnt] ]
+   .*            .dd_dbf->(DbGoto(nRec))
+   .*            .do UpdDbf
+   .*        .endif
+   .*        .M->nCnt := nCnt + 1
+   .*    .enddo
+   .*.endif
+.endif
+.dd_dbf->(DbGoto( jjDbfRec))
+.*
+.*----------------------------- Generazione FILE DI CONFIGURAZIONE
+.if ! file( M->ExePath+"dbStart.ini" )
+.do dbstart
+.endif
+.if ! file( M->ExePath+"dbLogin.dbf" )
+   .msg [Genera il file dbLogin.dbf]
+   .tCopyFile( dfExeTmp()+"dbLogin.dbf" ,M->ExePath+"dbLogin.dbf" )
+.endif

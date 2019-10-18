@@ -1,0 +1,230 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : INITPROC
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Inizializzazioni dell'oggetto di startup
+.* ----------------------------------------------------------------------------
+dfSetMain( "ÛcTprgÛ" )
+dfSetApplicationName("ÛAlltrim(oo_exe->exedes)Û")
+IF dfSetMain() == "ÛcTprgÛ"
+   .M->cHlp := tHlpId()
+   .if Len( cHlp ) > 0
+   dfHlpSet("ÛcHlpÛ")                ð   // Predispone settaggio id dell' help
+   .endif
+   .if type("OS()")=="C"    
+   .* Visual dBsee 
+   dfSet( "XbaseApplication", ÛtGenInfo()Û)
+   .* In Visual dBsee disable work around on S2Static:create()
+   dfSet( "XbaseS2StaticCreateWorkAround", "NO")
+   dfSet( AI_XBASEDDKEYMODE, AI_DDKEYMODE_ENH)
+   dfInitFont()
+   .endif
+   .if toExeEnv("xbcoordmode")=="1"
+   dfSet( "VDbseeCoordinateMode", "PIXEL")
+   .endif
+   .if toExeEnv("xbsubmenustyle")=="2"
+   dfSet("XbaseSubMenuToolbarStyle", "TREE")
+   .endif
+   .if toExeEnv("xbformscroll")=="1"
+   dfSet( AI_XBASEFORMSCROLL, AI_FORMSCROLL_ENABLED)
+   .endif
+   .if toExeEnv("xbwaitstyle") == "1"
+   dfSet( AI_XBASEWAITSTYLE, AI_WAITSTYLE_FANCY)
+   .endif
+   .if toExeEnv("xbwaitstyle") == "2"
+   dfSet( AI_XBASEWAITSTYLE, AI_WAITSTYLE_FANCY_AUTO)
+   .endif
+   .if toExeEnv("xbmsgstyle") == "1"
+   dfSet( AI_XBASEMSGSTYLE, AI_MSGSTYLE_FANCY)
+   .endif
+   .if toExeEnv("xbmsgstyle") == "2"
+   dfSet( AI_XBASEMSGSTYLE, AI_MSGSTYLE_FANCY_AUTO)
+   .endif
+   .if toExeEnv("xbalertstyle") == "1"
+   dfSet( AI_XBASEALERTSTYLE, AI_ALERTSTYLE_FANCY)
+   .endif
+   .if toExeEnv("xbalerticons") == "1"
+   dfSet( AI_XBASEALERTICONS, AI_ALERTICONS_FANCY)
+   .endif
+   .if toExeEnv("xbtoolbarstyle") == "1"
+   dfSet( AI_XBASETOOLBARSTYLE, AI_TOOLBARSTYLE_RIGHT)
+     .if ! EMPTY(toExeEnv("xbtoolbarwidth"))
+   dfSet( AI_XBASETOOLBAROPTIONS, {{AI_TOOLBARRIGHT_WIDTH, ÛVAL(toExeEnv("xbtoolbarwidth"))Û}})
+     .endif
+   .else
+     .if ! EMPTY(toExeEnv("xbtoolbarheight"))
+   dfSet( AI_XBASETOOLBAROPTIONS, {{AI_TOOLBAR_HEIGHT, ÛVAL(toExeEnv("xbtoolbarheight"))Û}})
+     .endif
+   .endif
+   .if toExeEnv("xbstatusstyle") == "1"
+   dfSet( AI_XBASESTATUSLINESTYLE, AI_STATUSLINESTYLE_FLAT)
+   .endif
+   .if toExeEnv("xbmultipgstyle") == "1"
+   dfSet( AI_XBASEMULTIPAGESTYLE, AI_MULTIPAGESTYLE_FLAT)
+   .endif
+   .if ! EMPTY(toProject("xbgrpboxfont"))
+   dfSet( AI_XBASEGRPBOXFONT, ÛtExpCast(toProject("xbgrpboxfont"))Û )
+   .endif
+   .if toExeEnv("xbgrpboxstyle") == "1"
+   dfSet( AI_XBASEGRPBOXSTYLE, BOX_PS_FLAT)
+   .endif
+   .if toExeEnv("xblsbboxstyle") == "1"
+   dfSet( AI_XBASELSBBOXSTYLE, BOX_PS_FLAT)
+   .endif
+   .if toExeEnv("xbtxtboxstyle") == "1"
+   dfSet( AI_XBASETXTBOXSTYLE, BOX_PS_FLAT)
+   .endif
+   .if toExeEnv("xbbutstyle") == "1"
+   dfSet( AI_XBASEBUTSTYLE, BUT_PS_FLAT1)
+   .endif
+   .if toExeEnv("xbbutstyle") == "2"
+   dfSet( AI_XBASEBUTSTYLE, BUT_PS_FLAT2)
+   .endif
+   .if toExeEnv("xbgetstyle") == "1"
+   dfSet( AI_XBASEGETSTYLE, GET_PS_FLAT)
+   .endif
+   .if toExeEnv("xbckbstyle") == "1"
+   dfSet( AI_XBASECHKSTYLE, CHK_PS_FLAT)
+   .endif
+   .if toExeEnv("xbradstyle") == "1"
+   dfSet( AI_XBASERADSTYLE, RAD_PS_FLAT)
+   .endif
+   .if toExeEnv("background")!="0"
+   dfSet( "XbaseBackgroundBmp", dfGetBkg( ÛtoExeEnv("background")Û ) )
+   .endif
+   .if toExeEnv("printmenutype")!="0"
+   dfSet( AI_XBASEPRNMENUNEW, .T. )
+   .endif
+   .if toExeEnv("seteuro")!="0"
+   dfSetEuro( .T. )
+   .endif
+   .if toExeEnv("colormode")=="1"
+   dfSet( AI_XBASECOLORMODE, AI_COLORMODE_DBSEE )
+   .endif
+   .if toExeEnv("progresbarstyle")=="0"
+   dfSet( AI_XBASEPROGRESSSTYLE,AI_PROGRESSSTYLE_STD )
+   .endif                       
+   .if toExeEnv("progresbarstyle")=="1"
+   dfSet( AI_XBASEPROGRESSSTYLE,AI_PROGRESSSTYLE_STD_THREAD)
+   .endif                       
+   .if toExeEnv("progresbarstyle")=="2"
+   dfSet( AI_XBASEPROGRESSSTYLE,AI_PROGRESSSTYLE_FANCY)
+   .endif                       
+   .if toExeEnv("printprogbarsty")=="0"
+   dfSet( AI_XBASEPRINTPROGRESSSTYLE,AI_PRINTPROGRESSSTYLE_STD)
+   .endif                       
+   .if toExeEnv("printprogbarsty")=="1"
+   dfSet( AI_XBASEPRINTPROGRESSSTYLE,AI_PRINTPROGRESSSTYLE_FANCY)
+   .endif                       
+   .if toExeEnv("printprogbarsty")=="2"
+   dfSet( AI_XBASEPRINTPROGRESSSTYLE,AI_PRINTPROGRESSSTYLE_FANCY_THREAD)
+   .endif                       
+   .if toExeEnv("indexwaitrstyle")=="2"
+   dfSet( AI_XBASEINDEXWAITSTYLE,AI_INDEXWAITSTYLE_NONE)
+   .endif                       
+   .if toExeEnv("indexwaitrstyle")=="0"
+   dfSet( AI_XBASEINDEXWAITSTYLE,AI_INDEXWAITSTYLE_STD)
+   .endif
+   .if toExeEnv("indexwaitrstyle")=="1"
+   dfSet( AI_XBASEINDEXWAITSTYLE, AI_INDEXWAITSTYLE_FANCY)
+   .endif
+   .if toExeEnv("tooltipcaratter")=="1"
+   dfTooltipMagicHelpON()
+   .endif
+   .if !EMPTY(toExeEnv("mandatorytype")) 
+   dfSet("XbaseMandatoryFieldsMode","ÛtoExeEnv("mandatorytype")Û" )
+   .endif
+   .if toExeEnv("helpformat")=="1"
+   dfHlpSetCB({ NIL, Û";"Û
+                {|cForm,cID| UPPER(ALLTRIM(cForm))+".HTM"}, Û";"Û
+                dbCfgPath("HelpPath")+"Ûalltrim(oo_exe->ExeName)Û.chm" })
+   .endif
+   .if tNetWork()
+   dfSet( AI_NET ,.T.)                  // Programma in rete
+   .endif
+   .if toExeEnv("usericon")=="0"
+   dfSet( AI_USRICON, .F. )
+   .endif
+   .if toExeEnv("userstate")=="1"
+   dfSet( AI_WINDOWINFO, .T. )
+   .* Commentato perche non pi— usato. 
+   .*if toExeEnv("userstate")=="0"
+   .*dfSet( AI_USRSTATE, .F. )
+   .endif
+   .if toExeEnv("fastmenuexit")=="1"
+   dfSet( AI_FASTMENUEXIT, .T. )
+   .endif
+   .if toExeEnv("fastdisplay")=="0"
+   dfSet( AI_FASTDISPLAY, .F. )
+   .endif
+   .if toExeEnv("errorinwindow")=="0"
+   dfSet( AI_ERRORINWINDOW, .F. )
+   .endif
+   .if toExeEnv("getcheckuar")=="1"
+   dfSet( AI_GETCHECKUAR, .T. )
+   .endif
+   .if toExeEnv("repeatget")=="1"
+   dfSet( AI_IFNOKEYREPEATGET, .T. )
+   .endif
+   .if toExeEnv("gotowin")=="1"
+   dfSet( AI_GOTOWINAFTERRETURN, .T. )
+   .endif
+   .if toExeEnv("disablekeyindex")=="1"
+   dfSet( AI_DISABLEKEYINDEX, .T. )
+   .endif
+   .if toExeEnv("disableoptimize")=="1"
+   dfSet( AI_FILTEROPTIMIZER, .F. )
+   .endif
+   .if toExeEnv("setconfirm")=="0"
+   SET CONFIRM OFF
+   .endif
+   .if toExeEnv("setcentury")=="1"
+   SET CENTURY ON
+   .endif
+   .if !(toExeEnv("setepoch")=="1900")
+   SET EPOCH TO ÛtoExeEnv("setepoch")Û
+   .endif
+   SET DATE ÛtoExeEnv("setdate",.T.)Û ð   // Predispone formato presentazione date
+   .if toExeEnv("resetaltc")=="1"
+   SETCANCEL( .F. )
+   .endif
+   .if toExeEnv("resetaltd")=="1"
+   .endif
+   dfSet( "XbaseGetComboExternal", "YES")
+   .if toExeEnv("ddkeywintype") == "1" 
+   dfSet({AI_XBASESTDFUNCTIONS, AI_STDFUNC_DDKEY}, {|n,k,f,b,e,idx| ddKeyAndWin(n,k,f,b,e,idx)} )
+   dfSet({AI_XBASESTDFUNCTIONS, AI_STDFUNC_DDWIN}, {|n,k,f,b,e,idx| ddKeyAndWin(n,k,f,b,e,idx)} )
+   .endif
+   .inj exe4 Prima della Gestione Login
+   .if toExeEnv("password")=="1"
+   dfLogin()                         ð   // Gestione password
+   IF dfSet(AI_USERLEVEL)==0         ð   // Se password inesistente
+      df2Quit()                      ð   // chiude il programma
+   END
+   .endif
+   dfInitScreenOn()
+   .if !tEmptyDbf()
+      .if toExeEnv("noupdgen")=="0"
+   IF dfChkPar("/UPD")               ð   // Attivazione dell'aggiornamento archivi
+      ddUpdDbf()
+   ENDIF
+      .endif
+      .if toExeEnv("nodbfgen")=="0"
+   ddIndex( IDX_CHECK )              ð   // Ricostruzione indici e creazione archivi
+      .endif
+   .endif
+   .inj exe6 // Dopo la Gestione Login
+   dfInitScreenOff()
+   .if oo_obj->TYP != "brw"
+   IF !(cMode$DE_STATE_INK +DE_STATE_ADD +DE_STATE_MOD)
+      cMode := DE_STATE_INK
+   ENDIF
+   .else
+   IF VALTYPE( nTbOrd ) != "N"
+      nTbOrd := NIL
+   ENDIF
+   .endif
+   .if tSetReportManagerxmltmpFile()
+   dfSet( AI_XBASEREPORTMANTMPFILE, AI_REPORTMANAGER_TEMPFILE_XML)
+   .endif
+ENDIF

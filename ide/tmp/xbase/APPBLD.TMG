@@ -1,0 +1,18 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : APPBLD
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab appende oggetto nel build
+.* ----------------------------------------------------------------------------
+.M->ProPrj           := NewProg("prj","1")
+.oo_bld->(dBappend())
+.oo_bld->EXE         := oo_exe->EXE
+.oo_bld->OBJ         := oo_obj->OBJ
+.oo_bld->TYP         := oo_obj->TYP
+.oo_bld->WDO         := oo_obj->WDO
+.oo_bld->EXT         := oo_obj->EXT
+.oo_bld->PRJINCN     := M->ProPrj
+.oo_bld->SECTION     := "1"
+.oo_bld->COMPILE     := "1"
+.oo_bld->LINK        := "1"
+.oo_bld->FLGGEN      := "1"

@@ -1,0 +1,97 @@
+.parameter cTact ,cTtyp ,cAls
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : PFKLSB
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab tasti standard per List box
+.* ----------------------------------------------------------------------------
+.if cTtyp == "opt"
+   .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: pfklsb.tmg in corso..." )
+.endif
+.M->cTmgName := "Lsbfrm.tmg "
+.M->Crlf     := chr(13) + chr(10)
+.M->cTpr1    := Alltrim(oo_obj->PRG)
+.M->cTobj    := tControlId()
+.M->cTals    := tGetAliasName(cAls)
+.*
+.if "pfk" $ cTact
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := "1"
+   .oo_mnu->MNUTYP      := "lab"
+   .oo_mnu->MNULAB      := "Tasti"
+   .oo_mnu->MNUUSR      := "Tasti su list box"
+   .oo_mnu->PFKITM      := oo_itm->itm
+   .oo_mnu->PFKIGC      := oo_itm->igc
+   .oo_mnu->(dBnet("url"))
+   .*
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunto tasto..."+Trim(oo_mnu->MNULAB) ,75) )
+   .*
+.endif
+.M->nTcho    := 10
+.if "anr" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := [Inserimento]
+   .oo_mnu->MNUUSR      := "Inserimento nuova riga"
+   .oo_mnu->pfkitm      := oo_itm->itm
+   .oo_mnu->pfkigc      := oo_itm->igc
+   .oo_mnu->pfkact      := "anr"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,[%FF%->(%OF%Anr(%LSBID%,{||%OEDR%Exe(DE_STATE_ADD,,,,,,aInhSon)} ))] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .*
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunto tasto..."+Trim(oo_mnu->MNULAB) ,75) )
+   .*
+.endif
+.if "mcr" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := [Modifica]
+   .oo_mnu->MNUUSR      := "Modifica riga"
+   .oo_mnu->pfkitm      := oo_itm->itm
+   .oo_mnu->pfkigc      := oo_itm->igc
+   .oo_mnu->pfkact      := "mcr"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,[%FF%->(%OF%Mcr(%LSBID%,{||%OEDR%Exe(DE_STATE_MOD)} ))] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .*
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunto tasto..."+Trim(oo_mnu->MNULAB) ,75) )
+   .*
+.endif
+.if "ecr" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := [Cancella]
+   .oo_mnu->MNUUSR      := "Cancella la riga"
+   .oo_mnu->pfkitm      := oo_itm->itm
+   .oo_mnu->pfkigc      := oo_itm->igc
+   .oo_mnu->pfkact      := "ecr"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,[%FF%->(%OF%Ecr(%LSBID%,{||%OEDR%Del()} ))] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .*
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunto tasto..."+Trim(oo_mnu->MNULAB) ,75) )
+   .*
+.endif
+.*
+.if cTtyp == "opt"
+   .__dbFrameOff()
+.endif

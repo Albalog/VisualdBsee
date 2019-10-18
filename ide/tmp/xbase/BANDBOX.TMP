@@ -1,0 +1,10 @@
+.if ! M->lCrystal
+   .m->cTBoxExp := [repli("ƒ", ]+ alltrim(str(oo_itm->col1-oo_itm->col+1))+[)]
+   .if !empty( cTPrintIf )
+IF €cTPrintIf€
+   .endif
+€space(ntMrg)€dfPrint( €nTrow+[, ]+nTcol+[, ]+cTBoxExp+[,, ]+ cTattr€ )
+   .if !empty( cTPrintIf )
+ENDIF
+   .endif
+.endif

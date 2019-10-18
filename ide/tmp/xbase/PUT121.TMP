@@ -1,0 +1,77 @@
+.parameter cTope
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : PUT121
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Scarica l'operazione richiesta da cTope per item 1:1
+.*                  : nTope = 3 - valorizza i dati
+.*                  : nTope = 4 - scrittura dati
+.* ----------------------------------------------------------------------------
+.M->cTals := ""
+.M->nTCnt := 1
+.M->nTlen := Len(aTrel11)
+.do while nTCnt <= nTlen
+   .M->cTals := aTrel11[nTcnt,1]
+   .M->cTCodr:= aTrel11[nTcnt,3]
+   .if cTope == "def"
+//          ALLINEA RECORD IN RELAZIONE 1:1 FILE ÛcTalsÛ
+ÛaTrel11[nTcnt,2]Û
+      .M->nTCnt1:= 1
+      .M->nTlen1:= Len(aTcontrol)
+      .do while nTCnt1 <= nTlen1
+         .if Lower(aTcontrol[nTcnt1,2]) == "121"+ Lower(cTals)
+ÛaTcontrol[nTcnt1,3]Û
+         .endif
+         .M->nTCnt1 := nTcnt1 +1
+      .enddo
+   .else
+//          SCRIVE CAMPI IN RELAZIONE 1:1 FILE ÛcTalsÛ
+a121Fld := {}
+      .M->nTCnt1:= 1
+      .M->nTlen1:= Len(aTcontrol)
+      .do while nTCnt1 <= nTlen1
+         .if Lower(aTcontrol[nTcnt1,2]) == "121"+ Lower(cTals)
+aadd( a121Fld ,ÛaTcontrol[nTcnt1,1]Û )
+         .endif
+         .M->nTCnt1 := nTcnt1 +1
+      .enddo
+IF (! ÛaTrel11[nTcnt,2]Û) .AND. ; ð // Verifica che non esista il record...
+   (! dfAempty(a121Fld) )         ð // che la somma dei campi non sia vuota
+      .if tNetWork()
+   .do N121lock with "app"
+      .else
+   ÛcTalsÛ->(dbAppend())          ð // prima di appendere il record in 1:1
+      .endif
+      .dd_rel->(dbSetOrder(1))
+      .dd_rel->(dbSeek( cTcodR ))
+      .foreach inhvalue
+         .M->cTsym := dd_sym->SYM_NAM
+         .M->cTexp := toInHerit("inheritexpr")
+         .if ! Empty( cTexp )
+   ÛcTals+[->]+Alltrim(cTsym)+[ := ]+cTexpÛ
+         .endif
+      .next
+   ÛcTalsÛ->(dbCommit())
+      .if tNetWork()
+   .do N121lock with "unl"
+      .endif
+ENDIF
+IF ÛaTrel11[nTcnt,2]Û             ð // Se esiste il record scrive i campi
+      .if tNetWork()
+   .do N121lock with "lok"
+      .endif
+      .M->nTCnt1:= 1
+      .M->nTlen1:= Len(aTcontrol)
+      .do while nTCnt1 <= nTlen1
+         .if Lower(aTcontrol[nTcnt1,2]) == "121"+ Lower(cTals)
+   ÛaTcontrol[nTcnt1,4]Û
+         .endif
+         .M->nTCnt1 := nTcnt1 +1
+      .enddo
+      .if tNetWork()
+   .do N121lock with "unl"
+      .endif
+ENDIF
+   .endif
+   .M->nTCnt := nTcnt +1
+.enddo

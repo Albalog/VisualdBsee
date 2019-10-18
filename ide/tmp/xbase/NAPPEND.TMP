@@ -1,0 +1,57 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : NAPPEND
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Append del record in rete
+.* ----------------------------------------------------------------------------
+ddFileLock(DD_LOCK ,"ÛcTdbfÛ" )        ð // Blocco dbdd (file semaforo)
+.do pkeynew
+.if nTpOrde > 0
+//             CONTROLLO DI NON DUPLICAZIONE CHIAVE PRIMARIA
+.M->cTMsgDup := toIndex("indexmsgdup")
+.if empty( M->cTMsgDup )
+IF !ÛcTdbfÛ->(ddPkChk( Ûstr(nTpOrde,2)Û ,tbPkExp(oWin), NIL, cState ))
+.else
+   .M->cTMsgDup := tExpCast(M->cTMsgDup)
+IF !ÛcTdbfÛ->(ddPkChk( Ûstr(nTpOrde,2)Û ,tbPkExp(oWin) ,;   //
+   ÛM->cTMsgDupÛ, cState ))
+.endif
+   .foreach get
+      .M->cTsym    := AllTrim(dd_sym->SYM_NAM)
+      .M->nTpkMode := tItmPrimaryKey( cTnSeek ,dd_sym->SYM )
+      .if nTpkMode != -1 .AND. cTsym == nTpkLast
+   ÛcTsymÛ( FORM_PREGET )
+      .endif
+   .next
+   ddFileLock( DD_UNLOCK ,"ÛcTdbfÛ" )  ð // Sblocco dbdd (file semaforo)
+   LOOP
+END
+.endif
+.inj getE Prima della duplicazione chiavi univoche
+//             CONTROLLO DI NON DUPLICAZIONE CHIAVI UNIVOCHE
+.foreach get
+   .M->cTsymCod := dd_sym->SYM
+   .M->nTukf    := Ascan( aTukLast ,{|eL|eL[1]==cTsymCod} )
+   .do while nTukf > 0
+      .M->nTrec := aTukLast[nTukf][2]
+      .dd_ndx->(dbGoto(nTRec))
+      .M->nTuOrde:= dd_ndx->NDXINCN
+      .M->cTuExpr:= tIndexExp(dd_ndx->FILE ,dd_ndx->NDX )
+      .M->cTMsgDup := toIndex("indexmsgdup")
+      .if empty( M->cTMsgDup )
+IF !ÛcTdbfÛ->(ddPkChk( Ûstr(nTuOrde,2)+[ ,]+cTuExprÛ, NIL, cState ))
+      .else
+          .M->cTMsgDup := tExpCast(M->cTMsgDup)
+IF !ÛcTdbfÛ->(ddPkChk( Ûstr(nTuOrde,2)+[ ,]+cTuExprÛ ,;  //
+   ÛM->cTMsgDupÛ, cState ))
+      .endif
+   ddFileLock( DD_UNLOCK ,"ÛcTdbfÛ" )  ð // Sblocco dbdd (file semaforo)
+   LOOP
+END
+      .M->nTukf := Ascan( aTukLast ,{|eL|eL[1]==cTsymCod}, M->nTukf+1 )
+   .enddo
+.next
+IF ! ÛcTdbfÛ->(dfNet(NET_APPEND))
+   ddFileLock( DD_UNLOCK ,"ÛcTdbfÛ" )  ð // Sblocco dbdd (file semaforo)
+   EXIT
+END

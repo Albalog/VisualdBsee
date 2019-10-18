@@ -1,0 +1,79 @@
+.parameter cToWin ,cItmId ,cTlsbDbf
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : COLLSBB
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Iniziallizazione COLONNE BROWSE BOX per oggetti browse
+.* ----------------------------------------------------------------------------
+.M->lTHead:= .T.
+.if oo_obj->TYP=="brw"
+   .M->lTHead:= IF( VAL(toObject("rowsinheader")) > 0 ,.T. ,.F. )
+.else
+   .M->lTHead:= IF( VAL(toItem("rowsinheader")) > 0 ,.T. ,.F. )
+.endif
+.foreach itemgroup oo_itm->TYP $ "tag-get-rel-var-udf-exp-img"
+   .*
+   .M->cTsym := trim(dd_sym->SYM_NAM)
+   .M->cIdC  := tControlId()
+   .M->aTblk := {}
+   .M->cTfoo := ""
+   .M->cTtot := ToItem("ftdatatype")
+   .M->cTtit := Alltrim(oo_itm->ITMSAY)
+   .M->cTwid := str(oo_itm->WIDTH,2)
+   .M->cTpic := tSayPicture()
+   .M->cTmsg := AllTrim(oo_itm->ITMMSG)
+   .do case
+      .case oo_itm->TYP == "tag"
+           .*
+           .M->cTpic := ""
+           .aadd( aTblk ,[{||tbDisTag(]+cToWin+[)} ð ;] )
+           .*
+      .case oo_itm->TYP == "rel"
+           .*
+           .M->cTson    := ""
+           .M->cTfat    := ""
+           .M->cTblk    := "{|| "
+           .M->cTseek   := ""
+           .M->nRec     := 0
+           .foreach alignitem
+             .M->nRec   := dd_dbf->(Recno())
+             .M->cTseek := toRelation("relkey")
+             .M->cTson  := tLkUpFileSon()
+             .M->cTfat  := LookFat()
+             .if dd_dbf->file_typ != "1"
+               .aadd( aTblk ,cTblk+cTson+"->(dfS("+tLkUpIndex()+" ,"+cTseek+")) ð ,;" )
+               .M->cTblk := ""
+             .endif
+           .next
+           .dd_dbf->(dbGoto( nRec ))
+           .if dd_dbf->file_typ == "1"
+              .* TABELLA
+              .aadd( aTblk ,cTblk+[dbTabGet("]+cTson+[",]+cTseek+[,"]+cTsym+[") } ð ;] )
+              .if cTtot != "0"
+                 .cTfoo := [dbTabGet( "]+cTson+[",]+cTseek+[,"]+cTsym+[" )]
+              .endif
+           .else
+              .* ARCHIVIO
+              .aadd( aTblk ,cTson+[->]+cTsym+[ } ð ;] )
+              .if cTtot != "0"
+                 .cTfoo := cTson+[->]+cTsym
+              .endif
+           .endif
+           .*
+      .otherwise
+           .*
+           .if oo_itm->typ $ "-exp-img-"
+              .M->cTpic := alltrim(oo_itm->PicO)
+           .endif
+           .M->cTbrwStr := ""
+           .do StrBrw with cTlsbDbf
+           .aadd( aTblk ,[ {|| ]+cTbrwStr+[ } ð ;] )
+           .if cTtot != "0"
+              .cTfoo := cTbrwStr
+           .endif
+           .*
+   .endcase
+   .*
+.do attcol
+   .*
+.next

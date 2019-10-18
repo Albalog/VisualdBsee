@@ -1,0 +1,38 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDQRYSEQ
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge gli item della query in un array di sequenze
+.* ----------------------------------------------------------------------------
+
+aSeq := {}                ð   //  array di ordinamento control in query
+.*
+.m->nTGet := 0
+.oo_itm->(dbSetOrder( 4 ) )                             ./ indice per descend(riga) + colonna
+.foreach item !oo_itm->TYP $ "box-pag-say-fon-ico-but-img"  ./  tutti tranne l'item box, pag, say, font, icon, but e image
+  .do case
+      .case oo_itm->TYP == "rel" .and. ToItem("editcondition") == "0"   ./  item in decodifica
+      .case oo_itm->TYP == "par"
+ATTACH TO QUERYEXP aSeq TYPE       QRY_PAR     ð ; // Parentesi
+                        PARAMETER "Ûtrim(oo_itm->ITMSAY)Û"
+      .case oo_itm->TYP == "lnk"
+            .ctAndOr := if(trim(oo_itm->ITMSAY)=="1", ".AND.", ".OR.")
+ATTACH TO QUERYEXP aSeq TYPE       QRY_LINK    ð ; // legame logico
+                        PARAMETER "ÛctAndOrÛ"
+      .case oo_itm->TYP == "exp" .and. empty(oo_itm->ITMGET)  ./  item espressione privo di variabile in get
+ATTACH TO QUERYEXP aSeq TYPE       QRY_EXP     ð ; // espressione
+                        PARAMETER  "Û(ToItem("expression"))Û"
+      .case oo_itm->TYP $ "get-rel-exp"
+            .m->nTGet := nTGet + 1
+            .cTCond := alltrim(toItem("querycondition", .T.))
+            .if EMPTY(cTCond)
+                .cTCond := "<"
+            .endif
+ATTACH TO QUERYEXP aSeq TYPE       QRY_FIELD   ð ; // ordinamento query
+                        PARAMETER  Ûm->nTGetÛ  ð   // per calcolo espressione
+ATTACH TO QUERYEXP aSeq TYPE       QRY_COND    ð ; // condizione
+                        PARAMETER "Ûalltrim(substr(cTCond,1,2))Û" ð   // Ûalltrim(substr(cTCond,3))Û
+      .otherwise
+            .dbMsgErr( "ITEM :"+oo_itm->TYP+" SCONOSCIUTO !")
+  .endcase
+.next

@@ -1,0 +1,153 @@
+.parameter cLsbDbf
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ACTLSBB
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Inizializza LIST-BOX su FILE
+.* ----------------------------------------------------------------------------
+.M->cTtitle     := Alltrim( oo_itm->ITMSAY )
+.M->cTlsbRel    := PadR(toItem("lsbrelation"),6)
+.M->cTIndexCode := toItem("lsbindex")
+.M->cTord       := tIndexOrd( M->cTIndexCode )
+.if empty( cTord )
+   .M->cTord:= tRelOrder(cTlsbRel)
+.endif
+.M->cTKey   := toItem("lsbkey")
+.if empty( cTKey )
+   .M->cTKey:= TRIM(tRelKey(cTlsbRel))
+.endif
+.M->cTset   := toItem("lsbfilter")
+.if empty( cTSet )
+   .M->cTset:= TRIM(tRelFilter(cTlsbRel))
+.endif
+.M->cTbrk   := toItem("lsbbreak")
+.if empty( cTBrk )
+   .M->cTbrk:= TRIM(tRelBreak(cTlsbRel))
+.endif
+.M->nOFR    := IF( oo_itm->TYP=="cmb",1,0 )
+/* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+   ³ Inizializza List-Box su archivio (vedere Norton Guide) ³
+   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+ÛcIdC+[ := ]+cLsbDbf+[->(tbBrwNew(]+str(oo_itm->ROW+nOFR,4) Û ð,; // Prima  Riga
+                                 Ûstr(oo_itm->COL,4) Û ð,; // Prima  Colonna
+                                 Ûstr(oo_itm->ROW1,4)Û ð,; // Ultima Riga
+                                 Ûstr(oo_itm->COL1,4)Û ð,; // Ultima Colonna
+.if type("OS()")=="C"    
+.* Visual dBsee
+                                 W_OBJ_BROWSEBOX            ,; // List-Box su FILE
+                                 NIL                   ð,; // Label
+                                 W_COORDINATE_PIXEL         )) // Gestione in Pixel 
+.else
+                                 W_OBJ_BROWSEBOX       ð)) // List-Box su FILE
+.endif
+
+.if oo_itm->TYP!="cmb"
+ÛcIdC+[:W_TITLE      := ]+tExpCast(cTtitle)Û ð   // Titolo oggetto browse
+.endif
+.if cTord != "0"
+ÛcIdC+[:W_ORDER      := ]+cTordÛ ð   // Nø Indice di relazione
+.endif
+.if empty(cTkey)
+ÛcIdCÛ:W_KEY        := NIL    ð   // Non esegue la seek
+.else
+ÛcIdC+[:W_KEY        := {||]+Trim(cTkey)Û} ð   // CodeBlock per la seek
+.endif
+ÛcIdC+[:W_FILTER     := {||]+Trim(cTset)Û} ð   // CodeBlock per il filtro
+.if LEN(M->cTbrk) >= 132 
+   .M->cSub  := LEFT(M->cTbrk, 80)
+   .M->cTbrk := subStr(M->cTbrk,81)
+   .do case 
+      .case AT("!=", M->cTbrk )> 1
+        .M->cTexp1 := M->cSub +Token(M->cTbrk ,"!=",1)
+        .M->cTexp2 := substr(Token(M->cTbrk ,"!=" ,2),2)
+ÛcIdC+[:W_BREAK      := {||]+cTexp1Û != ; ð   // Espressione    
+                           ÛcTexp2Û}  ð   // di break
+      .case AT("#" , M->cTbrk )> 1
+         .M->cTexp1 := M->cSub +Token(cTbrk ,"#" ,1)                              
+         .M->cTexp2 := Token(cTbrk ,"#" ,2)
+ÛcIdC+[:W_BREAK      := {||]+cTexp1Û != ; ð   // Espressione
+                           ÛcTexp2Û}  ð   // di break
+      .case AT(")" , M->cTbrk )> 1
+         .M->cTexp1 :=  M->cSub +substr(M->cTbrk, 1, AT(')',M->cTbrk))
+         .M->cTexp2 :=  substr(M->cTbrk, AT(')',M->cTbrk)+1)
+ÛcIdC+[:W_BREAK      := {||]+cTexp1Û; ð   // Espressione 
+                           ÛcTexp2Û}  ð   // di break
+      .case AT("+" , M->cTbrk )> 1
+         .M->cTexp1 :=  M->cSub +substr(M->cTbrk, 1, AT("+",M->cTbrk))
+         .M->cTexp2 :=  substr(M->cTbrk, AT("+",M->cTbrk)+1)
+ÛcIdC+[:W_BREAK      := {||]+cTexp1Û; ð   // Espressione 
+                           ÛcTexp2Û}  ð   // di break
+      .otherwise
+ÛcIdC+[:W_BREAK      := {||]+M->cSub+M->cTbrkÛ} ð   // CodeBlock per il break 
+   .endcase
+.else
+ÛcIdC+[:W_BREAK      := {||]+cTbrkÛ} ð   // CodeBlock per il break
+.endif
+.if empty(toItem("xbfillerboxcolor"))
+ÛcIdC+':W_COLORARRAY[AC_LSB_BACK  ]      := "'+tItmCol("fillerboxcolor")Û"  ð   // Colore fondo
+.else
+ÛcIdC+':W_COLORARRAY[AC_LSB_BACK  ]      := "'+toItem("xbfillerboxcolor")Û"  ð   // Colore fondo
+.endif
+ÛcIdC+':W_COLORARRAY[AC_LSB_TOPLEFT]     := "'+tItmCol("topleftcolor")Û"    ð   //    "   bordo superiore
+ÛcIdC+':W_COLORARRAY[AC_LSB_BOTTOMRIGHT] := "'+tItmCol("bottomrightcolo")Û" ð   //    "   bordo inferiore
+.if empty(toItem("xbpromptcolor"))
+ÛcIdC+':W_COLORARRAY[AC_LSB_PROMPT]      := "'+tItmCol("promptcolor")Û"     ð   //    "   prompt
+.else
+ÛcIdC+':W_COLORARRAY[AC_LSB_PROMPT]      := "'+toItem("xbpromptcolor")Û"     ð   //    "   prompt
+.endif
+.if empty(toItem("xbprompthilitec"))
+ÛcIdC+':W_COLORARRAY[AC_LSB_HILITE]      := "'+tItmCol("prompthilitecol")Û" ð   //    "   prompt selezionato
+.else
+ÛcIdC+':W_COLORARRAY[AC_LSB_HILITE]      := "'+toItem("xbprompthilitec")Û" ð   //    "   prompt selezionato
+.endif
+ÛcIdC+':W_COLORARRAY[AC_LSB_HOTKEY]      := "'+tItmCol("hotkeycolor")Û"     ð   //    "   hot key
+ÛcIdC+':COLORSPEC    := "'+tItmCol("fillerboxcolor")Û"
+.M->lTcolTag:=.F.
+.M->cTagFun :=""
+.foreach itemgroup oo_itm->TYP=="tag"
+  .M->lTcolTag := .T.
+  .M->cTagFun  := toItem("tagfunction")
+.next
+.if lTcolTag
+ÛcIdCÛ:W_TAGARRAY   := {}         ð   // Array dei tag
+   .if !Empty(cTagFun)
+ÛcIdC+[:W_TAGFUNCTION:= {|lTag|]+cTagFunÛ} ð   // Funzione sul tag
+   .endif
+.endif
+ATTACH REFRESH GROUP "ÛcLsbDbf+[" TO ]+cIdCÛ:W_R_GROUP
+.if !Empty(cTrefGr)
+ATTACH REFRESH GROUP "ÛcTrefGr+[" TO ]+cIdCÛ:W_R_GROUP
+.endif
+.foreach browseboxson
+AADD( ÛcIdC+[:W_R_CONTROL, "]+tControlId()Û" )
+.next
+.m->cHotKey := ""
+.if toItem("horscrollbar") == "1"
+    .m->cHotKey := m->cHotKey + "+ W_MM_HSCROLLBAR "
+.endif
+.if toItem("verscrollbar") == "1"
+    .m->cHotKey := m->cHotKey + "+ W_MM_VSCROLLBAR "
+.endif
+ÛcIdC+[:W_MOUSEMETHOD:= W_MM_EDIT ]+M->cHotKeyÛ
+.if toItem("linecursor") == "1"
+ÛcIdC+[:W_LINECURSOR:= .T.]Û
+.endif
+.if toItem("linerow") == "1"
+ÛcIdC+[:W_ROWLINESEPARATOR := .T.]Û
+.endif
+ÛcIdC+[:W_HEADERROWS := ]+TRIM(toItem("rowsinheader"))Û
+
+
+.dd_rel->(dbSetOrder(1))
+.dd_rel->(dbSeek( cTlsbRel ))
+.foreach inhvalue
+   .M->cTsym := dd_sym->SYM_NAM
+   .M->cTexp := toInHerit("inheritexpr")
+   .if ! Empty( cTexp )
+ATTACH INH TO ÛcIdCÛ:W_INHARRAY        ð ; // Id
+           INHFIELD "ÛAllTrim(cTsym)Û" ð ; // Nome campo ereditato
+           INHBLOCK {||ÛcTexpÛ }       ð   // Espressione per ereditare
+   .endif
+.next
+.dd_dbf->(dbGoto( nTdbfRec))
+

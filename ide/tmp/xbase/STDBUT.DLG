@@ -1,0 +1,83 @@
+.parameter lPag
+.M->lHome1:=NIL
+.M->lSkpp1:=NIL
+.M->lSkpn1:=NIL
+.M->lEnd1 :=NIL
+.M->lIns1 :=NIL
+.M->lMod1 :=NIL
+.M->lWri1 :=NIL
+.M->lEsc1 :=NIL
+.M->lDel1 :=NIL
+.M->lKey1 :=NIL
+.M->lPagh1:=NIL
+.M->lPagp1:=NIL
+.M->lPagn1:=NIL
+.M->lPage1:=NIL
+.M->nDlRow:=02
+.if lPag
+   .M->nDlRow:=0
+.endif
+.oStdBut:=DlgNew( nDlRow,08,"Inserimento pulsanti standard" ,.T. ,"@" )
+.DlgRow( oStdBut ,"  Finestra per la selezione dei pulsanti standard che possono   ")
+.DlgRow( oStdBut ,"  essere aggiunti all'oggetto. Per aggiungere un pulsante posi- ")
+.DlgRow( oStdBut ,"  zionare la voce con l'operazione desiderata e premere BARRA.  ")
+.DlgRow( oStdBut ," ÚElenco pulsanti ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿               ")
+.DlgRow( oStdBut ," ³  @01                                         ³               ")
+.DlgRow( oStdBut ," ³  @02                                         ³               ")
+.DlgRow( oStdBut ," ³  @03                                         ³               ")
+.DlgRow( oStdBut ," ³  @04                                         ³               ")
+.DlgRow( oStdBut ," ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´ @20           ")
+.DlgRow( oStdBut ," ³  @05                                         ³               ")
+.DlgRow( oStdBut ," ³  @06                                         ³               ")
+.DlgRow( oStdBut ," ³  @07                                         ³ @25           ")
+.DlgRow( oStdBut ," ³  @08                                         ³               ")
+.DlgRow( oStdBut ," ³  @09                                         ³ @25           ")
+.DlgRow( oStdBut ," ³  @10                                         ³               ")
+.if lPag
+.DlgRow( oStdBut ," ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´               ")
+.DlgRow( oStdBut ," ³  @11                                         ³               ")
+.DlgRow( oStdBut ," ³  @12                                         ³               ")
+.DlgRow( oStdBut ," ³  @13                                         ³               ")
+.DlgRow( oStdBut ," ³  @14                                         ³               ")
+.endif
+.DlgRow( oStdBut ," ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ               ")
+.*
+.DlgCkb( oStdBut ,"lHome1" ,"@01" ,{|x|M->lHome1:=x} ,M->lHome ,"Muove al primo record" )
+.DlgCkb( oStdBut ,"lSkpp1" ,"@02" ,{|x|M->lSkpp1:=x} ,M->lSkpp ,"Muove al record precedente" )
+.DlgCkb( oStdBut ,"lSkpn1" ,"@03" ,{|x|M->lSkpn1:=x} ,M->lSkpn ,"Muove al record successivo" )
+.DlgCkb( oStdBut ,"lEnd1"  ,"@04" ,{|x|M->lEnd1 :=x} ,M->lEnd  ,"Muove all'ultimo record" )
+.DlgCkb( oStdBut ,"lIns1"  ,"@05" ,{|x|M->lIns1 :=x} ,M->lIns  ,"Inserimento nuovo record" )
+.DlgCkb( oStdBut ,"lMod1"  ,"@06" ,{|x|M->lMod1 :=x} ,M->lMod  ,"Modifica record corrente" )
+.DlgCkb( oStdBut ,"lWri1"  ,"@07" ,{|x|M->lWri1 :=x} ,M->lWri  ,"Registra e chiude" )
+.DlgCkb( oStdBut ,"lEsc1"  ,"@08" ,{|x|M->lEsc1 :=x} ,M->lEsc  ,"Abbandona" )
+.DlgCkb( oStdBut ,"lDel1"  ,"@09" ,{|x|M->lDel1 :=x} ,M->lDel  ,"Cancellazione record corrente" )
+.DlgCkb( oStdBut ,"lKey1"  ,"@10" ,{|x|M->lKey1 :=x} ,M->lKey  ,"Chiavi di ricerca" )
+.if lPag
+.DlgCkb( oStdBut ,"lPagh1" ,"@11" ,{|x|M->lPagh1:=x} ,M->lPagh ,"Muove alla prima pagina" )
+.DlgCkb( oStdBut ,"lPagp1" ,"@12" ,{|x|M->lPagp1:=x} ,M->lPagp ,"Muove alla pagina precedente" )
+.DlgCkb( oStdBut ,"lPagn1" ,"@13" ,{|x|M->lPagn1:=x} ,M->lPagn ,"Muove alla pagina successiva" )
+.DlgCkb( oStdBut ,"lPage1" ,"@14" ,{|x|M->lPage1:=x} ,M->lPage ,"Muove all'ultima pagina" )
+.endif
+.*
+.DlgBut( oStdBut ,"cBu1"  ,"@20" ,{||.T.} ,{||DlgWri(oStdBut)} ,"^Conferma" )
+.DlgBut( oStdBut ,"cBu2"  ,"@25" ,{||.T.} ,{||DlgEsc(oStdBut)} ,"^Rinuncia" )
+.*
+.DlgShow(oStdBut)
+.IF DlgInkey(oStdBut)
+   .M->lHome:=M->lHome1
+   .M->lSkpp:=M->lSkpp1
+   .M->lSkpn:=M->lSkpn1
+   .M->lEnd :=M->lEnd1
+   .M->lIns :=M->lIns1
+   .M->lMod :=M->lMod1
+   .M->lWri :=M->lWri1
+   .M->lEsc :=M->lEsc1
+   .M->lDel :=M->lDel1
+   .M->lKey :=M->lKey1
+   .if lPag
+      .M->lPagh:=M->lPagh1
+      .M->lPagp:=M->lPagp1
+      .M->lPagn:=M->lPagn1
+      .M->lPage:=M->lPage1
+   .endif
+.endif

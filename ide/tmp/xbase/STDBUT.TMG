@@ -1,0 +1,51 @@
+.parameter nPag
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : STDBUT
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab pulsanti standard oggetto form
+.* ----------------------------------------------------------------------------
+.if M->lHome
+   .do ButHome with nPag
+.endif
+.if M->lSkpp
+   .do ButSkpp with nPag
+.endif
+.if M->lSkpn
+   .do ButSkpn with nPag
+.endif
+.if M->lEnd
+   .do ButEnd  with nPag
+.endif
+.if M->lIns
+   .do ButIns  with nPag
+.endif
+.if M->lMod
+   .do ButMod  with nPag
+.endif
+.if M->lDel
+   .do ButDel  with nPag
+.endif
+.if M->lKey
+   .do ButKey  with nPag
+.endif
+.if nPag > 1
+   .if M->lPagh
+      .do ButPagh with nPag
+   .endif
+   .if M->lPagp
+      .do ButPagp with nPag
+   .endif
+   .if M->lPagn
+      .do ButPagn with nPag
+   .endif
+   .if M->lPage
+      .do ButPage with nPag
+   .endif
+.endif
+.if M->lWri
+   .do ButWri  with nPag
+.endif
+.if M->lEsc
+   .do ButEsc  with nPag
+.endif

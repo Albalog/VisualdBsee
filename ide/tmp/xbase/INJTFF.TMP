@@ -1,0 +1,18 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : INJTFF
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Elenco dei punti di iniezione codice per le funzione
+.*              : che eseguono le transazioni sul file
+.*              : NON UTILIZZATO PER LA GENERAZIONE.
+.* ----------------------------------------------------------------------------
+.inj TFF0 Punto dichiarazione variabili statiche
+.inj TFF1 Dopo apertura file della transazione
+.inj TFF2 Prima della transazione di tipo PTT (Put The Transaction)
+.inj TFF3 Dopo     la transazione di tipo PTT (Put The Transaction)
+.inj TFF4 Prima della transazione di tipo RTT (Remove The Transaction)
+.inj TFF5 Dopo     la transazione di tipo RTT (Remove The Transaction)
+.inj TFF6 Prima della transazione di tipo LTT (Log The Transaction)
+.inj TFF7 Dopo     la transazione di tipo LTT (Log The Transaction)
+.inj TFF8 Dopo IF ENDIF operazione richiesta
+.inj TFF9 Prima dell'istruzione RETURN

@@ -1,0 +1,46 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : BUTEDR
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab pulsanti standard oggetto edit browse
+.* ----------------------------------------------------------------------------
+.oo_itm->(dBnet("app",0))
+.oo_itm->OBJ         := M->CodObj
+.oo_itm->ITM         := "0001"
+.oo_itm->BAND        := "001"
+.oo_itm->ITMINCN     := 5
+.oo_itm->TYP         := "but"
+.oo_itm->ITMSAY      := "O^K"
+.oo_itm->ITMMSG      := "Registra e chiude"
+.oo_itm->ROW         := 6
+.oo_itm->COL         := 1
+.oo_itm->ROW1        := 8
+.oo_itm->COL1        := 4
+.oo_itm->(dBnet("url"))
+.*
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butmacrotype"  ,"1" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butfunction"   ,[dbAct2Kbd("wri")] )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activeink"     ,"0" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activeins"     ,"1" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activemod"     ,"1" )
+.*
+.oo_itm->(dBnet("app",0))
+.oo_itm->OBJ         := M->CodObj
+.oo_itm->ITM         := "0002"
+.oo_itm->BAND        := "001"
+.oo_itm->ITMINCN     := 10
+.oo_itm->TYP         := "but"
+.oo_itm->ITMSAY      := "^Abbandona"
+.oo_itm->ITMMSG      := "Abbandona senza salvare"
+.oo_itm->ROW         := 6
+.oo_itm->COL         := 7
+.oo_itm->ROW1        := 8
+.oo_itm->COL1        := 17
+.oo_itm->(dBnet("url"))
+.*
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butmacrotype"  ,"1" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butfunction"   ,[dbAct2Kbd("esc")] )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activeink"     ,"0" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activeins"     ,"1" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activemod"     ,"1" )
+.__dbFrameDis( Padr(M->cTmgName+"Appesi pulsanti OK / ABBANDONA ..." ,75) )

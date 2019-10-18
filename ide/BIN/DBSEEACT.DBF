@@ -1,0 +1,157 @@
+ 28±+±hlp±F1
+ -1±+±frm±F2
+ -2±-±mov±F3
+ -3±-±dim±F4
+ -4±+±f05±F5
+ -5±-±sel±F6
+ -6±+±win±F7
+ -7±+±cop±F8
+ -8±+±new±F9
+ -9±+±wri±F10
+389±-±f11±F11
+390±-±f12±F12
+-10±+±ush±F1
+-11±-±S02±F2
+-12±-±S03±F3
+-13±-±S04±F4
+-14±-±S05±F5
+-15±-±zse±F6
+-16±-±S07±F7
+-17±-±S08±F8
+-18±-±S09±F9
+-19±-±S10±F10
+391±-±S11±F11
+392±-±S12±F12
+-20±-±C01±^F1
+-21±-±C02±^F2
+-22±-±C03±^F3
+-23±-±C04±^F4
+-24±-±C05±^F5
+-25±-±C06±^F6     = Switch Window in multiple - Document Interface
+-26±-±C07±^F7
+-27±-±C08±^F8
+-28±-±C09±^F9
+-29±-±C10±^F10
+393±-±C11±^F11
+394±-±C12±^F12
+-30±+±A01±Alt-F1
+-31±-±A02±Alt-F2
+-32±-±A03±Alt-F3
+-33±-±A04±Alt-F4
+-34±-±A05±Alt-F5
+-35±-±A06±Alt-F6  = Switch Window
+-36±-±A07±Alt-F7
+-37±-±A08±Alt-F8
+-38±-±A09±Alt-F9
+-39±-±sho±Alt-F10
+395±-±A11±Alt-F11
+396±-±A12±Alt-F12
+ 27±-±esc±Esc
+257±-±Aes±Alt-Esc
+ 43±-±plu±+
+ 45±-±min±-
+  9±+±tab±Tab
+271±+±Stb±Tab
+404±-±Ctb±^Tab
+421±-±Atb±Alt-Tab = Switch Window
+ 13±+±ret±<ÄÙ
+ 10±+±Crt±^ <ÄÙ
+284±-±Art±Alt-Return
+  8±-±bks±BackSpace
+127±-±Cbs±^BackSpace
+270±-±Abs±Alt-BackSpace
+ 22±+±add±Ins
+402±+±Cin±^Ins
+418±-±Ain±Alt-Ins
+  7±-±del±Canc
+403±-±Cde±^Canc
+419±-±Ade±Alt-Canc
+  5±+±uar±Fr.s—
+397±-±Cua±^Fr.s—
+408±-±Aua±Alt-Fr.s—
+ 18±+±pgu±Pag.s—
+ 31±+±Cpu±^Pag.s—
+409±-±Apu±Alt-Pag.s—
+  4±-±rar±Fr.Destra
+  2±-±Cra±^Fr.Destra
+413±-±Ara±Alt-Fr.Destra
+  6±-±end±End
+ 23±-±Cen±^End
+415±-±Aen±Alt-End
+ 19±-±lar±Fr.sin.
+ 26±-±Cla±^Fr.sin.
+411±-±Ala±Alt Fr.sin.
+  1±-±hom±Home
+ 29±-±Cho±^Home
+407±-±Aho±Alt-Home
+ 24±+±dar±Fr.gi—
+401±-±Cda±^Fr.gi—
+416±+±Ada±Alt-Fr.gi—
+  3±+±pgd±Pag.gi—
+ 30±+±Cpd±^Pag.gi—
+ 32±-±edt±Barra
+417±-±Apd±Alt-Pag.gi—
+297±-±A-\±Alt-barra ind.
+376±+±A_1±Alt-1
+377±-±A_2±Alt-2
+378±-±A_3±Alt-3
+379±+±A_4±Alt-4
+380±+±A_5±Alt-5
+381±-±A_6±Alt-6
+382±-±A_7±Alt-7
+383±-±A_8±Alt-8
+384±-±A_9±Alt-9
+385±-±A_0±Alt-0
+386±-±A-'±Alt-'
+387±-±A_±Alt-
+272±-±A_q±Alt-Q
+273±-±A_w±Alt-W
+274±-±A_e±Alt-E
+275±-±A_r±Alt-R
+276±-±A_t±Alt-T
+277±-±A_y±Alt-Y
+278±-±A_u±Alt-U
+279±-±A_i±Alt-I
+280±-±A_o±Alt-O
+281±-±A_p±Alt-P
+282±-±A_Š±Alt-Š
+283±-±A_+±Alt-+
+286±-±A_a±Alt-A
+287±-±A_s±Alt-S
+288±-±A_d±Alt-D
+289±-±A_f±Alt-F
+290±-±A_g±Alt-G
+291±-±A_h±Alt-H
+292±-±A_j±Alt-J
+293±-±A_k±Alt-K
+294±-±A_l±Alt-L
+295±-±A_•±Alt-•
+296±-±A_…±Alt-…
+299±-±A_—±Alt-—
+300±-±A_z±Alt-Z
+301±-±A_x±Alt-X
+302±-±A_c±Alt-C
+303±-±A_v±Alt-V
+304±-±A_b±Alt-B
+305±-±A_n±Alt-N
+306±-±A_m±Alt-M
+307±-±A-,±Alt-,
+308±-±A-.±Alt-.
+309±-±A_-±Alt--
+405±-±tai±Control + slash seleziona tutto         = Tag All Item
+015±-±C_o±^O   Uscita a sistema operativo
+505±-±C_e±^E   Attivazione editor
+506±-±C_F±^F -> Control + F
+518±-±C_r±^R   Rinomina entit…
+520±-±C_t±^T   Vista su template
+522±-±C_v±^V   Vista su oggetti
+523±-±C_w±^W     -> funzione centralizzata Where Used
+527±-±deb±^ ESC  -> debugger
+528±+±uai±control + back slash deseleziona tutto  = Untag All Item
+532±-±tsi±Control + barra seleziona/deseleziona   = Tag Selected Item
+632±-±smp±Alt + Control (Left/Right) + Barra      = System Menu Profiler
+707±-±Sde±SHIFT-DEL
+722±-±Sin±SHIFT-INS
+732±-±sms±Alt (Left/Right) + Barra                = System Menu Simulation
+921±-±Ast±Alt + Shift + Tab                       =
+

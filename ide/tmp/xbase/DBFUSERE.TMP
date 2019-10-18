@@ -1,0 +1,33 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : DBFUSEREP
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Apertura base dati per oggetti di stampa
+.* ----------------------------------------------------------------------------
+.M->nTcnt   := 1
+.M->lTFirst := .T.
+.do while nTcnt <= len(RepDbf)
+    .if RepDbf[nTcnt][1] == "0" .AND. RepDbf[nTcnt][4] == "mst"
+       .if nTcnt== 1
+/*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³  MASTER FILE   ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+       .endif
+IF !dfUse( "ÛRepDbf[nTcnt][2]Û", ÛRepDbf[nTcnt][3]Û ,aFile ) ;RETU .F. ;END
+    .endif
+    .M->nTcnt := m->nTcnt +1
+.enddo
+
+.M->nTcnt  := 1
+.do while nTcnt <= len(RepDbf)
+    .if RepDbf[nTcnt][1] == "0" .AND. RepDbf[nTcnt][4] == "rel"
+        .If m->lTFirst
+/*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³  RELATION FILE ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+            .m->lTFirst := .F.
+        .endif
+IF !dfUse( "ÛRepDbf[nTcnt][2]Û", ÛRepDbf[nTcnt][3]Û ,aFile ) ;RETU .F. ;END
+    .endif
+    .M->nTcnt  := m->nTcnt  +1
+.enddo

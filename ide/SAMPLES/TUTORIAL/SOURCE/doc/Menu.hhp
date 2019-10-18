@@ -1,0 +1,29 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=..\..\EXE\Menu.chm
+Contents file=Menu.hhc
+Default topic=Menu.htm
+Display compile progress=No
+Full-text search=Yes
+
+
+[FILES]
+   Menu.htm
+   Quit.htm
+   dbUdf.htm
+   dbRid.htm
+   CliFrm.htm
+   ArtFrm.htm
+   BolFrm.htm
+   CliRpt.htm
+   CliRpt1.htm
+   BolRpt.htm
+   T_BRpt.htm
+   About.htm
+   CliFrm1.htm
+   BolEdb.htm
+   BolFrm1.htm
+   CliQry.htm
+
+[INFOTYPES]
+

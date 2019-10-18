@@ -1,0 +1,115 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : INITSYS
+.* RELEASE      : XBase
+.* VERSION      :
+.* DESCRIZIONE  : utilita' in Visual dBsee 
+.* ----------------------------------------------------------------------------
+
+.M->lADS  := 0
+.M->cTrdd := tRddLibapp( toProject("rddtypeapp") )
+.if !tEmptyDbf() .AND. LOWER(SUBS(cTrdd,1,3))=="lib"
+
+PROCEDURE dbeSys()
+
+  /*
+   *   Adaption of Sorting order to hosting environment
+   */
+
+  SET COLLATION TO ASCII
+
+  /*
+   *   The database engines DBFDBE and NTXDBE are loaded "hidden"
+   *   and are combined to the abstract database engine DBFNTX
+   */
+.inj udf1  Start RddInit
+
+                                   ð // Predispone il link per gli RDD utilizzati
+   .M->aTrdd := {}
+   .M->cTrddE:= toProject("rddtypeapp",.T.)
+   .M->cTrddE:= Alltrim(Subs( cTrddE ,1 ,At("(",cTrddE)-1))
+   .aadd(  aTrdd ,cTrddE )
+   .foreach file
+      .M->cTrdd := toFile("rddtype",.T.)
+      .M->cTrdd := Alltrim(Subs( cTrdd ,1 ,At("(",cTrdd)-1))
+      .if Ascan( aTrdd ,{|x|x==cTrdd} ) == 0
+         .if M->cTrdd == "ADSDBE"
+           .lADS := 1
+         .else
+            .if !Empty(M->cTrdd)
+               .aadd(  aTrdd ,UPPER(M->cTrdd) )
+            .endif
+         .endif
+      .endif
+   .next
+   .if Ascan( aTrdd ,{|x| x=="DBFNTXAX"})>0 .OR. Ascan( aTrdd ,{|x| x=="DBFCDXAX"})>0
+       .lADS := 1
+   .endif
+   .if lADS == 1 
+      .do case 
+         .case Ascan( aTrdd ,{|x| x=="DBFNTXAX"} ) <= 0 .AND. Ascan( aTrdd ,{|x| x=="DBFNTX"} )  > 0 .AND. Ascan( aTrdd ,{|x| x=="DBFCDXAX"} ) <= 0
+            .aadd(  aTrdd ,"DBFNTXAX" )
+         .case Ascan( aTrdd ,{|x| x=="DBFCDXAX"} ) <= 0 .AND. Ascan( aTrdd ,{|x| x=="DBFCDX"} )  > 0 .AND. Ascan( aTrdd ,{|x| x=="DBFNTXAX"} ) <= 0
+            .aadd(  aTrdd ,"DBFCDXAX" )
+         .case Ascan( aTrdd ,{|x| x=="DBFCDXAX"} )  > 0 .AND. Ascan( aTrdd ,{|x| x=="DBFCDX"} ) <= 0 
+            .aadd(  aTrdd ,"DBFCDX" )
+         .case Ascan( aTrdd ,{|x| x=="DBFNTXAX"} )  > 0 .AND. Ascan( aTrdd ,{|x| x=="DBFNTX"} ) == 0 
+            .aadd(  aTrdd ,"DBFNTX" )
+         .case Ascan( aTrdd ,{|x| x=="DBFNTXAX"} )  > 0 .AND. Ascan( aTrdd ,{|x| x=="DBFNTX"} ) > 0 
+         .case Ascan( aTrdd ,{|x| x=="DBFCDXAX"} )  > 0 .AND. Ascan( aTrdd ,{|x| x=="DBFCDX"} ) > 0 
+         .otherwise
+            .aadd(  aTrdd ,"DBFNTXAX" )
+            .aadd(  aTrdd ,"DBFNTX" )
+      .endcase
+   .endif
+
+IF ! dfDBESet()
+   .M->nTcnt := 1
+   .M->nAlen := Len( aTrdd )
+
+   .do while (nTcnt <= nAlen )
+   dfÛaTrdd[nTcnt]Û()
+     .M->nTcnt := nTcnt+1
+   .enddo
+   .foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION=="9"
+   .M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+      .if (upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)$"CMX52.LIB")
+   dfComix()
+      .endif
+   .next
+.if trim(UPPER(M->cTrddE)) == "DBFNTXAX"
+    .M->cTrddE := "DBFNTX"
+    .if Ascan( aTrdd ,cTrddE ) == 0
+       dfDBFNTX()
+    .endif
+.endif
+.if trim(UPPER(M->cTrddE)) == "DBFCDXAX"
+    .M->cTrddE := "DBFCDX"
+    .if Ascan( aTrdd ,cTrddE ) == 0
+       dfDBFCDX()
+    .endif
+.endif
+
+ENDIF
+
+.IF Ascan( aTrdd ,"DBFNTX" ) == 0 
+// For Report Crystal And Report Manager it is necessary DBE dbfntx
+dfDBFNTX()
+.endif
+
+DbeSetDefault( "ÛcTrddEÛ" ) ð //  Set up default driver
+
+.inj udf3  End RddInit
+RETURN
+.endif
+
+*******************************************************************************
+FUNCTION AppSys()
+*******************************************************************************
+RETURN dbSeeAppSys()
+
+******************************************************************************
+EXIT PROCEDURE ExitMenu()
+******************************************************************************
+.inj udf2  Ad inizio funzione ExitMenu()
+CLOSE DATA              ð // Chiusura di tutti i file aperti
+RETURN

@@ -1,0 +1,13 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : SUBACT.TMP
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Sottofunzione di attivazione control
+.* ----------------------------------------------------------------------------
+.parameter ntFunc
+RETURN __Act€ntFunc€()
+
+*******************************************************************************
+STATIC FUNCTION __Act€ntFunc€()      // Sottofunzione di attivazione
+*******************************************************************************
+LOCAL aPfkItm

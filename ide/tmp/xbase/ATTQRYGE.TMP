@@ -1,0 +1,89 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTQRYGET.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control ENTRY FIELD ad oggetto QUERY
+.* ----------------------------------------------------------------------------
+.M->cTcnd    := tItmActive()
+.M->cTwvc    := ".T."
+.if tUdfGet( cTnSeek ,aTukLast )
+   .M->cTwvc  := if( toItem("editcondition")=="1" .OR. !empty(oo_itm->ITMGET), cIdC+"(ab)" ,".F." )
+.endif
+.M->nTpfkItm := 0
+.do pfkitm
+.M->cTc    := ["]+tItmCol("promptcolor")+[","]+tItmCol("hotkeycolor")      +[","]+;
+                  tItmCol("datacolor")  +[","]+tItmCol("datahilitecolor")  +["]
+.M->cXTc := ""
+.if empty(toItem("xbpromptcolor")) .and. empty(toItem("xbdatacolor"))
+   .M->cXTc := "{"+cTc+"}"
+.else
+   .if empty(toItem("xbpromptcolor"))
+      .M->cXTc := ["]+tItmCol("promptcolor") +[",NIL,"]
+   .else
+      .M->cXTc := ["]+toItem("xbpromptcolor") +[",NIL,"]
+   .endif
+   .if empty(toItem("xbdatacolor"))
+      .M->cXTc := cXTc+tItmCol("datacolor") +[",NIL]
+   .else
+      .M->cXTc := cXTc+toItem("xbdatacolor") +[",NIL]
+   .endif
+   .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+.endif
+.M->cFont  := toItem("fontname")
+.M->cPFont := toItem("promptfontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.if ! empty(cPFont) .and. at("(", cPFont) == 0
+    .M->cPFont := ["]+cPFont+["]
+.endif
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL GET '+cTsym+' AT '+nTr1+','+nTc1Û ð ; // Campo , Top+Left
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 SIZE       {ÛnTc2Û,ÛnTr2Û} ð ; // Dimensioni Campo get
+                 COORDINATE  W_COORDINATE_PIXEL  ð ; // Coordinate in Pixel
+.endif
+.if !(cTpag=="1")
+                 PAGE        ÛcTpagÛ  ð ; // Pagina
+.endif
+                 COLOR      ÛcXTcÛ   ð ; // Array dei colori
+.if !Empty(cTpro) .AND. ! oo_itm->TYP $ "-exp-img-"
+    .cTproAt := Str(tPromptRow(),4)+" ,"+Str(tPromptCol(),4)
+                 PROMPT     ÛtExpCast(cTpro)Û ð ; // Prompt
+                 PROMPTAT   ÛcTproAtÛ ð ; // Coordinate prompt
+.endif
+.if !(cTpicG==cTpicS)
+                 PICTUREGET "ÛcTpicGÛ"ð ; // Picture in get
+.endif
+                 PICTURESAY "ÛcTpicSÛ"ð ; // Picture in say
+.if !(cTwvc==".T.")
+                 CONDITION {|ab|ÛcTwvcÛ} ð ; // Funzione When/Valid
+.endif
+.if !(cTsys=="{|oGet|.T.}")
+                 SYSFUNCTION ÛcTsysÛ  ð ; // Funzione di sys
+.endif
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+.endif
+.if !Empty(cTrefGr)
+                 REFRESHGRP "ÛcTrefGrÛ" ð ; // Esegue il gruppo di refresh
+.endif
+.if tItmLkUpGet( oo_itm->ITMGET, oo_itm->ALS, "qry" )
+                 COMBO                ð ; // Icona combo
+    .if toItem("controlgap")=="1"
+                 GAP   1              ð ; // Spaziatura icona control/dati
+    .endif
+.endif
+.if nTpfkItm > 0
+                 PFK aPfkItm          ð ; // Array dei tasti della get
+.endif
+.if !(cTdis=="{||.T.}")
+                 DISPLAYIF ÛcTdisÛ    ð ; // Display condizionale
+.endif
+.if !Empty(cFont)
+                 FONT       ÛcFontÛ ð ; // Font Name (XBASE)
+.endif
+.if !Empty(cTpro) .and. !Empty(cPFont)
+                 PROMPTFONT ÛcPFontÛ ð ; // Prompt Font Name (XBASE)
+.endif
+                 MESSAGE ÛtExpCast(cTmsg)Û ð   // Messaggio

@@ -1,0 +1,54 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTSAY.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control DESCRIPTIVE TEXT ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTc := ["]+tItmCol("textcolor")+["]
+.M->cXTc := ["]+toItem("xbtextcolor")+["]
+.M->cTipAlign := ""
+.if ! cXTc == [""]
+   .M->cTc := 'DFXPPCLRSELECT('+cXTc+','+cTc+')'
+.endif
+.M->cFont := toItem("fontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.M->cTRotation := toItem("rotation")
+.if EMPTY(cTRotation)
+   .M->cTRotation := "0"
+.endif
+.M->cTShadowDepth := toItem("shadowdepth")
+.if EMPTY(cTShadowDepth)
+   .M->cTShadowDepth := "0"
+.endif
+.M->nTPaintStyle:= tPaintStyle(toItem("paintstyle"))
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL SAY '+tExpCast(cTpro)+' AT '+nTr1+','+nTc1Û ð ; // ATTSAY.TMP
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 SIZE       {ÛnTc2Û,ÛnTr2Û} ð ; // Dimensioni Campo get
+                 COORDINATE  W_COORDINATE_PIXEL ð ; // Coordinate in Pixel
+   .if !EMPTY(toItem("xball_vert")) .OR. !EMPTY(toItem("xball_oriz"))
+      .M->cTipAlign := tAlign(toItem("xball_oriz"), toItem("xball_vert"))
+                 ALIGNMENT ÛM->cTipAlignÛ  ð ; // SAY ALIGNMENT
+   .endif
+.endif
+   .if !(cTpag=="1")
+                 PAGE      ÛcTpagÛ ð ; // Pagina
+   .endif
+   .if !(cTdis=="{||.T.}")
+                 DISPLAYIF ÛcTdisÛ ð ; // Display condizionale
+   .endif
+   .if !Empty(cFont)
+                 FONT      ÛcFontÛ ð ; // Font Name (XBASE)
+   .endif
+   .if cTRotation != "0"
+                 ROTATION    ÛcTRotationÛ ð ; // Rotation (XBASE)
+   .endif
+   .if cTShadowDepth != "0"
+                 SHADOWDEPTH ÛcTShadowDepthÛ ð ; // Shadow Depth (XBASE)
+   .endif
+   .if ! EMPTY(nTPaintStyle)
+                 PAINTSTYLE ÛnTPaintStyleÛ ð ; // Paint Style (XBASE)
+   .endif
+                 COLOR    {ÛcTcÛ}  ð   // Array dei colori

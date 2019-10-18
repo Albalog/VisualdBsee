@@ -1,0 +1,103 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : PR1
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab aggiunge oggetto report lista semplice
+.* ----------------------------------------------------------------------------
+.*-----------------------------> Dichiarazione variabile per ciclo get
+.M->cObjLab  := ""
+.M->cMnuObj  := tObjMnuId()
+.M->nMnuRec  := oo_mnu->(Recno())
+.M->cTmgName := "pr1.tmg "
+.MEti        := if(oo_mnu->MNUTYP=="dom" .and. empty(oo_mnu->OBJ) .and. empty(toMenu("pfkfunction")),;
+                 oo_mnu->mnulab,PadR("Stampa",60))
+.MPrgDrv     := space(07)
+.Mdbf        := space(08)
+.Mndx        := space(08)
+.MGrpExpr1   := space(78)
+.MGrpExpr2   := space(78)
+.MGrpExpr3   := space(78)
+.MGrpExpr4   := space(78)
+.MGrpExpr5   := space(78)
+.MGrpExpr6   := space(78)
+.MGrpExpr7   := space(78)
+.MGrpExpr8   := space(78)
+.MGrpExpr9   := space(78)
+.mnGrp       := 0
+.oDlg        := NIL
+.lRepStd     := .F.
+.*
+.do pr1.dlg
+.DlgShow(oDlg)
+.if !DlgInkey(oDlg)
+    .return
+.endif
+.*-----------------------------> Prelevo il codice del FILE
+.dd_dbf->(DbSetOrder(2))
+.dd_dbf->(DbSeek(upper(m->MDbf)))
+.MDbf  := dd_dbf->FILE
+.dd_dbf->(DbSetOrder(1))
+.*-----------------------------> Prelevo il codice dell'INDICE
+.NotFound := .t.
+.*
+.dd_ndx->(DbSetOrder(1))
+.dd_ndx->(DbSeek(m->Mdbf))
+.do while dd_ndx->file = m->Mdbf .and. NotFound .and. !dd_ndx->(eof())
+    .if upper(dd_ndx->ndx_nam) = upper(m->Mndx)
+        .m->Mndx  := dd_ndx->ndx
+        .NotFound := .f.
+    .endif
+    .dd_ndx->(DbSkip())
+.enddo
+.__dbFrameOn( 05 ,02, 15, 77, "Esecuzione GRAB: report1.tmg in corso..." )
+.*-----------------------------> Dichiarazione variabili di registrazione
+.tcCurrGrp  := ""
+.CntGrp   := 1
+.*
+.*---------------------------------- AGGIUNGE OGGETTI
+.M->cTitle := StrTran(M->Meti, "^", "")+" Oggetto : report1"
+.M->CodObj := ""
+.do report1 with "ins/grp"
+.*
+.M->CodMnu  := ""
+.oo_mnu->(dbGoto(nMnuRec))
+.if oo_mnu->MNUTYP=="dom" .and. empty(oo_mnu->OBJ) .and. empty(toMenu("pfkfunction"))
+   .*------------------->  Aggiorno il MENU
+   .oo_mnu->(dBnet("rec"))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := M->MEti
+   .oo_mnu->MNU         := oo_mnu->mnu
+   .oo_mnu->OBJ         := M->cObjLab
+   .oo_mnu->(dBnet("url"))
+.else
+   .*------------------->  Aggiunge il MENU
+   .M->CodMnu           := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := M->cMnuObj
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := ""
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := M->MEti
+   .oo_mnu->MNUUSR      := "Stampa "+StrTran(M->Meti, "^", "")
+   .oo_mnu->OBJ         := M->cObjLab
+   .oo_mnu->FLGUPD      := "1"
+   .oo_mnu->(dBnet("url"))
+.endif
+.tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,alltrim(m->MPrgDrv)+[Exe()] )
+.tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunta etichetta di menu :"+Trim(oo_mnu->mnulab) ,75) )
+.*
+.*----------------------------> Flag con Nørecord (HO AGGIUNTO!!!)
+.M->nRecMnu    := oo_mnu->(Recno())
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunta chiamata da menu :"+alltrim(m->MPrgDrv)+[Exe()] ,70) )
+.__dbFrameDis( Padr(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,75) )
+.*
+.__dbFrameOff()
+.*
+.tFlgIni()
+.*
+.msg [Operazione ultimata !]
+.*
+.if m->lRepStd                 ./ Impostazione report standard?
+    .do RepStd with "pr1"      ./ Attivazione report standard
+.endif

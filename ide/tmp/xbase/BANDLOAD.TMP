@@ -1,0 +1,103 @@
+.parameter cTidBand
+.M->cTidBand := lower( cTidBand )
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : BANDLOAD
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Scaricamento banda con relativi item
+.* ----------------------------------------------------------------------------
+.m->cTBandName := ""      ./ nome funzione per banda
+.m->cTBandDes  := ""      ./ descrizione funzione per banda
+.m->cTitmBand  := ""      ./ identificatore di banda
+.m->cSeek      := ""
+.m->cBandAlias := ""
+.do case
+    .case oo_prn->grp == "00"
+          .do case
+              .case cTidBand=="hea"
+                    .m->cTBandName := "ReportBanner"
+                    .m->cTBandDes  := "Banda di banner di report"
+                    .m->cTitmBand  := "H"
+              .case cTidBand=="pgh"
+                    .m->cTBandName := "PageHeader"
+                    .m->cTBandDes  := "Banda di header di pagina"
+                    .m->cTitmBand  := "S"
+              .case cTidBand=="foo"
+                    .m->cTBandName := "ReportFooter"
+                    .m->cTBandDes  := "Banda di footer di report"
+                    .m->cTitmBand  := "F"
+              .case cTidBand=="pgf"
+                    .m->cTBandName := "PageFooter"
+                    .m->cTBandDes  := "Banda di footer di pagina"
+                    .m->cTitmBand  := "P"
+              .otherwise
+                    .dbMsgErr( m->cTidBand+" SCONOSCIUTO !")
+          .endcase
+    .case oo_prn->typ $  "mst-rel"
+
+          .m->cBandAlias := UPPER(tRepAliasName())
+          .do case
+              .case cTidBand=="hea"
+                    .m->cTBandName := tRepAliasName()+"Header"
+                    .m->cTBandDes  := "Banda di header file "+tRepAliasName()
+                    .m->cTitmBand  := "H"
+              .case cTidBand=="bdy"
+                    .m->cTBandName := tRepAliasName()+"Body"
+                    .m->cTBandDes  := "Banda di body file "+tRepAliasName()
+                    .m->cTitmBand  := "B"
+              .case cTidBand=="foo"
+                    .m->cTBandName := tRepAliasName()+"Footer"
+                    .m->cTBandDes  := "Banda di footer file "+tRepAliasName()
+                    .m->cTitmBand  := "F"
+              .otherwise
+                    .dbMsgErr( m->cTidBand+" SCONOSCIUTO !")
+          .endcase
+    .case oo_prn->typ == "grp"
+          .m->cTBandName := tRepAliasName()+tRepLevGrp()+if(cTidBand=="hea", "H","F")
+          .m->cTBandDes  := "Banda di "+if(cTidBand=="hea","header", "footer")+" file "+tRepAliasName()+" Livello "+tRepLevGrp()
+          .m->cTitmBand  := if(cTidBand=="hea", "H", "F")
+   .otherwise
+//controllare scaricamento bande!
+.endcase
+
+******************************************************************************
+STATIC PROCEDURE Ûm->cTBandNameÛ()   ð   // Ûm->cTBandDesÛ
+******************************************************************************
+.block Ûlower(m->cTitmBand)+oo_prn->GRPÛ funzione di gestione banda di report
+.ctBand := oo_prn->grp+M->cTitmBand
+.oo_itm->( dbSetOrder(3) )     ./ obj+band+str(row,3)+str(col,3)
+.foreach item oo_itm->band == m->ctBand
+      .cTtypeFace := trim(toItem("typeface"))
+      .cTPrintIf  := trim(toItem("printif"))
+      .nTMrg      := if( empty( cTPrintIf ), 0, 3 )
+      .cTattr     := "PRN_NORMAL"
+      .if cTtypeFace!="1"
+         .do bandtype
+      .endif
+      .dd_sym->(DbSetOrder(1))
+      .dd_sym->(DbSeek( oo_itm->ITMGET ))
+      .M->nTrow :=  str(oo_itm->ROW ,4)
+      .M->nTcol :=  str(oo_itm->COL ,4)
+      .do case
+         .case oo_itm->TYP=="say"
+.do bandsay
+         .case oo_itm->TYP=="get"
+.do bandget
+         .case oo_itm->TYP=="exp"
+.do bandexp
+         .case oo_itm->TYP=="var"
+.do bandvar
+         .case oo_itm->TYP=="prc"
+.do bandprc
+         .case oo_itm->TYP=="box"
+.do bandbox
+         .case oo_itm->TYP=="fon"
+.do bandfon
+         .otherwise
+               .* SCONOSCIUTO
+               .dbMsgErr( "* ITEM TYP= "+oo_itm->TYP+" SCONOSCIUTO !")
+      .endcase
+.next
+.oo_prn->(dbSetOrder(1))
+.endblock
+RETURN

@@ -1,0 +1,146 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : DE3
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab modello data entry su piu' pagine
+.* ----------------------------------------------------------------------------
+.M->cObjLab  := ""
+.M->cMnuObj  := tObjMnuId()
+.M->nMnuRec  := oo_mnu->(Recno())
+.M->cTmgName := "de3.tmg "
+.M->MEti     := if(oo_mnu->MNUTYP=="dom" .and. empty(oo_mnu->OBJ) .and. empty(toMenu("pfkfunction")),;
+                   oo_mnu->mnulab,PadR("Gestione",60))
+.M->MPrgFrm1 := SPACE(07)
+.M->Mdbf     := SPACE(08)
+.M->Mpag     := 2
+.*----------- DEFAULT variabili per pulsanti su oggetto
+.M->lHome    := .F.
+.M->lSkpp    := .F.
+.M->lSkpn    := .F.
+.M->lEnd     := .F.
+.M->lIns     := .F.
+.M->lMod     := .F.
+.M->lWri     := .F.
+.M->lEsc     := .F.
+.M->lDel     := .F.
+.M->lKey     := .F.
+.M->lPagh    := .F.
+.M->lPagp    := .F.
+.M->lPagn    := .F.
+.M->lPage    := .F.
+.M->oDlg     := NIL
+.M->EnvId    := "GrabDe3"
+.do de3.dlg
+.DlgShow(oDlg)
+.if !DlgInkey(oDlg)
+    .return
+.endif
+.*                               Preleva il codice del FILE
+.dd_dbf->(DbSetOrder(2))
+.dd_dbf->(DbSeek(upper(m->MDbf)))
+.M->MDbf     := dd_dbf->FILE
+.dd_dbf->(DbSetOrder(1))
+.*
+.__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: de3.tmg in corso..." )
+.*
+.M->cTmgName         := "form1.tmg "
+.M->ProPrj           := NewProg("prj","1")
+.M->CodObj           := NewCod("obj")
+.M->cObjLab          := M->CodObj
+.*
+.oo_bld->(dBnet("app",0))
+.oo_bld->EXE         := oo_exe->exe
+.oo_bld->OBJ         := M->CodObj
+.oo_bld->TYP         := "frm"
+.oo_bld->WDO         := "frm"
+.oo_bld->EXT         := "prg"
+.oo_bld->PRJINCN     := M->ProPrj
+.oo_bld->SECTION     := "1"
+.oo_bld->COMPILE     := "1"
+.oo_bld->LINK        := "1"
+.oo_bld->FLGGEN      := "1"
+.oo_bld->(dBnet("url"))
+.*
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto nel file make/link..." ,70) )
+.*
+.oo_obj->(dBnet("app",0))
+.oo_obj->OBJ         := M->CodObj
+.oo_obj->TYP         := "frm"
+.oo_obj->WDO         := "frm"
+.oo_obj->EXT         := "prg"
+.oo_obj->TMPCOD      := "00"
+.oo_obj->PRG         := M->mPrgFrm1
+.oo_obj->DBF         := M->mDbf
+.oo_obj->OBJDES      := StrTran(M->mEti,"^","")
+.oo_obj->ROW         := 01
+.oo_obj->COL         := 01
+.oo_obj->ROW1        := 22
+.oo_obj->COL1        := 78
+.oo_obj->OBJRL       := "0"
+.oo_obj->FLGUPD      := "1"
+.oo_obj->(dBnet("url"))
+.*
+.oo_itm->(dBnet("dbf",0))
+.*
+.oo_itm->(dBAppend())
+.oo_itm->OBJ         := M->CodObj
+.oo_itm->ITM         := "0000"
+.oo_itm->BAND        := "001"
+.oo_itm->ITMINCN     := 0
+.oo_itm->TYP         := "pag"
+.oo_itm->ITMSAY      := "Pagina Nø1"
+.*
+.M->nCnt := 2
+.do while nCnt <= MPag
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunta Pagina :"+Alltrim(str(nCnt,2)) ,70) )
+   .oo_itm->(dBAppend())
+   .oo_itm->OBJ         := M->CodObj
+   .oo_itm->ITM         := "0000"
+   .oo_itm->BAND        := Padl( nCnt ,3 ,"0")
+   .oo_itm->ITMINCN     := 0
+   .oo_itm->TYP         := "pag"
+   .oo_itm->ITMSAY      := "Pagina Nø"+ Alltrim(str(nCnt,2))
+   .nCnt := nCnt +1
+.enddo
+.oo_itm->(dBnet("unl"))
+.*
+.do stdbut with MPag
+.*
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto form..."+Trim(oo_obj->OBJDES) ,70) )
+.*
+.if !Empty( oo_obj->DBF )
+   .ToWrite( "obj", oo_obj->OBJ, "actionbar" ,"1" )
+   .do MnuFrm with "file/add/mod/del/win/A07/skn/skp"
+.endif
+.*
+.M->CodMnu  := ""
+.oo_mnu->(dbGoto(nMnuRec))
+.if oo_mnu->MNUTYP=="dom" .and. empty(oo_mnu->OBJ) .and. empty(toMenu("pfkfunction"))
+   .*------------------->  Aggiorno il MENU
+   .oo_mnu->(dBnet("rec"))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := M->MEti
+   .oo_mnu->OBJ         := M->cObjLab
+   .oo_mnu->(dBnet("url"))
+.else
+   .*------------------->  Aggiunge il MENU
+   .M->CodMnu           := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := M->cMnuObj
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := ""
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := M->MEti
+   .oo_mnu->MNUUSR      := "Gestione data-entry "+StrTran(M->mEti,"^","")
+   .oo_mnu->OBJ         := M->cObjLab
+   .oo_mnu->FLGUPD      := "1"
+   .oo_mnu->(dBnet("url"))
+.endif
+.tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,AllTrim(M->mPrgFrm1)+"Exe()" )
+.tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+.*                              Flag con Nørecord (HO AGGIUNTO!!!)
+.M->nRecMnu    := oo_mnu->(Recno())
+.*
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunge chiamata da menu :"+alltrim(m->MPrgFrm1)+[()] ,70) )
+.__dbFrameDis( Padr(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+.__dbFrameOff()

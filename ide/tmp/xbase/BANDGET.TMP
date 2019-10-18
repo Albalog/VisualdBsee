@@ -1,0 +1,88 @@
+.* verifica se l'item
+.* appartiene al record virtuale
+.m->nTPrnPos := oo_prn->(recno())
+.oo_prn->(dbSetOrder(3))
+.if !empty(oo_itm->rel) .and. !oo_prn->(dbSeek(oo_obj->obj+"G"+oo_itm->rel+"rel"))
+    .*
+    .*  l'item corrente non appartiene al record virtuale
+    .foreach itmpath
+    .***************
+       .if !oo_prn->(dbSeek(oo_obj->obj+"G"+oo_lam->rel+"rel"))
+           .dd_dbf->(dbsetorder(1))
+           .dd_dbf->(dbseek(dd_rel->file1))
+           .if dd_dbf->file_typ != "1"
+               .dd_ndx->(dbSetOrder(2))
+               .dd_ndx->(dbSeek(dd_rel->relndx))
+ÛtDbfAliasName()+'->(dfS('+alltrim(str(dd_ndx->NdxIncN))+', '+toRelation("relkey")+'))'Û
+           .endif
+       .endif
+    .next
+.endif
+.*
+.dd_dbf->(DbSeek( oo_itm->ALS))
+.if !empty( cTPrintIf )
+IF ÛcTPrintIfÛ
+.endif
+.if dd_dbf->file_typ==[1]
+    .* TABELLA
+    .* ------------
+    .dd_rel->(dbSetOrder(1))
+    .dd_rel->(DbSeek( oo_itm->rel ))
+    .dd_sym->(dbSeek(dd_rel->relsym))
+    .dd_dbf->(dbSetOrder(1))
+    .dd_dbf->(dbSeek(dd_rel->file2))
+    .M->cTFileFat := tDbfAliasName()
+    .dd_dbf->(dbSeek(dd_rel->file1))
+    .M->cTFileSon := tDbfAliasName()
+    .M->cSeek := M->cTFileFat+"->"+trim(dd_sym->sym_nam)
+    .dd_sym->(dbSeek(oo_itm->itmget))
+    .if M->lCrystal
+Ûspace(ntMrg)ÛdfReportOutPut( ÛnTrow+[, ]+nTcol+[, ]+[ dbTabGet( "]+M->cTFileSon+[", ]+M->cSeek+[, "]+trim(dd_sym->sym_nam)+[" ) ] +[, {"]+tControlID()+;
+              [","]+dd_sym->sym_typ+[",]+ALLTRIM(STR(dd_sym->sym_len))+[,]+ALLTRIM(STR(dd_sym->sym_dec))+[},"]+M->cBandAlias+[","]+["]Û  )
+    .else
+       .if toItem("bitmap") == "1"
+Ûspace(ntMrg)ÛdfPrintImage( ÛnTrow+[, ]+nTcol+[, ]+[ dbTabGet( "]+M->cTFileSon+[", ]+M->cSeek+[, "]+trim(dd_sym->sym_nam)+[" ) ]+[, ]+toItem("printimgsizew")+[, ]+;
+             toItem("printimgsizeh")Û )
+       .else
+          .M->cFont := toItem("fontname")
+          .if ! empty(cFont)
+             .if at("(", cFont) == 0
+                .M->cFont := ["]+cFont+["]
+             .endif
+             .M->cFont := ",,,,,, "+cFont
+          .endif
+Ûspace(ntMrg)ÛdfPrint( ÛnTrow+[, ]+nTcol+[, ]+[ dbTabGet( "]+M->cTFileSon+[", ]+M->cSeek+[, "]+trim(dd_sym->sym_nam)+[" ) ] +[, "]+tSayPicture()+[", ] + cTattr + cFontÛ )
+       .endif
+    .endif
+.else
+   .* ARCHIVIO
+   .* -------------
+   .if M->lCrystal
+Ûspace(ntMrg)ÛdfReportOutPut( ÛnTrow+[, ]+nTcol+[, ]+tDbfAliasName()+[->]+trim(dd_sym->SYM_NAM)+[, {"]+tControlID()+;
+              [","]+dd_sym->sym_typ+[",]+ALLTRIM(STR(dd_sym->sym_len))+[,]+ALLTRIM(STR(dd_sym->sym_dec))+[},"]+M->cBandAlias+[","]+tDbfAliasName()+[->]+trim(dd_sym->SYM_NAM)+["]Û  )
+   .else
+      .if toItem("bitmap") == "1"
+Ûspace(ntMrg)ÛdfPrintImage( ÛnTrow+[, ]+nTcol+[, ]+tDbfAliasName()+[->]+trim(dd_sym->SYM_NAM)+[, ]+toItem("printimgsizew")+[, ]+;
+             toItem("printimgsizeh")Û )
+      .else
+         .M->cFont := toItem("fontname")
+         .if ! empty(cFont) .and. at("(", cFont) == 0
+            .M->cFont := ["]+cFont+["]
+         .endif
+         .if oo_itm->WIDTH != 0 ./  item multiriga
+            .cTPic := if( dd_sym->SYM_TYP == "M", "", tSayPicture())
+Ûspace(ntMrg)ÛdfPrint( ÛnTrow+[, ]+nTcol+[, ]+tDbfAliasName()+[->]+trim(dd_sym->SYM_NAM)+[, "]+cTPic+[", ]+;
+             cTattr+[, .T.,]+alltrim(str(oo_itm->WIDTH))+[, ]+toItem("prnprecolumn")+[, ]+toItem("prnpostcolumn")+[, ]+toItem("prnfiller")+[, ]+M->cFontÛ )
+         .else
+            .if ! empty(cFont)
+                .M->cFont := ",,,,,, "+cFont
+            .endif
+Ûspace(ntMrg)ÛdfPrint( ÛnTrow+[, ]+nTcol+[, ]+tDbfAliasName()+[->]+trim(dd_sym->SYM_NAM)+[, "]+tSayPicture()+[", ]+ cTattr + cFontÛ )
+         .endif
+      .endif
+   .endif
+.endif
+.if !empty( cTPrintIf )
+ENDIF
+.endif
+.oo_prn->(dbGoto(m->nTPrnPos))

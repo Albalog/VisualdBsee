@@ -1,0 +1,189 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTREL.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control FIELD RELATION ad oggetto.
+.* ----------------------------------------------------------------------------
+.dd_dbf->(dbSetOrder(1))
+.dd_dbf->(dbSeek(oo_itm->ALS))
+.M->cTipAlign := ""
+.M->cTson    := tDbfAliasName()
+.M->cTfunc   := ""
+.M->cTseek   := ""
+.M->nTSeek   := 0
+.M->cRelType := "" 
+.M->aWs      := {} 
+.foreach alignitem
+   .if dd_dbf->file_typ == "1"
+      .if nTSeek > (IIF( FixCod1164(),0,1))
+         .M->cTseek   := toRelation("relkey")
+      .else
+         .M->cTseek   := toRelation("relkey",,"mem")
+         .if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTseek)) } ) == 0
+            .M->cTseek:= toRelation("relkey")
+         .endif
+      .endif
+      .M->cTson    := tLkUpFileSon()
+      .M->cTfunc   := 'dbTabGet( "'+cTson+'" ,'+cTseek+' ,"'+cTsym+'" )'
+   .else
+      .M->nTSeek   := M->nTSeek+1
+   .endif
+.next
+.if Empty( cTfunc )
+   .M->cTfunc:= cTsym
+   .if (oo_itm->TYP=="rel") .OR. (oo_itm->TYP=="txb".AND.oo_itm->WDO=="rel")
+      .M->cRelTyp := dfGetRel(oo_itm->REL,{||dfTr()})
+      .do case
+         .case cRelTyp == "1:1"
+               .if toItem( "editcondition" ) != "1"
+                   .M->cTfunc := cTson+"->"+cTsym
+               .endif
+         .case cRelTyp != "1:1" .OR. EMPTY(M->cTdbf)
+               .M->cTfunc := cTson+"->"+cTsym
+      .endcase
+   .endif
+.endif
+.M->cTc := ""
+.if oo_itm->TYP == "txb"
+   .M->cTc := ["]+tItmCol("promptcolor") +[","]+tItmCol("hotkeycolor") +[","]+;
+                  tItmCol("datacolor")   +[","]+tItmCol("topleftcolor")+[","]+;
+                  tItmCol("bottomrightcolor")+["]
+.else
+   .M->cTc := ["]+tItmCol("promptcolor")+[","]+tItmCol("hotkeycolor")+[","]+;
+                  tItmCol("datacolor")+[",NIL,NIL]
+.endif
+.M->cXTc := ""
+.if empty(toItem("xbpromptcolor")) .and. empty(toItem("xbdatacolor"))
+   .M->cXTc := "{"+cTc+"}"
+.else
+   .if empty(toItem("xbpromptcolor"))
+      .M->cXTc := ["]+tItmCol("promptcolor") +[",NIL,"]
+   .else
+      .M->cXTc := ["]+toItem("xbpromptcolor") +[",NIL,"]
+   .endif
+   .if empty(toItem("xbdatacolor"))
+      .M->cXTc := cXTc+tItmCol("datacolor") +[",NIL,NIL]
+   .else
+      .M->cXTc := cXTc+toItem("xbdatacolor") +[",NIL,NIL]
+   .endif
+   .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+.endif
+.M->cFont  := toItem("fontname")
+.M->cPFont := toItem("promptfontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.if ! empty(cPFont) .and. at("(", cPFont) == 0
+    .M->cPFont := ["]+cPFont+["]
+.endif
+.M->cTRotation := toItem("rotation")
+.if EMPTY(cTRotation)
+   .M->cTRotation := "0"
+.endif
+.M->cTShadowDepth := toItem("shadowdepth")
+.if EMPTY(cTShadowDepth)
+   .M->cTShadowDepth := "0"
+.endif
+.M->nTPaintStyle:= tPaintStyle(toItem("paintstyle"))
+.if ! oo_itm->TYP == "txb"
+   .if (empty(nTPaintStyle))
+      .* Tolto perche cambiava il defualt in VDB 1.6.3
+      .* .M->nTPaintStyle:= "FUN_PS_GETLOOK"
+      .M->nTPaintStyle:= "FUN_PS_STD"
+   .endif
+.endif
+.if oo_itm->TYP == "get" .or. oo_itm->TYP == "var"
+  .cRelType := 'GET AS FUNCTION'
+.else
+  .cRelType := 'FUNCTION'
+.endif
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL '+cRelType+' '+cTfunc+' AT '+nTr1+','+nTc1+','+nTr2+','+nTc2Û ð ; // ATTREL.TMP
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 COORDINATE  W_COORDINATE_PIXEL  ð ; // Coordinate in Pixel
+   .if !EMPTY(toItem("xball_vert")) .OR. !EMPTY(toItem("xball_oriz"))
+      .M->cTipAlign := tAlign(toItem("xball_oriz"), toItem("xball_vert"))
+                 ALIGNMENT ÛM->cTipAlignÛ  ð ; // FUNCTION ALIGNMENT
+   .endif
+.endif
+.if !(cTpag=="1")
+                 PAGE       ÛcTpagÛ   ð ; // Pagina
+.endif
+                 COLOR ÛcXTcÛ        ð ; // Array dei colori
+                 PICTURESAY "ÛcTpicSÛ"ð ; // Picture in say
+.M->cTblk    := "BEFORE {||"
+.M->nTcnt    := 0
+.foreach alignitem
+  .M->nTcnt  := nTcnt+1
+  .M->cTend  := ","
+  .M->cMode  := ""
+  .if FixCod1164()
+     .if nTCnt==1
+        .if tItmMstL(dd_sym->SYM)
+           .M->cMode := "mem"
+        .endif
+     .endif
+  .else
+     .if nTcnt==1 .OR. nTcnt==2 .OR. nTcnt==3    
+       .M->aWS      := VDBWorkSpaceSave()
+       .M->cTseek   := toRelation("relkey",,"mem")
+       .if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTseek)) } ) > 0
+          .DD_SYM->(dfs(2,UPPER(toRelation("relkey",, "mem" ) ) ))
+       .endif
+       .if tItmMstL(dd_sym->SYM)
+          .M->cMode := "mem"
+       .endif
+       .VDBWorkSpaceRest(aWS)
+     .endif
+  .endif
+  .M->cTseek := toRelation("relkey",,cMode)
+  .if nTcnt == nTSeek
+     .M->cTend := " }"
+  .endif
+  .M->cTson  := tLkUpFileSon()
+  .if dd_dbf->file_typ != "1"
+                 ÛcTblk+cTson+[->(dfS(]+tLkUpIndex()+[,]+cTseek+[)) ]+cTendÛ ð ; // dfS() funzione di allineamento (vedere Norton Guide)
+  .endif
+  .M->cTblk := ""
+.next
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Gruppo di refresh
+.endif
+.if toItem("realtime")=="1"
+                 REALTIME             ð ; //
+.endif
+.M->cTpreEx := toitem("precomputedexp")
+.if !Empty(cTpreEx)
+                 COMPUTEDEXP {||ÛTRIM(cTsym)+[:=]+cTpreExÛ} ð ; // Espressione di ricalcolo
+.endif
+.M->cTpreGr := toitem("precomputedid")
+.if !Empty(cTpreGr)
+                 COMPUTEDGRP "ÛcTpreGrÛ" ð ; // ID che comandano il ricalcolo
+.endif
+.if !Empty(cTpro)
+   .cTproAt := Str(tPromptRow(),4)+" ,"+Str(tPromptCol(),4)
+   .if oo_itm->TYP == "txb"
+      .cTproAt := nTr1+" ,"+Str(val(nTc1)+1,4)
+   .endif
+                 PROMPT   ÛtExpCast(cTpro)Û ð ; // Prompt
+                 PROMPTAT ÛcTproAtÛ ð ; // Coordinate prompt
+.endif
+.if oo_itm->TYP == "txb"
+                 BOX   Ûoo_itm->FONTÛ ð ; // Tipo Box
+.endif
+.if !Empty(cFont)
+                 FONT       ÛcFontÛ ð ; // Font Name (XBASE)
+.endif
+.if !Empty(cTpro) .and. !Empty(cPFont)
+                 PROMPTFONT ÛcPFontÛ ð ; // Prompt Font Name (XBASE)
+.endif
+.if cTRotation != "0"
+                 ROTATION    ÛcTRotationÛ ð ; // Rotation (XBASE)
+.endif
+.if cTShadowDepth != "0"
+                 SHADOWDEPTH ÛcTShadowDepthÛ ð ; // Shadow Depth (XBASE)
+.endif
+.if ! EMPTY(nTPaintStyle)
+                 PAINTSTYLE ÛnTPaintStyleÛ ð ; // Paint Style (XBASE)
+.endif
+                 DISPLAYIF ÛcTdisÛ    ð   // Display condizionale

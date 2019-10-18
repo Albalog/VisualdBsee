@@ -1,0 +1,68 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : SYM
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Documentazione dei simboli del progetto ordinati per tipo
+.* ----------------------------------------------------------------------------
+.*
+.out simboli.txt
+          ⁄ƒƒƒƒƒø
+          ≥Campi≥
+          ¿ƒƒƒƒƒŸ
+.foreach symfie
+   €dd_sym->SYM_NAM+[ :]+dd_sym->sym_des€
+   ---------- : €dd_sym->sym_typ  +[ ]+ str(dd_sym->sym_len,3) +[ ]+ str(dd_sym->sym_dec,3)€
+   picture    : €dd_sym->sym_pic€
+
+.next
+     ⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+     ≥Funzioni utente≥
+     ¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒŸ
+.foreach symudf
+   €dd_sym->SYM_NAM+[ :]+dd_sym->sym_des€
+   ---------- :
+   picture    : €dd_sym->sym_pic€
+
+                .M->Memo := []
+                .GetCod( "sek" ,@Memo ,"DD_SYM" ,"FUNC" ,""  )
+                .gettext m->Memo
+
+.next
+     ⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+     ≥Funzioni check≥
+     ¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒŸ
+.foreach symchk
+   €dd_sym->SYM_NAM+[ :]+dd_sym->sym_des€
+   ---------- :
+   picture    : €dd_sym->sym_pic€
+
+                .M->Memo := []
+                .GetCod( "sek" ,@Memo ,"DD_SYM" ,"FUNC" ,""  )
+                .gettext m->Memo
+
+.next
+     ⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+     ≥Campi    check≥
+     ¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒŸ
+.foreach symfie
+   .M->Memo := []
+   .if GetCod( "sek" ,@Memo ,"DD_SYM" ,"FUNC" ,""  )
+   €dd_sym->SYM_NAM+[ :]+dd_sym->sym_des€
+   ---------- :
+   picture    : €dd_sym->sym_pic€
+
+                .gettext m->Memo
+
+   .endif
+.next
+        ⁄ƒƒƒƒƒƒƒƒƒø
+        ≥Variabili≥
+        ¿ƒƒƒƒƒƒƒƒƒŸ
+.foreach symvar
+   €dd_sym->SYM_NAM+[ :]+dd_sym->sym_des€
+   ---------- : €dd_sym->sym_typ  +[ ]+ str(dd_sym->sym_len,3) +[ ]+ str(dd_sym->sym_dec,3)€
+   picture    : €dd_sym->sym_pic€
+
+.next
+
+.close

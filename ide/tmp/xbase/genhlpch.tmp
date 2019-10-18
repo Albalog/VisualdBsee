@@ -1,0 +1,135 @@
+.M->cTPath     := tSourcePath()+"\doc"
+.if ! dfChkDir(cTPath)
+    .dfMD(cTPath)
+.endif
+.out €cTPath+"\"+ALLTRIM(oo_exe->ExeName)€.hhp
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=€"..\..\EXE\"+ALLTRIM(oo_exe->ExeName)€.chm
+Contents file=€ALLTRIM(oo_exe->ExeName)€.hhc
+Default topic=€tInitProc()€.htm
+Display compile progress=No
+Full-text search=Yes
+./ Language=0x410 Italiano (Italia)
+
+[FILES]
+.foreach make oo_bld->EXT=="prg"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   €cTPrg€.htm 
+.next
+
+[INFOTYPES]
+
+.close
+.*
+.out €cTPath+"\"+ALLTRIM(oo_exe->ExeName)€.hhc
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="ImageType" value="Folder">
+</OBJECT>
+.m->cPrevCho := ""
+.m->cCho     := ""
+.m->nTmrg    := 0
+.oo_obj->(dfS(1, oo_exe->OBJINI))
+.foreach menuentry oo_mnu->MNUON != "-"
+   .m->cCho      := AllTrim(oo_mnu->CHO)
+   .M->cMnuLab   := if(oo_mnu->MNUTYP=="lin" ,"" ,trim(oo_mnu->MNULAB) )
+   .if ! empty(cMnuLab) 
+       .m->cMnuLab := STRTRAN(cMnuLab, "^", "")
+       .m->cMnuLab := STRTRAN(cMnuLab, "~", "")
+       .m->nTmrg := 4+ (len(cCho)*2)
+       .if len(cCho) > len(cPrevCho) 
+€space(nTmrg-2)+repli("<UL>",len(cCho)-len(cPrevCho))€
+       .endif
+       .if len(cCho) < len(cPrevCho)
+€space(nTmrg)+repli("</UL>",len(cPrevCho)-len(cCho))€
+       .endif 
+       .m->cPrevCho := cCho
+€space(nTmrg)€<LI> <OBJECT type="text/sitemap">
+€space(nTmrg)€       <param name="Name" value="€cMnuLab€">
+       .if ! empty(oo_mnu->obj)
+          .m->cTFNam := dfGetObj(oo_mnu->OBJ, {||alltrim(oo_obj->PRG)})
+€space(nTmrg)€       <param name="Local" value="€cTFNam€.htm">
+       .endif
+€space(nTmrg)€     </OBJECT>
+   .endif 
+.next
+€space(nTmrg-2)+repli("</UL>",len(cPrevCho))€
+</BODY></HTML>
+.close
+.foreach make oo_bld->EXT=="prg"
+  .out €cTPath+"\"+ALLTRIM(oo_obj->PRG)€.htm
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Visual dBsee">
+<Title>€alltrim(oo_obj->objdes)€</Title>
+</HEAD>
+<BODY>
+<h1>€alltrim(oo_obj->objdes)€</h1>
+<hr>
+.m->cText := ""
+.GetCod( "sek" ,@cText,"OO_OBJ", "INFO", "" )
+.m->cTag    := "#tec"
+.m->cendTag := "#end"
+.if !VDB_CHM_TECNICO()
+   .m->nPos := AT(UPPER(cTag), UPPER(cText))
+   .IF nPOS != 0
+      .*m->nPOS += LEN(cTag)
+      .m->nPOS1 := AT(cEndTag, cText, nPos)
+      .IF m->nPOS1 == 0
+          .m->nPOS1 := LEN(cText)
+      .ENDIF
+      .m->cNoteTec   := SUBSTR(cText, nPos, nPos1-nPos +4)
+      .m->cText      := STRTRAN(cText, cNoteTec, "")
+   .ENDIF
+.else
+   .m->cText := STRTRAN(cText,cTag   , "")
+   .m->cText := STRTRAN(cText,cEndTag, "")
+.endif
+.m->cText := ConvToAnsiCP( cText )
+.m->cText := STRTRAN(cText, (chr(13)+chr(10)), "<br>"+chr(13)+chr(10))
+
+
+€cText€
+.m->aCHMMsg  := VDB_GETCHMITEMHELP(oo_obj->OBJ)
+.M->nAMsgCnt := 1
+.M->nAMsglen := Len(aCHMMsg)
+.if Len(aCHMMsg)>0
+<hr>
+.endif
+.do while nAMsgCnt <= nAMsglen
+.*<hr>
+  .if !empty(aCHMMsg[nAMsgCnt][1])
+     .m->cText := alltrim(aCHMMsg[nAMsgCnt][1])
+     .m->cText := ConvToAnsiCP( cText )
+     .m->cText := STRTRAN(cText, (chr(13)+chr(10)), "<br>"+chr(13)+chr(10))
+<h2>€cText€</h2>
+  .endif
+  .if !empty(aCHMMsg[nAMsgCnt][2])
+     .m->cText := alltrim(aCHMMsg[nAMsgCnt][2])
+     .m->cText := ConvToAnsiCP( cText )
+     .m->cText := STRTRAN(cText, (chr(13)+chr(10)), "<br>"+chr(13)+chr(10))
+€cText€
+  .endif
+  .M->nAMsgCnt := nAMsgCnt +1
+.enddo
+</BODY>
+</HTML>
+  .close
+.next
+.if file(tGet_hhc_Exe_Path())
+   .VDBRunShell('"'+cTPath+"\"+ALLTRIM(oo_exe->ExeName)+'.hhp"', tGet_hhc_Exe_Path(), .F., .F.)
+   .if VDB_CHM_TECNICO()
+     .do genhlptc
+   .endif
+.else
+   .VDBAlert("Microsoft HTML compiler (hhc.exe) not found in your computer//Unable to compile help file!")
+.endif
+
+ 

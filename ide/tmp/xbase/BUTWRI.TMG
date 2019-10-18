@@ -1,0 +1,28 @@
+.parameter nPag
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : BUTWRI
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab pulsante conferma edit corrente
+.* ----------------------------------------------------------------------------
+.M->cItm := NewCod("itm")
+.M->nPro := NewProg("itm")
+.oo_itm->(dBnet("app",0))
+.oo_itm->OBJ         := oo_obj->OBJ
+.oo_itm->ITM         := M->cItm
+.oo_itm->BAND        := IF(nPag>1,"000","001")
+.oo_itm->ITMINCN     := M->nPro
+.oo_itm->TYP         := "but"
+.oo_itm->ITMSAY      := "O^k"
+.oo_itm->ITMMSG      := "Registra e chiude"
+.oo_itm->ROW         := 3
+.oo_itm->COL         := 0
+.oo_itm->ROW1        := 05
+.oo_itm->COL1        := 03
+.oo_itm->(dBnet("url"))
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butmacrotype"  ,"1" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butfunction"   ,'dbAct2Kbd("wri")' )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activeink"     ,"0" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activeins"     ,"1" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activemod"     ,"1" )
+.__dbFrameDis( PADR("Aggiunto PULSANTE Ok" ,70) )

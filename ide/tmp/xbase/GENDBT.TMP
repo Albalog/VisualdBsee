@@ -1,0 +1,81 @@
+.parameter jjIsAskW
+.* ----------------------------------------------------------------------------------
+.* TEMPLATE     : GENDBT
+.* RELEASE      : 5.0
+.* VERSION      : d
+.* DESCRIZIONE  : Genera il file dbtabD.dbf per file tabellari Visual dBsee
+.* ----------------------------------------------------------------------------------
+.M->lExit := .F.
+.M->ExePath := tExePath()+"\"
+.M->cTabName:= alltrim(toPrjTab("tabname"))
+.if file(ExePath+cTabName+".dbf")
+   .if type("jjIsAskW") != "L"
+      .if dBMsgDis( "tgendbt" ,0 ) != 1
+          .M->lExit := .T.
+      .endif
+   .endif
+.endif
+.if lExit
+    .return
+.endif
+.*
+.msg [Genera archivio dati per file tabellari : ]+M->ExePath+M->cTabName
+.aDbf := {}
+.AADD(aDbf,{"Tabid"      ,"C" ,Val(toPrjTab("tabfieid")  ) ,0})
+.AADD(aDbf,{"Tabprk"     ,"C" ,Val(toPrjTab("tabfiepkey")) ,0})
+.AADD(aDbf,{"Tabcode"    ,"C" ,Val(toPrjTab("tabfiecode")) ,0})
+.AADD(aDbf,{"Tabdeleted" ,"C" ,Val(toPrjTab("tabfiedel") ) ,0})
+.AADD(aDbf,{"Tabdata"    ,"C" ,Val(toPrjTab("tabfiedata")) ,0})
+.AADD(aDbf,{"Tabupdtime" ,"C" ,Val(toPrjTab("tabfietime")) ,0})
+.AADD(aDbf,{"Tabupddate" ,"D" ,Val(toPrjTab("tabfiedate")) ,0})
+.AADD(aDbf,{"Tabusrlock" ,"C" ,Val(toPrjTab("tabfielock")) ,0})
+.*
+.M->DbfSource := M->ExePath+M->cTabName
+.M->DbfName   := M->cTabName
+.M->NtxSource := dbfSource+"1.ntx"
+.dbCreate(M->DbfSource,aDbf)
+.*
+.dbUseArea(.T.,NIL,dBfSource,"AliTab",.F.,.F.)
+.if NetErr()
+   .return
+.endif
+.*
+.dd_dbf->(DbSetorder(1))
+.dd_dbf->(DbGotop())
+.do while !dd_dbf->(eof())
+    .if dd_dbf->file_typ == "1"
+        .*
+        .M->cMemo  := ""
+        .GetCod( "sek", @cMemo ,"DD_DBF" ,"INFO" ,"" )
+        .*
+        .if !empty( cMemo )
+            .*
+            .* scarica il contenuto del campo memo
+            .* con le eventuali valorizzazioni del
+            .* file tabellare in dbTabd
+            .*
+            .M->aTabRec:=tTabPreVal(cMemo)
+            .M->nCnt:=1
+            .do while nCnt<=Len(aTabRec)
+                .AliTab->(dbAppend())
+                .AliTab->Tabid      := aTabRec[nCnt][1]
+                .AliTab->Tabprk     := aTabRec[nCnt][2]
+                .AliTab->Tabcode    := aTabRec[nCnt][3]
+                .AliTab->Tabdeleted := aTabRec[nCnt][4]
+                .AliTab->Tabdata    := aTabRec[nCnt][5]
+                .AliTab->Tabupdtime := aTabRec[nCnt][6]
+                .AliTab->Tabupddate := aTabRec[nCnt][7]
+                .AliTab->Tabusrlock := aTabRec[nCnt][8]
+                .M->nCnt := nCnt +1
+            .enddo
+            .*
+        .endif
+        .*
+    .endif
+    .*
+    .dd_dbf->(DbSetorder(1))
+    .dd_dbf->(DbSkip(1))
+    .*
+.enddo
+.AliTab->(dbCloseArea())
+.dd_dbf->(DbGotop())

@@ -1,0 +1,214 @@
+<CAP> CONFIGURAZIONE DELL'APPLICATIVO
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ CONFIGURAZIONE REPORT ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+  possibile associare ad ogni documento da inviare in stampa il suo
+ specifico LAYOUT.
+
+ Per LAYOUT si intende l'insieme delle marginature e dei codici per
+ il controllo della stampante. Questi parametri determinano, in ultima
+ analisi, l'aspetto finale del vostro documento.
+
+ I settaggi per i diversi LAYOUT di stampa, devono essere effettuati
+ all'interno del file DBSTART.INI, alla sezione [Report], oppure
+ all'interno del quadro di definzione presentato in fase di lancio di
+ una stampa. All'interno di questo quadro, attraverso l'utilizzo dei
+ pulsanti richiamabili anche dai rispettivi tasti caldi (hot key),
+ sar… possibile impostare la stampante su cui inviare la stampa, la
+ porta di output e i margini e la lunghezza di pagina del report.
+
+ Ad ogni report Š possibile associare una diversa stampante ed una
+ diversa porta di uscita.
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ PORTE FISICHE DI STAMPA ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ La definizione delle diverse porte fisiche di stampa Š effettuabile
+ in un'apposita sezione all'interno del file DBSTART.INI.  Ad ogni porta
+ di uscita Š possibile associare una diversa stampante o un diverso
+ device di output.
+
+ L'impostazione della porta logica sulla quale indirizzare la stampa Š
+ effettuabile anche dall'interno del quadro presentato al lancio di
+ una stampa, attraverso il pulsante "Cambio porta".  Naturalmente
+ perchŠ vengano presentate, le porte di uscita devono essere previste
+ all'interno del file DBSTART.INI, alla sezione [port] "porte
+ fisiche".
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ CONFIGURAZIONE STAMPANTI ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ Ogni stampante Š da inizializzarsi secondo le proprie caratteristiche
+ specifiche.
+
+ Ad esempio la sequenza di codici ASCII (il comando) per settare
+ in grassetto la vostra stampante ad aghi sar…, con ogni probabilit…,
+ "027" (ESC) + "071" (G), mentre la vostra LASER necessiter…
+ presumibilmente di tutt'altra sequenza (come specificato nel relativo
+ manuale).
+
+ Oltre ai DRIVER STANDARD forniti con l'Applicazione, sar… possibile
+ predisporne di ulteriori, a seconda delle stampanti che si intende
+ utilizzare.
+
+ I settaggi per le stampanti vengono effettuati in un'apposita sezione
+ all'interno del file DBSTART.INI. Tale sezione Š denominata "Printer"
+
+ La scelta della stampante sulla quale effettuare il report viene
+ impostata all'interno del quadro di definizione presentato in fase di
+ lancio della stampa. Utilizzando il pulsante STAMPANTI viene
+ presentato l'elenco di tutte le stampanti che sono impostate
+ all'interno della sezione "printer".
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ PATH DI SISTEMA ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ In questa fase per ogni file di sistema vengono assegnati i vari
+ percorsi di ricerca.
+
+ Se non viene inserito alcun path i file vengono ricercati nella
+ directory corrente.
+
+ All'interno del file DBSTART.INI Š possibile impostare i percorsi
+ di sistema per i seguenti file:
+
+ Path per i file tabellari
+     Indicazione del path nel quale vengono definiti i file
+     tabellari.
+
+ Path per i file di help
+     Indicazione del path nel quale vengono definiti i file
+     di help.
+
+ Path per dizionario dell'applicazione
+     Indicazione del path nel quale vengono definiti i file
+     del Dizionario Dati dell'applicazione.
+
+ Path utente
+     Indicazione dei path (fino ad un massimo di 10) definibili
+     dall'utente per l'apertura dei file.
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ CONFIGURAZIONI UTENTE ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ All'interno del file DBSTART.INI Š possibile effettuare delle impostazioni
+ particolari, riguardanti le configurazioni utente. Queste riguardano:
+
+ Compattamento file
+     Compattazione file prima della ricostruzione indici
+     Cancellazione fisica record YES
+     Nessuna cancellazione       NO
+
+ NetWork attiva
+     Consente di definire se la rete locale (NetWork) sia attiva o
+     meno impostando alcuni parametri
+     LockRepeatTime = 60
+     GetTimeOut     = 60
+     GetWarning     = 20
+
+ MouseAttivo
+     Consente di impostare la modalit… del puntatore del mouse.
+     Nel caso si utilizzino Blinker  3.x in DUAL MODE o EXTEND MODE, o
+     Exospace Š necessario impostare a NO il parametro MouseVga
+     MouseVga=NO
+
+ Nome tabelle e Modifica tabelle
+     Parametro che consente di identificare il nome del file unico
+     per la gestione dei file di tipo tebellare, con il relativo
+     indice e l'abilitazione o meno l'editing delle tabelle.
+     TabName  =dbtabD
+     TabIndex1=dbtabD1
+     TabModify=YES
+
+ Numero di righe all'attivazione
+     Consente di impostare il numero di righe video per la
+     visualizzazione dell'applicazione, cioŠ se 25 o 50; se vuoto non
+     modifica la risoluzione
+     ConsoleLines=
+
+ Colore dell'ombra
+     Consente di impostare il colore dell'ombra per gli finestre di
+     data entry.
+     Siccome la palette pu• cambiare il default dell'ombra
+     potrebbe non essere quello impostato
+     ShadowColor= B/N
+
+ Stampante di DEFAULT e Porta di DEFAULT
+     Consente di impostare la stampante e la porta di default
+     DefaultPrinter=107
+     DefaultPort=Lpt1
+
+ Colore di OFF
+     Consente di impostare il colore del titolo di una maschra di data
+     entry disattiva.
+     ObjectOffColor= G/B
+
+ Cls alla partenza e ScreenColor
+     Consente di definire se in fase di avvio dell'applicazione debba
+     essere effettuato un Cleas screen e di definire se attivare e
+     dopo quanto tempo lo screen saver.
+     ClearScreen = YES
+     ScreenColor = GR+/BG
+     ScreenSaverActive = YES
+     ScreenSaverTime   = 120
+
+ Abilito la ridefinizione dei caratteri
+ Caratteri ridefiniti
+     Consente di definire se l'applicazione debba avere i caratteri
+     ridefiniti.
+     Per ogni carattere viene indicato il codice ASCII per la
+     ridefinizione dei caratteri utilizzati per il design control
+     FontRedefinition=YES
+
+ Messaggi durante la lettura dell'ini
+     Consente di impostare se i messaggi durante la lettura del file
+     di configurazione debbano essere visualizzati o meno
+     IniMessage=YES
+
+ Font
+     Consente di impostare il font (.vgf) da utilizzare
+     nell'applicazione.  Il font di default, deve essere
+     presente nella directory dell'applicazione stessa.
+     Per definire il font da utilizzare viene data la possibilita
+     di impostare il percorso (path) attraverso l'uso di una
+     variabile di ENVIRONMENT.
+     In questo modo il font viene preso dal direttorio impostato nel
+     settaggio della variabile di ENVIRONMENT MySet a DOS
+     Es. : FontFile=%MySet%COURIER.vgf
+     FontFile=SLANT.VGF
+
+ Screen file
+     Consente di definire il file con la ridefinizione dei caratteri
+     di riempimento degli sfondi. Tale sfondo deve essere presente
+     nella directory dell'applicazione.
+     ScreenFile=button.bkg
+
+ Tasti
+     L'elenco dei tasti con a fianco il proprio scancode e la
+     relativa descrizione. Tale descrizione Š quella che appare
+     all'interno della lista presentata alla pressione dei tasti
+     SHIFT-F1. Si consiglia l'intervento all'interno di questa sezione
+     solo da parte di personale esperto.
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ CONFIGURAZIONE COLORI ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ All'interno di una specifica sezione del file DBSTART.INI Š possibile
+ effettuare l'impostazione dei colori che verranno utilizzati dalle
+ funzioni di libreria per la visualizzazione dei colori di alcune
+ parti dell'applicazione.  Tali parti riguardano, per esempio, il
+ colore dei messaggi di errore (dBMsgErr()), dell'help (dFHlp()),
+ della calcolatrice, della riga utente, ecc.
+
+ La sezione all'interno della quale Š possibile apportare le
+ variazioni cromatiche all'applicazione Š denominata [color].
+
+ All'interno di questa sezione sar… possibile anche apportare,
+ con le dovute cautele, modifiche ai colori della palette.

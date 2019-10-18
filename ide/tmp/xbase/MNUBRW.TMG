@@ -1,0 +1,97 @@
+.parameter cTact ,cTprg
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : MNUBRW
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grag etichette di menu (tasti) per oggetto browse
+.* ----------------------------------------------------------------------------
+.M->cTmgName := "MnuBrw.tmg "
+.M->Crlf     := chr(13) + chr(10)
+.*
+.if "file" $ cTact
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := "1"
+   .oo_mnu->MNUTYP      := "lab"
+   .oo_mnu->MNULAB      := "^File"
+   .oo_mnu->MNUUSR      := "Azioni sul file della browse"
+   .oo_mnu->(dBnet("url"))
+   .*
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunto tasto..."+Trim(oo_mnu->MNULAB) ,75) )
+   .*
+.endif
+.M->nTcho    := 10
+.if "anr" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "Inserimento"
+   .oo_mnu->MNUUSR      := "Inserimento nuova riga"
+   .oo_mnu->PFKACT      := "anr"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,Alltrim(cTprg)+[Anr()] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .*
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunto tasto..."+Trim(oo_mnu->MNULAB) ,75) )
+   .*
+.endif
+.if "mcr" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "Modifica"
+   .oo_mnu->MNUUSR      := "Modifica riga"
+   .oo_mnu->PFKACT      := "mcr"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,Alltrim(cTprg)+[Mcr()] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .*
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunto tasto..."+Trim(oo_mnu->MNULAB) ,75) )
+   .*
+.endif
+.if "ecr" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "Cancella"
+   .oo_mnu->MNUUSR      := "Cancella la riga"
+   .oo_mnu->PFKACT      := "ecr"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,Alltrim(cTprg)+[Ecr()] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .*
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunto tasto..."+Trim(oo_mnu->MNULAB) ,75) )
+   .*
+.endif
+.if "ret" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "Conferma la selezione"
+   .oo_mnu->MNUUSR      := "Seleziona la riga sul cursore e chiude la finestra"
+   .oo_mnu->PFKACT      := "ret"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,[lBreak:=.T.] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .*
+   .__dbFrameDis( Padr(M->cTmgName+"Aggiunto tasto..."+Trim(oo_mnu->MNULAB) ,75) )
+   .*
+.endif

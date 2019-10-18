@@ -1,0 +1,159 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTQRYREL.tmp
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Aggiunge control FIELD RELATION ad oggetto QUERY
+.* ----------------------------------------------------------------------------
+.dd_dbf->(dbSetOrder(1))
+.dd_dbf->(dbSeek(oo_itm->ALS))
+.M->cTson    := tDbfAliasName()
+.M->cTfunc   := ""
+.M->cTseek   := ""
+.M->nTSeek   := 0
+.foreach alignitem
+   .if dd_dbf->file_typ == "1"
+       .M->cTseek  := toRelation("relkey",,"mem")
+       .M->nTPos   :=  Ascan( aTQuery, {|x|x[2]==alltrim(M->cTseek)} )
+       .if M->nTPos == 0
+           .M->nTPos := 1
+       .endif
+       .M->cTseek  := "aQuery["+alltrim(str(M->nTPos))+",3]"
+       .M->cTson  := tLkUpFileSon()
+       .M->cTfunc   := 'dbTabGet( "'+cTson+'" ,'+cTseek+' ,"'+cTsym+'" )'
+   .else
+       .M->nTSeek   := M->nTSeek+1
+   .endif
+.next
+.if Empty( cTfunc )
+   .M->cTfunc:= cTson+"->"+cTsym
+.endif
+.M->cTc    := ["]+tItmCol("promptcolor")+[","]+tItmCol("hotkeycolor")      +[","]+;
+                  tItmCol("datacolor")  +[","]+tItmCol("datahilitecolor")  +["]
+.M->cXTc := ""
+.if empty(toItem("xbpromptcolor")) .and. empty(toItem("xbdatacolor"))
+   .M->cXTc := "{"+cTc+"}"
+.else
+   .if empty(toItem("xbpromptcolor"))
+      .M->cXTc := ["]+tItmCol("promptcolor") +[",NIL,"]
+   .else
+      .M->cXTc := ["]+toItem("xbpromptcolor") +[",NIL,"]
+   .endif
+   .if empty(toItem("xbdatacolor"))
+      .M->cXTc := cXTc+tItmCol("datacolor") +[",NIL,NIL]
+   .else
+      .M->cXTc := cXTc+toItem("xbdatacolor") +[",NIL,NIL]
+   .endif
+   .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+.endif
+.M->cFont  := toItem("fontname")
+.M->cPFont := toItem("promptfontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.if ! empty(cPFont) .and. at("(", cPFont) == 0
+    .M->cPFont := ["]+cPFont+["]
+.endif
+.M->cTRotation := toItem("rotation")
+.if EMPTY(cTRotation)
+   .M->cTRotation := "0"
+.endif
+.M->cTShadowDepth := toItem("shadowdepth")
+.if EMPTY(cTShadowDepth)
+   .M->cTShadowDepth := "0"
+.endif
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL FUNCTION '+cTfunc+' AT '+nTr1+','+nTc1+','+nTr2+','+nTc2Û ð ; // Campo
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 COORDINATE  W_COORDINATE_PIXEL  ð ; // Coordinate in Pixel
+.endif
+.if !(cTpag=="1")
+                 PAGE        ÛcTpagÛ  ð ; // Pagina
+.endif
+                 PICTURESAY "ÛcTpicSÛ"ð ; // Picture in say
+.M->cTblk    := "BEFORE {||"
+.M->nTcnt    := 0
+.*
+.foreach alignitem
+  .M->nTcnt  := nTcnt+1
+  .M->cTson  := tLkUpFileSon()
+  .M->cTend  := ","
+  .*
+  .if nTcnt==1 .and. Lower(tLeadDbf())==Lower(cTdbf)
+      .M->cTseek  := toRelation("relkey",,"mem")
+      .if "+" $ cTseek .and. ! "(" $ cTseek
+          .* chiave con indice composto senza funzioni di trasformazione str(), upper()
+          .M->cTappo := strtran(cTseek, " ", "") 
+          .M->cTseek := ""
+          .do while ! empty(cTAppo)
+             .M->nTPos := at("+", cTAppo)
+             .M->cTAppo1:= ""
+             .if M->nTPos == 0
+                 .M->cTAppo1:= cTAppo
+                 .M->cTAppo := ""
+             .else
+                 .M->cTAppo1:= left(cTAppo, nTPos-1) 
+                 .M->cTAppo := substr(cTappo, nTPos+1) 
+             .endif
+             .if ! empty( cTAppo1 )
+                .M->nTPos   :=  Ascan( aTQuery, {|x|x[2]==alltrim(M->cTappo1)} )
+                .if M->nTPos == 0
+                    .M->nTPos := 1
+                .endif
+                .if ! empty(cTseek)
+                    .M->cTseek := cTseek + "+"
+                .endif
+                .M->cTseek  := cTseek + "aQuery["+alltrim(str(M->nTPos))+",3]"
+             .endif
+          .enddo       
+      .else
+         .*  Mantis 1028
+         .*  M->nTPos   :=  Ascan( aTQuery, {|x|UPPER(x[2])==UPPER(alltrim(M->cTseek))} )
+         .*
+         .M->nTPos   :=  Ascan( aTQuery, {|x|UPPER(x[2])==UPPER(alltrim(M->cTSym1))} )
+         .if M->nTPos == 0
+             .M->nTPos   :=  Ascan( aTQuery, {|x|ALLTRIM(UPPER(x[2])) $ UPPER(alltrim(M->cTseek))} )
+             .if M->nTPos == 0
+                .M->nTPos := 1
+             .endif
+         .endif
+         .M->cTseek  := "aQuery["+alltrim(str(M->nTPos))+",3]"
+      .endif
+  .else
+      .M->cTseek  := toRelation("relkey")
+  .endif
+  .*
+  .if nTcnt == nTSeek
+     .M->cTend := " }"
+  .endif
+  .*
+  .if dd_dbf->file_typ != "1"
+                 ÛcTblk+cTson+[->(dfS(]+tLkUpIndex()+[,]+cTseek+[)) ]+cTendÛ ; ð // dfS() funzione di allineamento (vedere Norton Guide)
+  .endif
+  .*
+  .M->cTblk := ""
+.next
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Gruppo di refresh
+.endif
+                 COLOR      ÛcXTcÛ   ð ; // Array dei colori
+.if !Empty(cTpro)
+   .cTproAt := Str(tPromptRow(),4)+" ,"+Str(tPromptCol(),4)
+                 PROMPT     ÛtExpCast(cTpro)Û ð ; // Prompt
+                 PROMPTAT   ÛcTproAtÛ ð ; // Coordinate prompt
+.endif
+.if oo_itm->TYP == "txb"
+                 BOX   Ûoo_itm->FONTÛ ð ; // Tipo Box
+.endif
+.if !Empty(cFont)
+                 FONT       ÛcFontÛ ð ; // Font Name (XBASE)
+.endif
+.if !Empty(cTpro) .and. !Empty(cPFont)
+                 PROMPTFONT ÛcPFontÛ ð ; // Prompt Font Name (XBASE)
+.endif
+.if cTRotation != "0"
+                 ROTATION    ÛcTRotationÛ ð ; // Rotation (XBASE)
+.endif
+.if cTShadowDepth != "0"
+                 SHADOWDEPTH ÛcTShadowDepthÛ ð ; // Shadow Depth (XBASE)
+.endif
+                 DISPLAYIF ÛcTdisÛ    ð   // Display condizionale

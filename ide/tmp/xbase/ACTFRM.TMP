@@ -1,0 +1,120 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ACTFRM
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Metodo per inizializzare oggetto form
+.* ----------------------------------------------------------------------------
+.M->cTkey := ""
+.M->cTset := ".T."
+.M->cTbrk := ".F."
+.M->cTKey := TRIM(tRelKey(oo_obj->OBJREL))
+.M->cTset := TRIM(tRelFilter(oo_obj->OBJREL))
+.M->cTbrk := TRIM(tRelBreak(oo_obj->OBJREL))
+.M->cTord := TRIM(tRelOrder( oo_obj->OBJREL))
+/*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³ Inizializza oggetto ( vedere Norton Guide ) ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+
+.if !empty(M->cTdbf)
+oWin := ÛM->cTdbf+[->(TbBrwNew(]+str(val(tObjTopRow()),4)Û ð,; // Prima  Riga
+.else
+oWin := 0->(TbBrwNew( Ûstr(val(tObjTopRow()),4)Û   ð,; // Prima  Riga
+.endif
+                      Ûstr(val(tObjLeftCol()),4)Û  ð,; // Prima  Colonna
+                      nHigh   ð,; // Ultima Riga
+                      nLen    ð,; // Ultima Colonna
+.if type("OS()")=="C"    
+.* Visual dBsee
+                      W_OBJ_FRM                             ,; // Tipo oggetto ( form )
+                      NIL                          ð,; // Label
+                      W_COORDINATE_PIXEL                    )) // Gestione in Pixel 
+.else
+                      W_OBJ_FRM                    ð)) // Tipo oggetto ( form )
+.endif
+
+.if toObject("titlebar") == "0"
+oWin:titlebar    := .F.           ð   // Senza barra del titolo
+.else
+oWin:W_TITLE     := ÛtExpCast(trim(oo_obj->OBJDES))Û ð   // Titolo oggetto
+.endif
+.*if nTBrwNdx > 0
+.*oWin:W_ORDER   := Ûstr(nTbrwNdx,2)Û  ð   // Indice di relazione
+.*endif
+.if cTord != "0"
+oWin:W_ORDER     := ÛcTordÛ  ð   // Indice di relazione
+.endif
+.if empty(M->cTKey)
+oWin:W_KEY       := NIL           ð   // Non esegue la seek
+.else
+oWin:W_KEY       := {||ÛM->cTKeyÛ} ð   // CodeBlock per la seek
+.endif
+oWin:W_FILTER    := {||ÛM->cTsetÛ} ð   // CodeBlock per il filtro
+.if LEN(M->cTbrk) >= 132
+   .M->cTexp1 := Token(cTbrk ,"!" ,1)
+   .M->cTexp2 := Token(cTbrk ,"=" ,2)
+oWin:W_BREAK     := {||ÛcTexp1Û != ; ð   // Espressione
+                       ÛcTexp2Û}   ð   // di break
+.else
+oWin:W_BREAK     := {||ÛcTbrkÛ}    ð   // CodeBlock per il break
+.endif
+oWin:W_PAGELABELS:= {}             ð   // Array delle pagine
+.if tObjNumPage()>1
+oWin:W_PAGECODEBLOCK:= {}
+.endif
+oWin:W_PAGERESIZE:= {}
+.foreach page
+ATTACH PAGE LABEL ÛtExpCast(Alltrim(oo_itm->ITMSAY))Û TO oWin:W_PAGELABELS
+.if tObjNumPage()>1
+ATTACH PAGE CODEBLOCK {||ÛtPageBlock()Û} TO oWin:W_PAGECODEBLOCK
+.endif
+.if tPageResize( 1 )
+ATTACH PAGE RESIZE ÛtPageResize()Û TO oWin:W_PAGERESIZE
+.endif
+.next
+oWin:W_MENUHIDDEN:= Ûif(toObject("actionbar")=="0",.T.,.F.)Û ð   // Stato attivazione barra azioni
+.if empty(toObject("xbclientareacol"))
+oWin:W_COLORARRAY[AC_FRM_BACK  ] := "ÛtObjCol("clientareacolor")Û" ð   // Colore di FONDO
+.else
+oWin:W_COLORARRAY[AC_FRM_BACK  ] := "ÛtoObject("xbclientareacol")Û" ð   // Colore di FONDO
+.endif
+oWin:W_COLORARRAY[AC_FRM_BOX   ] := "ÛtObjCol("bordercolor")Û"     ð   // Colore di BOX
+oWin:W_COLORARRAY[AC_FRM_HEADER] := "ÛtObjCol("titlebaroncolor")Û" ð   // Colore di HEADER ON
+oWin:W_COLORARRAY[AC_FRM_OPTION] := "ÛtObjCol("iconscolor")Û"      ð   // Colore di ICONE
+.if toObject("shadow") != "1"
+oWin:W_SHADOW    := .F.           ð   // Ombra
+.endif
+.if toObject("actionbar") == "1"
+
+oWin:W_BG_TOP ++
+oWin:W_RP_TOP ++ ;oWin:nTop++
+.endif
+
+.if toObject("resizable") == "0"
+  .if toObject("windowborder") == "0"
+oWin:border      := XBPDLG_NO_BORDER     ð   // Tipo bordo invisibile
+  .else
+oWin:border      := XBPDLG_DLGBORDER
+  .endif
+.else
+oWin:border      := XBPDLG_RAISEDBORDERTHICK 
+.endif
+.if toObject("maximized") == "1"
+oWin:lFullScreen := .T.
+.else
+  .if toObject("maximized") == "2"
+oWin:lCenter := .T.
+  .endif
+.endif
+.if toObject("mdi") == "1"
+oWin:mdi := .T.
+.endif
+.if toObject("msgarea") == "0"
+oWin:ShowMessageArea := .F.
+.endif
+.if toObject("toolbar") == "0"
+oWin:ShowToolBar := .F.
+.endif
+.if toObject("background")!="0"
+oWin:bitmapBG := dfGetBkg( ÛtoObject("background")Û )
+.endif
+oWin:icon := APPLICATION_ICON

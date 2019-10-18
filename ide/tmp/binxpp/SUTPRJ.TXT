@@ -1,0 +1,118 @@
+
+Questa applicazione Š stata realizzata sfruttando l'ambiente di sviluppo
+dBsee ideato e prodotto dalla ISA Italian Software Agency con sede in
+Baveno (NO).
+
+Le applicazioni realizzate mediante dBsee sono caratterizzate da un elevato
+grado di affidabilit… e da un'interfaccia utente gradevole, di facile
+apprendimento e conforme alle normative CUA.  All'interno delle
+applicazioni realizzate con dBsee Š previsto l'uso del mouse in ogni
+sessione operativa.
+
+Nelle fasi operative, messaggi specifici consentiranno di effettuare la
+corretta sequenza delle manualit… per ottenere il risultato desiderato.
+
+Inoltre, un'help contestuale alla sessione di lavoro corrente, potr… chiare
+qualunque dubbio possa sorgere dall'utilizzo di dBsee.
+
+La ricerca dei dati negli archivi Š notevolmente facilitata grazie alle
+potenti funzioni di interrogazione che prevedono un diffuso utilizzo di
+finestre e chiavi di accesso multiple.
+
+Un'altra importante caratteristica di questa applicazione Š quella di
+supportare il data entry completamente in memoria, scrivendo i dati su disco
+solo al termine della fase di inserimento.  Questo consente di non rovinare la
+base dati in caso di cadute accidentali di tensione e, in caso di errore di
+scrittura, di ripristinare i dati originali premendo semplicemente il tasto
+ESC.
+
+ inoltre supportata la gestione della RETE LOCALE.
+
+
+<CAP> ORGANIZZAZIONE DEL MANUALE
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+Il presente manuale Š organizzato nel seguente modo :
+
+1) Verr… proposto inizialmente l'albero del menu generale, secondo il quale
+   si articolano le diverse sessioni operative
+
+2) Far… seguito un dettagliato elenco delle gestioni nel quale verranno
+   poste in evidenza le caratteristiche operative delle maschere di data entry
+   e delle stampe.
+
+3) Al termine verranno analizzati gli aspetti pi— generali
+   dell'applicazione, come l'ORGANIZZAZIONE DEL VIDEO, l'elenco dei TASTI
+   FUNZIONE disponibili e la CONFIGURAZIONE DEL SISTEMA.  <NEWPAGE>
+
+<CAP> INSTALLAZIONE
+ÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+  necessario disporre di un DISCO RIGIDO sul vostro PC con almento 12
+ Mb liberi e di 640 K di RAM.
+
+  consigliato l'utilizzo del Il SISTEMA OPERATIVO DOS 5.0 o versioni
+ successive.
+
+ Nel file CONFIG.SYS deve essere presente il seguente set di
+ istruzioni :
+
+
+               BUFFERS=20        Con DOS versione 3.0 e successive
+               FILES=101
+
+
+ Per installare l'applicazione Š necessario creare una nuova directory
+ (nome a piacimento) sul disco rigido e copiare al suo interno il
+ contenuto dei dischetti in dotazione.
+
+ Per lanciare l'applicazione in formato eseguibile entrare nella
+ Directory nella quale avete copiato i dischetti e digitare il nome
+ del programma a livello di PROMPT del DOS.
+
+ Per uscire dall'applicazione premere il tasto ESC.
+
+
+<CAP> GENERAZIONE INDICI
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+  importante ricordare che la prima operazione da effettuare, quando
+ viene lanciato il programma per la prima volta, Š la GENERAZIONE
+ DEGLI INDICI, operazione eseguita da una funzione che si trova nel
+ Menu alla voce "SERVIZI".
+
+ La ricostruzione indici pu• essere eseguita periodicamente con lo
+ scopo di effettuare la manutenzione degli archivi.  In questa fase
+ infatti, vengono eliminati fisicamente tutti i record cancellati che
+ altrimenti rimarrebbero sui file dati anche se in modo invisibile.
+
+ ATTENZIONE :
+ In caso di cadute accidentali di tensione o di altre situazioni che
+ provocano un'interruzione forzata dell'applicazione, potrebbero
+ verificarsi incongruenze di dati.
+
+  questo il momento di lanciare la RICOSTRUZIONE INDICI.
+
+ Nel caso si desiderasse Š possibile effettuare l'operazione sopra
+ riportata cancellando, dal prompt del DOS, gli indici
+ dell'applicazione, utilizzando il comando:
+
+       DEL *.NTX
+
+ Nel momento in cui si accede all'applicazione, gli indici verranno
+ automaticamente ricostruiti.
+
+ <CAP> CONFIGURAZIONE
+ ÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+ Il prodotto viene fornito in una versione gi… configurata secondo le
+ esigenze pi— diffuse.   possibile comunque modificare gli attributi
+ di colore delle maschere di data entry, oppure i margini di stampa, o
+ ancora le caratteristiche di inizializzazione della stampante
+ (potrete indirizzare le vostre stampe su una STAMPANTE AD AGHI, su
+ LASER o su una stampante a TRASFERIMENTO TERMICO, semplicemente
+ cambiando o modificando il DRIVER di stampante attivo).
+
+ Tutte queste caratteristiche possono essere impostate attraverso il
+ file di configurazione DBSTART.INI e sono analizzate dettagliatamente
+ nell'apposita sezione del manuale.

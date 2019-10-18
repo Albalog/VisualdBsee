@@ -1,0 +1,108 @@
+.parameter cIdLsb
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTCMB.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control COMBINATION BOX ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTcnd    := ["]+tItmActive()+["]
+.if !empty(toItem("jumpif"))
+   .M->cTcnd := "("+cTcnd + ").AND.!(" + toItem("jumpif") +")"
+.endif
+.M->cTwvc    := if( EMPTY(toItem("validfunction")) ,".T." ,toItem("validfunction"))
+.M->cTsym    := toItem("cmbdataorigin")
+.IF EMPTY(M->cTsym)
+   .M->cTsym := "cDmmVar"
+.endif
+.M->cIdC     := tControlId()
+.M->nTpfkItm := 0
+.M->cTc      := ["]+tItmCol("promptcolor")+[","]+tItmCol("hotkeycolor")    +[","]+;
+                    tItmCol("datacolor")  +[","]+tItmCol("datahilitecolor")+["]
+.M->cXTc := ""
+.if empty(toItem("xbpromptcolor")) .and. empty(toItem("xbdatacolor"))
+   .M->cXTc := "{"+cTc+"}"
+.else
+   .if empty(toItem("xbpromptcolor"))
+      .M->cXTc := ["]+tItmCol("promptcolor") +[",NIL,"]
+   .else
+      .M->cXTc := ["]+toItem("xbpromptcolor") +[",NIL,"]
+   .endif
+   .if empty(toItem("xbdatacolor"))
+      .M->cXTc := cXTc+tItmCol("datacolor") +[",NIL]
+   .else
+      .M->cXTc := cXTc+toItem("xbdatacolor") +[",NIL]
+   .endif
+   .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+.endif
+.M->cFont  := toItem("fontname")
+.M->cPFont := toItem("promptfontname")
+.M->cLFont := toItem("cmblsbfontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.if ! empty(cPFont) .and. at("(", cPFont) == 0
+    .M->cPFont := ["]+cPFont+["]
+.endif
+.if ! empty(cLFont) .and. at("(", cLFont) == 0
+    .M->cLFont := ["]+cLFont+["]
+.endif
+.do pfkitm
+ATTACH "ÛcIdCÛ" TO oWin:W_CONTROL GET AS COMBO ÛcTsymÛ ð ; // ATTCMB.TMP
+                 AT ÛnTr1+','+nTc1Û  ð ; // Coordinate dato in get
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 SIZE       {ÛnTc2Û,ÛnTr2Û} ð ; // Dimensioni Campo get
+                 COORDINATE  W_COORDINATE_PIXEL ð ; // Coordinate in Pixel
+.endif
+.if !(cTpag=="1")
+                 PAGE   ÛcTpagÛ      ð ; // Pagina
+.endif
+                 COLOR  ÛcXTcÛ      ð ; // Array dei colori
+.if !(cTpicG==cTpicS)
+                 PICTUREGET "ÛcTpicGÛ"ð ; // Picture in get
+.endif
+                 PICTURESAY "ÛcTpicSÛ"ð ; // Picture in say
+.if !(cTwvc==".T.")
+                 CONDITION {|ab|ÛcTwvcÛ} ð ; // Funzione When/Valid
+.endif
+                 ACTIVE {||cState $ ÛcTcndÛ } ð ; // Stato di attivazione
+.if !Empty(cTpro)
+   .cTproAt := Str(tPromptRow(),4)+" ,"+Str(tPromptCol(),4)
+                 PROMPT ÛtExpCast(cTpro)Û ð ; // Prompt
+                 PROMPTAT ÛcTproAtÛ  ð ; // Coordinate prompt
+.endif
+.if !(cTdis=="{||.T.}")
+                 DISPLAYIF ÛcTdisÛ   ð ; // Display condizionale
+.endif
+.if !(cTsys=="{|oGet|.T.}")
+                 SYSFUNCTION ÛcTsysÛ ð ; // Funzione interna alla get
+.endif
+.if nTpfkItm > 0
+                 PFK aPfkItm         ð ; // Array dei tasti della get
+.endif
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+.endif
+.if !Empty(cTrefGr)
+                 REFRESHGRP "ÛcTrefGrÛ" ð ; // Esegue il gruppo di refresh
+.endif
+.if toItem("controlgap")=="1"
+                 GAP   1                ð ; // Spaziatura icona control/dati
+.endif
+.if toItem("cmbdatachk")=="1"
+                 DATACHECK {||.F.}      ð ; // Controllo dati disabilitato
+.endif
+                 VARNAME "ÛcTSymÛ" ð ; //
+.if !Empty(cTmsg)
+                 MESSAGE ÛtExpCast(cTmsg)Û ð ; // Messaggio
+.endif
+.if !Empty(cFont)
+                 FONT        ÛcFontÛ     ð ; // Font Name (XBASE)
+.endif
+.if !Empty(cTpro) .and. !Empty(cPFont)
+                 PROMPTFONT  ÛcPFontÛ    ð ; // Prompt Font Name (XBASE)
+.endif
+.if !Empty(cLFont)
+                 LISTBOXFONT ÛcLFontÛ    ð ; // Listbox Font Name (XBASE)
+.endif
+                 LISTBOX ÛcIdLsbÛ    ð   // Listbox-Box-Combo

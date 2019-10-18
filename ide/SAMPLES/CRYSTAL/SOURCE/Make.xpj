@@ -1,0 +1,50 @@
+//
+// Project - Definition
+//
+
+[PROJECT]
+    COMPILE       = xpp
+    COMPILE_FLAGS = /M/N/W/B/Q/PRE/O:noncb
+    DEBUG         = yes
+    GUI           = yes
+    LINKER        = alink
+    LINK_FLAGS    = /out:..\EXE\menu.exe /FORCE:UNRESOLVED
+    RC_COMPILE    = arc
+    RC_FLAGS      = /v
+    PROJECT.XPJ
+    OBJ_FORMAT    = COFF
+    OMF_LINKER    = _BLINKER.BAT @Dlink.lnk
+
+[PROJECT.XPJ]
+    Menu.EXE
+
+[Menu.EXE]
+// Main
+   ..\source\Menu.prg
+// Starting procedure
+   ..\source\_Menu.prg
+// Source
+   ..\source\Quit.prg
+   ..\source\dbUdf.prg
+   ..\source\dbRid.prg
+   ..\source\artFrm.prg
+   ..\source\cliFrm.prg
+   ..\source\docFrm.prg
+   ..\source\artPr1.prg
+   ..\source\cliPr1.prg
+   ..\source\docPr2.prg
+   ..\source\About.prg
+   ..\source\cliQry.prg
+   ..\source\docEdb.prg
+   ..\source\docQry.prg
+   dblang.lib
+   kernel32.LIB
+   user32.lib
+   msvcrt.lib
+   winspool.lib
+   comdlg32.lib
+   vdbsee1x.lib
+   Make.ARC
+
+   // #COD OIRMK4 // #END In coda ai programmi in compilazione. (Lasciare una riga vuota!!)
+

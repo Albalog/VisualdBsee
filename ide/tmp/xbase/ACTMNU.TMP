@@ -1,0 +1,56 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ACTMNU.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Inizializza il menu e le azioni sui tasti dell'oggetto
+.* ----------------------------------------------------------------------------
+.foreach menuentry oo_mnu->MNUON != "-"
+   .M->cMnuTyp   := if(oo_mnu->MNUTYP=="lin" ,"MN_LINE" ,"MN_LABEL")
+   .M->cMnuLab   := if(oo_mnu->MNUTYP=="lin" ,"" ,trim(oo_mnu->MNULAB) )
+   .M->cLab      := ""
+   .if oo_mnu->MNUTYP == "din"
+     .GetCod( "sek" , @M->cLab ,"OO_MNU" ,"EDIN" ,"" )
+     .if !EMPTY(M->cLab)
+       .M->cMnuLab   += M->cLab
+     .endif
+   .endif
+   .M->cTblock   := [ (cState$"]+tMnuActive()+[")]
+   .if !Empty(toMenu("pfkcondition")) .AND. toMenu("pfkcondition")!=".T."
+      .M->cTblock := cTblock +".AND.(" + toMenu("pfkcondition")+")"
+   .endif
+   .M->cTlabelon := if(toMenu("mnulabelon") =="0" ,"MN_ON"  ,"MN_SECRET")
+   .M->cTlabeloff:= if(toMenu("mnulabeloff")=="0" ,"MN_OFF" ,"MN_HIDDEN")
+   .M->cTruntime := toMenu("pfkruncond")
+   .M->cTexecute := toMenu("pfkfunction")
+   .M->lTinform  := toMenu("mnuinform")=="1"
+   .if Empty(cTexecute)
+       .M->cTexecute := [dbMsgErr( dfStdMsg( MSG_ADDMENUUND ) )]
+   .else
+       .M->cTexecute := AllTrim(tStrTran( cTexecute ,AllTrim(oo_obj->PRG) ))
+   .endif
+   .M->cTImg    := toImage(toMenu("xbimgorigin"), toMenu("xbimgdata"))
+ATTACH "ÛAllTrim(oo_mnu->CHO)Û" TO MENU oWin:W_MENUARRAY AS ÛcMnuTypÛ ð ; // ACTMNU.TMP
+        BLOCK    {|CHILD,LABEL,ID|if(ÛcTblock+[ ,]+cTlabelon+[ ,]+cTlabeloffÛ )} ð ; // Condizione di stato di attivazione
+        .if !empty(cTruntime) .and. cTruntime#".T."
+        RUNTIME  {|CHILD,LABEL,ID|ÛcTruntimeÛ}          ð ; // Condizione di run time
+        .endif
+        .if !empty(cMnuLab)
+        .if oo_mnu->MNUTYP == "din"
+        PROMPT   {||ÛcMnuLabÛ}      ð ; // Dinamic Label
+        .else
+        PROMPT   ÛtExpCast(cMnuLab)Û      ð ; //Label
+        .endif
+        .endif
+        .if !empty(oo_mnu->PFKACT)
+        SHORTCUT "Ûtrim(oo_mnu->PFKACT)Û" ð ; // Shortcut
+        .endif
+        EXECUTE  {||ÛcTexecuteÛ}          ð ; // Funzione
+        MESSAGE  ÛtExpCast(trim(oo_mnu->mnuusr))Û ð ; // Messaggio utente
+        .if lTinform
+        INFORM ; //
+        .endif
+        .if ! empty(cTImg)
+        IMAGES  ÛcTImgÛ                ð ; //
+        .endif
+        ID "ÛOO_MNU->MNUOBJ+OO_MNU->MNUÛ"
+.next

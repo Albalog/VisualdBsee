@@ -1,0 +1,17 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : APPEDB
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab appende oggetto edit browse nel build
+.* ----------------------------------------------------------------------------
+.*           APPENDE QUADRO EDIT RIGA SE PRESENTE SU OGGETTO
+.if !Empty( oo_obj->OBJ2OBJ )
+   .if ! TobjInExe( oo_obj->OBJ2OBJ )
+      .oo_obj->(dbSetOrder(1))
+      .oo_obj->(dbSeek( oo_obj->OBJ2OBJ ))
+      .*
+      .do appbld
+      .*
+      .__dbFrameDis( "Incluso oggetto :"+oo_obj->PRG ,70)
+   .endif
+.endif

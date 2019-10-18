@@ -1,0 +1,33 @@
+.parameter cTndxSeek
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTPKS.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Crea la struttura della chiave primaria
+.* ----------------------------------------------------------------------------
+.dd_ndx->(DbSetOrder(2))
+.dd_ndx->(DbSeek( cTndxSeek))
+.M->cTkey := ""
+.if !empty( toIndex("indexexpr") )
+   .M->cTexp := alltrim(tStrTran( toIndex("indexexpr"), "uExp" ))
+ATTACH KEY "globalexp" TO oWin:W_PRIMARYKEY    ð ; // Espressione globale
+       BLOCK      {|uExp|ÛcTexpÛ}          ð ; // Code block
+       EXPRESSION "ÛtoIndex("indexexpr")Û" ð   // Espressione
+.else
+ATTACH KEY "globalexp" TO oWin:W_PRIMARYKEY
+.endif
+.M->nTcnt := 0
+.foreach keyfield
+   .dd_sym->(dbSetOrder(1))
+   .dd_sym->(dbSeek( dd_key->KEY_SYM))
+   .M->cTkey := AllTrim(dd_sym->SYM_NAM)
+   .M->nTcnt := nTcnt + 1
+   .M->cTexp := tStrTran( toKeyField("KeyExpr") ,cTkey, alltrim(str(dd_sym->SYM_LEN)), alltrim(str(dd_sym->SYM_DEC)) )
+ATTACH KEY "Ûupper(cTkey)Û"  TO oWin:W_PRIMARYKEY ð ; // Campo chiave
+       KEYTYPE    ÛtoKeyField("keytype")Û  ð ; // Tipo  campo chiave
+       BLOCK      {|x|IF(x==NIL,ÛcTexp+[ ,]+cTkeyÛ:=x) } ð ; // Valorizza la chiave
+       VARTYPE    "Ûdd_sym->Sym_TypÛ"      ð ; // Tipo dato
+       VARLEN     Ûdd_sym->Sym_LenÛ        ð ; // Lunghezza campo chiave
+       EXPRESSION "ÛcTexpÛ"                ð   // Espressione
+.next
+

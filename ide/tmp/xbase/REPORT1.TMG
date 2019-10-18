@@ -1,0 +1,120 @@
+.parameter cPar1
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : REPORT1
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab report tipo lista semplice
+.* ----------------------------------------------------------------------------
+.M->cTmgName := "report1.tmg "
+.if "ins" $ cPar1
+    .M->ProPrj           := NewProg("prj","1")
+    .M->CodObj           := NewCod("obj")
+    .M->cObjLab          := M->CodObj
+    .*
+    .oo_bld->(dBnet("app",0))
+    .oo_bld->EXE         := oo_exe->exe
+    .oo_bld->OBJ         := M->CodObj
+    .oo_bld->TYP         := "prn"
+    .oo_bld->WDO         := "prn"
+    .oo_bld->EXT         := "prg"
+    .oo_bld->PRJINCN     := M->ProPrj
+    .oo_bld->SECTION     := "1"
+    .oo_bld->COMPILE     := "1"
+    .oo_bld->LINK        := "1"
+    .oo_bld->FLGGEN      := "1"
+    .oo_bld->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto nel file make/link..." ,75) )
+    .*
+    .oo_obj->(dBnet("app",0))
+    .oo_obj->OBJ         := M->CodObj
+    .oo_obj->TYP         := "prn"
+    .oo_obj->WDO         := "prn"
+    .oo_obj->EXT         := "prg"
+    .oo_obj->DBF         := M->MDbf
+    .oo_obj->TMPCOD      := "00"
+    .oo_obj->PRG         := M->MPrgDrv
+    .oo_obj->OBJDES      := M->cTitle
+    .oo_obj->ROW         := 03
+    .oo_obj->COL         := 02
+    .oo_obj->ROW1        := 60
+    .oo_obj->COL1        := 999
+    .oo_obj->OBJRL       := "0"
+    .oo_obj->VFLOAT      := "1"
+    .oo_obj->FLGUPD      := "1"
+    .oo_obj->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto report..."+Trim(oo_obj->OBJDES) ,75) )
+    .msg "Aggiunto oggetto : " + Trim(oo_obj->OBJDES)
+    .*
+.endif
+.*
+.if "grp" $ cPar1
+    .*------------------------------------------- Appendo nel file OO_PRN header di stampa
+    .CodPrn := NewCod("prn")
+    .oo_prn->(dBnet("app",0))
+    .oo_prn->PRN         := M->CodPrn
+    .oo_prn->OBJ         := M->CodObj
+    .oo_prn->REC_ID      := "G"
+    .oo_prn->TYP         := "rep"
+    .oo_prn->GRP         := "00"
+    .oo_prn->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto Header di stampa..." ,75) )
+    .*
+    .*------------------------------------------- Appendo nel file OO_PRN file master
+    .CodPrn := NewCod("prn")
+    .oo_prn->(dBnet("app",0))
+    .oo_prn->PRN         := M->CodPrn
+    .oo_prn->OBJ         := M->CodObj
+    .oo_prn->REC_ID      := "G"
+    .oo_prn->TYP         := "mst"
+    .oo_prn->GRP         := "AA"
+    .oo_prn->FILE        := M->mDbf
+    .oo_prn->TYPCOD      := "dbf"
+    .oo_prn->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto File Master..." ,75) )
+    .*
+    .*------------------------------------------- Appendo nelle opzioni l'indice per il master
+    .TOWrite( "prn", oo_prn->PRN, "indexcode" , M->mNdx)
+    .*------------------------------------------- Appendo nelle opzioni la banda di body
+    .TOWrite( "prn", oo_prn->PRN+"bdy", "bandactive" , "1")
+    .*
+    .tlExit := .f.
+    .tcCurrGrp := "MgrpExpr"+"€CntGrp€"
+    .if empty(€tcCurrGrp€)
+       .tlExit := .t.
+    .endif
+    .*
+    .do while CntGrp <= 9 .and. !tlExit
+        .*
+        .CodPrn := NewCod("prn")
+        .oo_prn->(dBnet("app",0))
+        .oo_prn->PRN         := M->CodPrn
+        .oo_prn->OBJ         := M->CodObj
+        .oo_prn->REC_ID      := "G"
+        .oo_prn->GRP         := "A" + CHR(ASC("A") + CntGrp )
+        .oo_prn->TYP         := "grp"
+        .oo_prn->FILE        := M->mDbf
+        .oo_prn->TYPCOD      := "dbf"
+        .oo_prn->(dBnet("url"))
+        .*
+        .__dbFrameDis( Padr(M->cTmgName+"Aggiunto Gruppo..." ,75) )
+        .*
+        .*------------------------------------------- Appendo nelle opzioni l'espressione di gruppo
+        .ToWrite( "prn", oo_prn->PRN, "grpexpr" , &tcCurrGrp)
+        .*
+        .mnGrp   := CntGrp
+        .CntGrp  := CntGrp + 1
+        .*
+        .if CntGrp <= 9
+            .tcCurrGrp := "MgrpExpr"+"€CntGrp€"
+            .if empty(€tcCurrGrp€)
+                .tlExit := .t.
+            .endif
+        .endif
+    .enddo
+    .*
+.endif
+.msg "Appende oggetto :" + oo_obj->objDes

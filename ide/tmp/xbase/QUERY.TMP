@@ -1,0 +1,289 @@
+.parameter cTtmp
+.M->cTtmp   := lower( cTtmp )
+.M->cNotPfk := ""
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : QUERY
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Metodi per oggetto query in monoutenza
+.* ----------------------------------------------------------------------------
+.do GenUsrM
+.M->lTnet   := .F.
+.M->nTcnt   := 0
+.M->nTvlc   := 0
+.M->cTstr   := ""
+.M->cTclf   := chr(13) + chr(10)
+.*
+.M->nTobjRec:= oo_obj->(recno())
+.M->cTobjTyp:= oo_obj->WDO
+.M->cTprg   := alltrim(oo_obj->PRG)
+.M->cTtitle := trim(oo_obj->OBJDES)
+.M->nTBrwNdx:= 0
+.M->lTtrnRep:= .F.
+.M->lTtrnApp:= .F.
+.M->cTnSeek := ""
+.M->aTukLast:= {}
+.*
+.M->nTdbfRec:= 0
+.M->cTdbf   := ""
+.dd_dbf->(dbSetOrder(1))
+.IF dd_dbf->(dbSeek(oo_obj->DBF))
+   .M->nTdbfRec:= dd_dbf->(recno())
+   .M->cTdbf   := tDbfAliasName()
+.endif
+.M->aItmDbf := tDbfLoadArray( oo_obj->OBJ )
+.*
+.M->lUdfObj := .F.
+.foreach symudfobj
+    .M->lUdfObj := .T.
+.next
+.*
+.M->cTAccChk := toProject("accesscheckfunc")
+.if "(" $ cTAccChk
+    .m->cTAccChk := left(cTAccChk, at("(", cTAccChk)-1)
+.endif
+.m->cTAccChk := alltrim(cTAccChk)
+.*
+.dd_dbf->(dbGoto( nTdbfRec ))
+.*
+.if tGenerationDividedfortype()
+.out ÛtSourcePath()+"\"+ tsourceGenPath()+cTprgÛ.prg 
+.do info with trim(cTtitle), tSourcePath()+"\"+tsourceGenPath()+cTprg+".prg" ,tGenTemplate()
+.else
+.out ÛtSourcePath()+"\"+cTprgÛ.prg 
+.do info with trim(cTtitle), tSourcePath()+"\"+cTprg+".prg" ,tGenTemplate()
+.endif
+
+
+#INCLUDE "Common.ch"
+#INCLUDE "dfCtrl.ch"
+#INCLUDE "dfGenMsg.ch"
+#INCLUDE "dfLook.ch"
+#INCLUDE "dfMenu.ch"
+#INCLUDE "dfNet.ch" 
+#INCLUDE "dfReport.ch"
+#INCLUDE "dfSet.ch"
+#INCLUDE "dfWin.ch"
+.inj top0 Punto di dichiarazione file INCLUDE *.ch per file sorgente
+
+.do varglo
+
+.M->aTquery := {}
+.m->ntGet   := 0
+
+.oo_itm->( dbSetOrder( 4 ) )
+.dd_sym->( dbSetOrder( 1 ) )
+.foreach item oo_itm->TYP $ "get-rel-exp-img"
+   .*
+   .dd_sym->( dbSeek( oo_itm->ITMGET ) )
+   .*
+   .do case
+       .*    non vengono considerati item di relazione in say
+       .case oo_itm->TYP == "rel" .and. ToItem("editcondition") == "0"
+             .*
+       .*    non vengono considerati item di tipo espressione privi di variabile in get
+       .case oo_itm->TYP $ "exp-img" .and. empty(oo_itm->ITMGET)
+             .*
+      .otherwise
+             .aadd(  aTQuery , {oo_itm->(recno()) , dfGetSym(oo_itm->ITMGET,;
+                                             {||alltrim(dd_sym->SYM_NAM)})} )
+             .m->ntGet := m->ntGet + 1
+             .*
+   .endcase
+.next
+
+STATIC aQuery                  ð,; // array dei campi in get
+       aSeq                    ð,; // array di ordinamento dei control delle query
+       oWin   := NIL           ð,; // Oggetto form
+       aFile  := {}            ð,; // Array dei file aperti dall' oggetto
+       cState := DE_STATE_MOD  ð,; // Stato della gestione
+       nWin   := 0             ð   // Flag per impedire la ricorsione
+
+.inj top1 Punto di dichiarazione STATICHE a livello di file sorgente
+
+         /* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+            ³           TABELLA METODI DELL'OGGETTO QUERY          ³
+            ÃÄÄÄÄÂÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+            ³ nø ³ mtd.³ Descrizione                               ³
+            ÃÄÄÄÄÅÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+            ³  1 ³ exe ³ Esecutore                                 ³
+            ³  2 ³ dbf ³ Apre la base dati                         ³
+            ³  3 ³ act ³ Attivazione oggetto                       ³
+            ³  4 ³ upw ³ Update window (aggiorna oggetto)          ³
+            ³  5 ³ end ³ Fine operazioni                           ³
+            ÀÄÄÄÄÁÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+
+*******************************************************************************
+FUNCTION ÛcTprgÛExe(                ; ð // [ 01 ]  ESECUTORE OPERAZIONI
+                     aQryOpt      , ; ð // Array dati in query
+                     xParameter     ) ð // Parametro Opzionale passato all'Entit…
+                   
+*******************************************************************************
+LOCAL  lRet    := .F.             ð   // Flag logico di ritorno
+
+.block exe0 Esegue le operazioni di base per attivazione oggetto QUERY
+
+PRIVATE  EnvId:="ÛcTprgÛ" ,SubId:=""   ð   // Variabili di ambiente per oggetto query
+.if ! empty(cTAccChk)
+
+IF ! ÛcTAccChkÛ(EnvId)
+   RETURN .F.
+ENDIF
+.endif
+
+nWin++
+IF nWin==1
+
+   IF ÛcTprgÛDbf()                ð // Apre la base dati
+
+      ÛcTprgÛAct()                ð // Attivazione oggetto
+      tbConfig( oWin )            ð // Configura oggetto (vedere Norton Guide)
+      ÛcTprgÛUpw( "#" )           ð //Visualizza i dati da MEMORIA
+
+      .inj exe3 
+
+      .M->cTmodId := toObject("startupmodctrl")
+      .if !Empty( cTmodId )
+      tbGetGoto(oWin ,"ÛcTmodIdÛ" ) ð //Rende attivo il primo control in modifica (vedere Norton Guide)
+      .else
+      tbGetTop(oWin,.T.)            ð //Rende attivo il primo control in modifica (vedere Norton Guide)
+      .endif
+
+      IF (lRet := tbGet( oWin ))    ð //Fase di get
+
+         .inj exe1 Prima assegnamento array delle get
+         // Assegna all'array aQryOpt chiave, filtro e break di query
+         ÛcTdbfÛ->(dfQryOpt( aQuery, aSeq, aQryOpt )) ð //Ottimizzatore query
+         .inj exe2 Dopo assegnamento array delle get
+
+      ENDIF
+
+      ÛcTprgÛEnd( W_OC_RESTORE )    ð //Chiusura oggetto
+   END
+
+.if !empty(aItmDbf)
+   dfClose( aFile, .F., .T. )       ð //Chiusura file
+
+.endif
+.if ! empty( toProject("winnotavailmsg") )
+ELSE
+   dfAlert( ÛtExpCast( toProject("winnotavailmsg") )Û )
+   ACT := "esc"
+.endif
+ENDIF
+nWin--
+
+.endblock
+
+RETURN lRet
+
+*******************************************************************************
+FUNCTION ÛcTprgÛDbf()             ð // [ 02 ] APERTURA DATABASE
+*******************************************************************************
+.block dbf0 apertura della base dati
+
+.if !empty(aItmDbf)
+.do dbfuse
+.endif
+
+.endblock
+
+RETURN .T.
+
+*******************************************************************************
+FUNCTION ÛcTprgÛAct( )            ð // [ 03 ] INIZIALIZZA OGGETTO
+*******************************************************************************
+LOCAL nHigh  := Ûstr(val(tObjBottom()),4)  Û 
+LOCAL nLen   := Ûstr(val(tObjRightCol()),4)Û 
+.block act0 Inizializzazione oggetto oWin
+
+IF oWin!=NIL ;RETURN oWin ;END    ð // Oggetto gia' inizializzato! Ritorna l'Id dell'oggetto.
+
+.dd_sym->( dbSeek( dd_sym->sym ) )   ./ ##
+.do addQryGe                      ./  genera array delle get
+.do addQrySe                      ./  genera array delle sequenze
+
+.do ActFrm
+.do icons
+/*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³ Menu Action  ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+.do ActMnu
+ATTACH "Z1" TO MENU oWin:W_MENUARRAY AS MN_LABEL  ð ; //
+        BLOCK    {||if((cState$"iam"),MN_SECRET,MN_OFF)} ð ; // Condizione di stato di attivazione
+        PROMPT   dfStdMsg( MSG_FORMESC ) ð ; // Label
+        SHORTCUT "esc"           ð ; // Azione (shortcut)
+        EXECUTE  {||dbAct2Kbd("esc")} ð ; // Funzione
+        MESSAGE  dfStdMsg( MSG_FORMESC ) ð   // Message
+ATTACH "Z2" TO MENU oWin:W_MENUARRAY AS MN_LABEL  ð ; //
+        BLOCK    {||if((cState$"am"),MN_SECRET,MN_OFF)} ð ; // Condizione di stato di attivazione
+        PROMPT   dfStdMsg( MSG_FORMWRI ) ð ; // Label
+        SHORTCUT "wri"           ð ; // Azione (shortcut)
+        EXECUTE  {||Act:="wri"}  ð ; // Funzione
+        MESSAGE  dfStdMsg( MSG_FORMWRI ) ð   // Message
+.if TisInitProc()
+   .if toExeEnv("menuopened")=="1"
+oWin:W_MENUPOS := "1"
+   .endif
+.endif
+.do ActTbr
+
+.inj act1 Dopo inizializzazioni oggetto oWin
+
+.do QryContr
+.m->cTFunc := toProject("titlesetupfunc")
+.if ! empty(cTFunc)
+   .if "(" $ cTFunc
+       .m->cTFunc := left(cTFunc, at("(", cTFunc)-1)
+   .endif
+   .m->cTFunc := alltrim(cTFunc)
+
+oWin:W_TITLE := ÛcTFunc+"("+tExpCast(trim(oo_obj->OBJDES))+", oWin, EnvID)"Û
+.endif
+
+.endblock
+
+RETURN oWin
+
+*******************************************************************************
+FUNCTION ÛcTprgÛUpw(        ;     ð // [ 04 ]  UPDATE WINDOW
+                    cDisGrp )     ð // Gruppo di visualizzazione
+*******************************************************************************
+.block upw0 Update window oggetto oWin
+
+tbDisItm( oWin ,cDisGrp )
+
+.endblock
+
+RETURN NIL
+
+*******************************************************************************
+FUNCTION ÛcTprgÛEnd(         ;    ð // [ 05 ] OPERAZIONI DI CHIUSURA
+                     cClose  )    ð // Modalita' chiusura oggetto "rcd"
+*******************************************************************************
+.block end0 Chiusura e rilascio oggetto oWin
+
+oWin:=tbEnd( oWin , cClose )
+
+.endblock
+
+RETURN NIL
+
+.if nTget > 0
+   .foreach item oo_itm->TYP $ "get-rel-exp-img"
+     .dd_sym->(dbSetOrder(1))
+     .dd_sym->(dbSeek(oo_itm->ITMGET))
+     .if tUdfGet( cTnSeek ,aTukLast )
+.do UdfqryGe
+     .endif
+   .next
+.endif
+
+.if lUdfObj
+.do udfobj
+.endif
+
+.inj bot1 Fine quadro data-entry
+
+.close
+.dbUsrOld()

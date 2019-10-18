@@ -1,0 +1,44 @@
+.parameter cEntId, cSeek
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GENENT                                           ?????
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Rigenera tutti gli oggetti modificati per tipo da entita'
+.* ----------------------------------------------------------------------------
+.msg [Operazione in corso ! - Attendere prego]
+.if cEntId == "typ+wdo"
+   .oo_obj->(DbSetorder(3))
+   .oo_obj->(DbSeek(cSeek))
+   .do while tObjType() == cSeek .and. ! oo_obj->(eof())
+      .M->nObjRec := oo_obj->(recno())
+      .if oo_obj->(dbNet("rec")) .AND. !empty(oo_obj->FLGUPD)
+.do ÛtObjTemplate("tmp")Û
+         .oo_obj->(DbGoto(nObjRec))
+         .oo_obj->PRGDATE := date()
+         .oo_obj->PRGTIME := dfTimeStd()
+         .oo_obj->FLGUPD  := ""
+         .oo_obj->(dbNet("url"))
+
+         .if oo_obj->WDO=="mke"
+             .oo_obj->(DbGotop())
+             .do while !oo_obj->(EOF())
+                 .if (oo_obj->TYP $ "lib-ext-spc")
+                     .if oo_obj->(dbNet("rec"))
+                         .oo_obj->PRGDATE := date()
+                         .oo_obj->PRGTIME := dfTimeStd()
+                         .oo_obj->FLGUPD  := ""
+                         .oo_obj->(dbNet("url"))
+                     .endif
+                 .endif
+                 .oo_obj->(dbSkip())
+             .enddo
+             .oo_obj->(DbGoto( nObjRec ))
+         .endif
+         .tUpgradeEnv()
+      .else
+          .msg [Programma : ]+alltrim(oo_obj->prg)+[.prg - NESSUNA MODIFICA !!]
+      .endif
+      .oo_obj->(DBSetorder(3))
+      .oo_obj->(DbSkip(1))
+   .enddo
+.endif

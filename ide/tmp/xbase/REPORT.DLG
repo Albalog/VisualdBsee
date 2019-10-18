@@ -1,0 +1,23 @@
+.EnvId       := "GrabPr1"
+.oDlg:=DlgNew( 05 , 9 ,"Stampa lista semplice" ,.T. ,"@" )
+.DlgRow( oDlg ,"                                                            ")
+.DlgRow( oDlg ," Intestazione .....: @01                                    ")
+.DlgRow( oDlg ," Archivio .........: @02                                    ")
+.DlgRow( oDlg ," Indice ...........: @03                                    ")
+.DlgRow( oDlg ," Nome programma ...: @04                                    ")
+.DlgRow( oDlg ," @05                                                        ")
+.DlgRow( oDlg ,"                                                            ")
+.DlgRow( oDlg ," @15              @20  @25                                  ")
+.DlgRow( oDlg ,"                                                            ")
+.DlgGet( oDlg ,"cTitle" ,"@01" ,{||M->cTitle} ,{||.T.} ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",NIL,;
+            "Digitare intestazione dell'oggetto" )
+.DlgGet( oDlg ,"mDbf" ,"@02" ,{||M->mDbf} ,{|cM,nS|FmDbf(cM,nS)}  ,"XXXXXXXX" ,NIL,;
+           "Digitare nome file | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mNdx" ,"@03" ,{||M->mNdx} ,{|cM,nS|FmNdx(cM,nS)}  ,"XXXXXXXX" ,NIL,;
+           "Digitare nome indice | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mPrgDrv" ,"@04" ,{||M->mPrgDrv} ,{|cM,nS|FmPrgDrv(cM,nS,m->mDbf,"Pr1")} ,"XXXXXXX" ,NIL,;
+            "Digitare nome programma !")
+.DlgCkb( oDlg ,"lRepStd" ,"@05" ,{|x|M->lRepStd:=x} ,M->lRepStd,"Modalit… report standard" )
+.DlgBut( oDlg ,"Butb"    ,"@15" ,{||.T.} ,{||DlgTake("Pr1Grp.dlg",.F.)} ,"R^aggruppamenti")
+.DlgBut( oDlg ,"But1"    ,"@20" ,{||.T.} ,{||DlgWri(oDlg)}    ,"^OK")
+.DlgBut( oDlg ,"But2"    ,"@25" ,{||.F.} ,{||DlgEsc(oDlg)}    ,"^Rinuncia")

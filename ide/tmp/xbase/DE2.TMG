@@ -1,0 +1,232 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : DE2
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab modello data-entry tipo fattura
+.* ----------------------------------------------------------------------------
+.M->cObjLab  := ""
+.M->cMnuObj  := tObjMnuId()
+.M->nMnuRec  := oo_mnu->(Recno())
+.M->cTmgName := "de2.tmg "
+.M->MEti     := if(oo_mnu->MNUTYP=="dom" .and. empty(oo_mnu->OBJ) .and. empty(toMenu("pfkfunction")),;
+                   oo_mnu->mnulab,PadR("Gestione",60))
+.M->MPrgFrm1 := SPACE(07)
+.M->MPrgFrm2 := SPACE(07)
+.M->Mdbf     := SPACE(08)
+.M->MDbf1    := SPACE(08)
+.M->MndxRel  := SPACE(08)
+.*----------- DEFAULT variabili per pulsanti su oggetto
+.M->lHome    := .F.
+.M->lSkpp    := .F.
+.M->lSkpn    := .F.
+.M->lEnd     := .F.
+.M->lIns     := .F.
+.M->lMod     := .F.
+.M->lWri     := .F.
+.M->lEsc     := .F.
+.M->lDel     := .F.
+.M->lKey     := .F.
+.M->oDlg     := NIL
+.M->EnvId    := "GrabDe2"
+.do de2.dlg
+.DlgShow(oDlg)
+.if !DlgInkey(oDlg)
+    .return
+.endif
+.*                               Preleva il codice del FILE-TESTATA + RIGHE
+.dd_dbf->(DbSetOrder(2))
+.dd_dbf->(DbSeek(upper(m->MDbf)))
+.M->MDbf     := dd_dbf->FILE
+.dd_dbf->(DbSeek(upper(m->MDbf1)))
+.M->MDbf1    := dd_dbf->FILE
+.dd_dbf->(DbSetOrder(1))
+.*                               Preleva il codice di relazione
+.dd_rel->(DbSetOrder(2))
+.dd_rel->(DbSeek(m->Mdbf1))
+.M->CodRel   := dd_rel->REL
+.M->lExit    := .F.
+.do while dd_rel->File1 = m->Mdbf1 .and. !dd_rel->(eof()) .and. !lExit
+    .if dd_rel->File2 = m->MDbf
+       .dd_ndx->(DbSetOrder( 2))
+       .dd_ndx->(DbSeek(dd_rel->relndx))
+       .if upper(dd_ndx->ndx_nam)=upper(m->MndxRel)
+          .M->lExit  := .T.
+          .M->CodRel := dd_rel->REL
+       .endif
+   .endif
+   .dd_rel->(Dbskip(1))
+.enddo
+.*
+.__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: de2.tmg in corso..." )
+.*
+.M->nRecLsb := 0
+.M->CodFat  := ""
+.M->CodEdr  := ""
+.M->cTmgName:= "form2.tmg "
+.M->ProPrj  := NewProg("prj","1")
+.M->CodObj  := NewCod("obj")
+.M->cObjLab := M->CodObj
+.*
+.oo_bld->(dBnet("app",0))
+.oo_bld->EXE         := oo_exe->exe
+.oo_bld->OBJ         := M->CodObj
+.oo_bld->TYP         := "frm"
+.oo_bld->WDO         := "frm"
+.oo_bld->EXT         := "prg"
+.oo_bld->PRJINCN     := M->ProPrj
+.oo_bld->SECTION     := "1"
+.oo_bld->COMPILE     := "1"
+.oo_bld->LINK        := "1"
+.oo_bld->FLGGEN      := "1"
+.oo_bld->(dBnet("url"))
+.*
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto nel file make/link..." ,70) )
+.*
+.oo_obj->(dBnet("app",0))
+.oo_obj->OBJ         := M->CodObj
+.oo_obj->TYP         := "frm"
+.oo_obj->WDO         := "frm"
+.oo_obj->EXT         := "prg"
+.oo_obj->TMPCOD      := "00"
+.oo_obj->PRG         := M->mPrgFrm1
+.oo_obj->DBF         := M->mDbf
+.oo_obj->OBJDES      := StrTran(M->mEti,"^","")
+.oo_obj->ROW         := 01
+.oo_obj->COL         := 01
+.oo_obj->ROW1        := 22
+.oo_obj->COL1        := 78
+.oo_obj->OBJRL       := "0"
+.oo_obj->FLGUPD      := "1"
+.oo_obj->(dBnet("url"))
+.*
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto form..."+Trim(oo_obj->OBJDES) ,70) )
+.*
+.oo_itm->(dBnet("app",0))
+.oo_itm->OBJ         := M->CodObj
+.oo_itm->ITM         := "0000"
+.oo_itm->BAND        := "001"
+.oo_itm->ITMINCN     := 0
+.oo_itm->TYP         := "pag"
+.oo_itm->ITMSAY      := "Pagina Nø1"
+.oo_itm->(dBnet("url"))
+.*
+.oo_itm->(dBnet("app",0))
+.oo_itm->OBJ         := M->CodObj
+.oo_itm->ITM         := "0001"
+.oo_itm->BAND        := "001"
+.oo_itm->ITMINCN     := 5
+.oo_itm->IGC         := ""
+.oo_itm->TYP         := "lsb"
+.oo_itm->ITMSAY      := "Righe : "+StrTran(M->mEti,"^","")
+.oo_itm->FONT        := "01 "
+.oo_itm->ROW         := 8
+.oo_itm->COL         := 0
+.oo_itm->ROW1        := 19
+.oo_itm->COL1        := 77
+.oo_itm->(dBnet("url"))
+.M->nRecLsb          := oo_itm->(Recno())
+.*
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM+oo_itm->IGC,"lsbroworigin" ,M->mDbf1 )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM+oo_itm->IGC,"lsbrelation"  ,M->CodRel)
+.if !Empty( M->mPrgFrm2 )
+   .do PfkLsb with "pfk/anr/mcr/ecr" ,"lsb" ,M->mDbf1
+.endif
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunta list-box..." ,70) )
+.*
+.do stdbut with 1
+.*
+.*
+.ToWrite( "obj", oo_obj->OBJ, "actionbar" ,"1" )
+.do MnuFrm with "file/add/mod/del/win/A07/skn/skp"
+.*
+.if !Empty( M->mPrgFrm2 )
+    .M->cTmgName := "brwedt.tmg "
+    .M->ProPrj   := NewProg("prj","1")
+    .M->CodObj   := NewCod("obj")
+    .*                               Aggiunge nel file MAKE/LINK
+    .oo_bld->(dBnet("app",0))
+    .oo_bld->EXE         := oo_exe->exe
+    .oo_bld->OBJ         := M->CodObj
+    .oo_bld->TYP         := "frm"
+    .oo_bld->WDO         := "edr"
+    .oo_bld->EXT         := "prg"
+    .oo_bld->PRJINCN     := M->ProPrj
+    .oo_bld->FLGGEN      := "1"
+    .oo_bld->COMPILE     := "1"
+    .oo_bld->LINK        := "1"
+    .oo_bld->SECTION     := "1"
+    .oo_bld->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto nel file make/link..." ,70) )
+    .*                               Aggiunto oggetto QUADRO EDIT RIGA
+    .oo_obj->(dBnet("app",0))
+    .oo_obj->OBJ         := M->CodObj
+    .oo_obj->TYP         := "frm"
+    .oo_obj->WDO         := "edr"
+    .oo_obj->EXT         := "prg"
+    .oo_obj->TMPCOD      := "00"
+    .oo_obj->PRG         := M->mPrgFrm2
+    .oo_obj->DBF         := M->mDbf1
+    .oo_obj->OBJDES      := [Edit ]+M->mDbf1
+    .oo_obj->ROW         := 12
+    .oo_obj->COL         := 03
+    .oo_obj->ROW1        := 20
+    .oo_obj->COL1        := 75
+    .oo_obj->OBJRL       := "0"
+    .oo_obj->FLGUPD      := "1"
+    .oo_obj->(dBnet("url"))
+    .*
+    .M->CodEdr := M->CodObj
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto EditBrowse..."+Trim(oo_obj->OBJDES) ,70) )
+    .*
+    .oo_itm->(dBnet("app",0))
+    .oo_itm->OBJ         := M->CodObj
+    .oo_itm->ITM         := "0000"
+    .oo_itm->BAND        := "001"
+    .oo_itm->ITMINCN     := 0
+    .oo_itm->TYP         := "pag"
+    .oo_itm->ITMSAY      := "Pagina Nø1"
+    .oo_itm->(dBnet("url"))
+    .*
+    .do butedr
+    .*
+    .if !Empty( oo_obj->DBF )
+       .do MnuFrm with "file/add/mod/del/win/A07"
+    .endif
+    .oo_itm->(dbGoto(M->nRecLsb))
+    .tOWrite("itm",oo_itm->OBJ+oo_itm->ITM+oo_itm->IGC,"lsbrowedit"  ,oo_obj->OBJ )
+    .*
+.endif
+.*
+.M->CodMnu  := ""
+.oo_mnu->(dbGoto(nMnuRec))
+.if oo_mnu->MNUTYP=="dom" .and. empty(oo_mnu->OBJ) .and. empty(toMenu("pfkfunction"))
+   .*------------------->  Aggiorno il MENU
+   .oo_mnu->(dBnet("rec"))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := M->mEti
+   .oo_mnu->OBJ         := M->cObjLab
+   .oo_mnu->(dBnet("url"))
+.else
+   .*------------------->  Aggiunge il MENU
+   .M->CodMnu           := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := M->cMnuObj
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := ""
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := M->mEti
+   .oo_mnu->MNUUSR      := "Gestione data-entry "+StrTran(M->mEti,"^","")
+   .oo_mnu->OBJ         := M->cObjLab
+   .oo_mnu->FLGUPD      := "1"
+   .oo_mnu->(dBnet("url"))
+.endif
+.tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,AllTrim(M->MPrgFrm1)+"Exe()" )
+.tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+.*                              Flag con Nørecord (HO AGGIUNTO!!!)
+.M->nRecMnu    := oo_mnu->(Recno())
+.*
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunge chiamata da menu :"+alltrim(m->MPrgFrm1)+[()] ,70) )
+.__dbFrameDis( Padr(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+.__dbFrameOff()

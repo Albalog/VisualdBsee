@@ -1,0 +1,73 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : UDFQRYGET
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Genera la funzione di controllo get per l'item in oggetto QUERY
+.* ----------------------------------------------------------------------------
+.m->nTCnt := Ascan( aTQuery, {|x|x[1] == oo_itm->(recno()) })
+.if m->nTCnt != 0
+    .M->cTsymCod  := dd_sym->SYM
+    .M->cTsym     := "cGet"+alltrim(str(m->nTCnt))
+    .M->cTsym1    := "aQuery["+alltrim(str(nTCnt))+",3]"
+    .M->cTsymNam  := alltrim(dd_sym->SYM_NAM)
+    .M->cTinf     := dd_sym->SYM_NAM+[, ]+dd_sym->SYM_TYP+[, ]+str(dd_sym->SYM_LEN,3)+[, ]+str(dd_sym->SYM_DEC,3)
+    .M->cTseek  := toRelation("relkey",,"mem")
+    .if "+" $ cTseek .and. ! "(" $ cTseek
+        .* chiave con indice composto senza funzioni di trasformazione str(), upper()
+        .M->cTappo := strtran(cTseek, " ", "") 
+        .M->cTseek := ""
+        .do while ! empty(cTAppo)
+           .M->nTPos := at("+", cTAppo)
+           .M->cTAppo1:= ""
+           .if M->nTPos == 0
+               .M->cTAppo1:= cTAppo
+               .M->cTAppo := ""
+           .else
+               .M->cTAppo1:= left(cTAppo, nTPos-1) 
+               .M->cTAppo := substr(cTappo, nTPos+1) 
+           .endif
+           .if ! empty( cTAppo1 )
+              .if ! empty(cTsymNam) .and. upper(alltrim(cTAppo1)) == upper(alltrim(cTsymNam))
+                  .M->nTPos := nTCnt
+              .else
+                 .M->nTPos   :=  Ascan( aTQuery, {|x|x[2]==alltrim(M->cTappo1)} )
+                 .if M->nTPos == 0
+                     .M->nTPos := 1
+                 .endif
+              .endif
+              .if ! empty(cTseek)
+                  .M->cTseek := cTseek + "+"
+              .endif
+              .M->cTseek  := cTseek + "aQuery["+alltrim(str(M->nTPos))+",3]"
+           .endif
+        .enddo       
+    .else
+       .M->cTseek  := cTSym1
+    .endif
+*******************************************************************************
+STATIC FUNCTION €cTsym+[( nPrePost ) // ]+M->cTinf€
+*******************************************************************************
+LOCAL aDbL ,lRet:=.T.
+.tPutInj( 0 ,[.inj GSF1] )
+DO CASE
+   CASE nPrePost == FORM_PREGET
+
+        .do WhenQry with 8
+
+        .tPutInj( 8 ,[.inj EDTA] )
+
+   CASE nPrePost == FORM_POSTGET .OR. nPrePost == FORM_CHKGET
+
+        .do ValidQry with 8
+
+        .tPutInj( 8 ,[.inj CHKA] )
+
+        IF nPrePost == FORM_POSTGET
+           .tPutInj( 11 ,[.inj GSF5] )
+        ENDIF
+
+ENDCASE
+.tPutInj( 0 ,[.inj GSF9] )
+
+RETURN lRet
+.endif

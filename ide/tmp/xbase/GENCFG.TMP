@@ -1,0 +1,31 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GENCFG
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Genera file di configurazione Progetto
+.* ----------------------------------------------------------------------------
+.M->ExePath    := tExePath()+"\"
+.M->CfgDat     := array(2)
+.M->CfgDat[01] := [dBstart.ini - File di INI del progetto  ]
+.M->CfgDat[02] := [dBlogin.dbf - Password                  ]
+.M->cFgTag     := {}
+.usermsg [Ctrl+Barra=Tag/unTag i file da generare - <Ù=Conferma]
+.dBwar(0,0,0,0,[SELEZIONE],[],CfgDat,CfgTag,1,0,[dbwar],NIL,[ret/esc],[s],[s],0)
+.M->nCfg := 1
+.do while nCfg <= len( CfgTag )
+   .if !Empty(CfgTag[nCfg])
+      .if type("OS()")=="C"
+         .* Visual dBsee
+         .msg 'CREA IL FILE -> ' + CfgDat[CfgTag[nCfg]]
+      .else
+         .msg [CREA IL FILE -> ] + CfgDat[CfgTag[nCfg]]
+      .endif
+      .M->CfgCopy := Upper( token( CfgDat[CfgTag[nCfg]] ," " ,1 ) )
+      .if M->CfgCopy == "DBSTART.INI"
+.do dbstart
+      .else
+         .tCopyFile( dfExeTmp()+M->CfgCopy ,M->ExePath+M->CfgCopy )
+      .endif
+   .endif
+   .M->nCfg := nCfg + 1
+.enddo

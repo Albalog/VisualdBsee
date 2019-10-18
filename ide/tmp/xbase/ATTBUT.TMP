@@ -1,0 +1,59 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTBUT.tmp
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Aggiunge control BUTTON ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTcnd := ["]+tItmActive()+["]
+.if !empty(toItem("butcondition")) .AND. toItem("butcondition")!=".T."
+   .M->cTcnd := cTcnd + ".AND.(" + toItem("butcondition")+")"
+.endif
+.M->bTfun  := toItem("butfunction")
+.M->cTbmp  := toItem("butbitmap")
+.M->cTBmpId := ""
+.if cTbmp == "0"
+    .M->cTbmp := ""
+.else
+   .if cTbmp == "1"
+      .M->cTbmp := "BUT_BMP_YES"
+   .else
+      .M->cTbmp := "BUT_BMP_SIZE"
+   .endif
+   .M->cTBmpId := toImage(toItem("xbimgorigin"), toItem("butbitmapname"))
+.endif
+.if Empty(bTfun)
+   .M->bTfun  := [dbMsgErr( dfStdMsg( MSG_ATTBUTUND ) )]
+.endif
+.M->cFont  := toItem("fontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.M->cTc := ["]+tItmCol("topleftcolor")   +[","]+tItmCol("promptcolor")     +[","]+;
+               tItmCol("hotkeycolor")    +[","]+tItmCol("bottomrightcolor")+[","]+;
+               tItmCol("prompthilitecol")+[","]+tItmCol("hotkeyhilitecol") +["]
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL GET AS PUSHBUTTON '+tExpCast(trim(oo_itm->ITMSAY))Û ð ; // ATTBUT.TMP
+                 AT ÛnTr1+','+nTc1+','+nTr2+','+nTc2Û ð ; // Coordinate
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 COORDINATE  W_COORDINATE_PIXEL ð ; // Coordinate in Pixel
+.endif
+.if !(cTpag=="1")
+                 PAGE        ÛcTpagÛ   ð ; // Pagina
+.endif
+                 COLOR    {ÛcTcÛ}      ð ; // Array dei colori
+                 FUNCTION {||ÛbTfunÛ}  ð ; // Funzione di controllo
+                 ACTIVE   {||cState $ ÛcTcndÛ} ð ; // Stato di attivazione
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+.endif
+.if toItem("packbutton") == "1"
+                 PACK                  ð ; // Pulsante su 2 righe
+.endif
+.if !Empty(cFont)
+                 FONT      ÛcFontÛ   ð ; // Font Name (XBASE)
+.endif
+.if ! empty(cTBmpID)
+                 BITMAP    ÛcTbmpÛ   ð ; // Bitmap (XBASE)
+                 BITMAPID  ÛcTbmpIDÛ   ð ; // Bitmap ID (XBASE)
+.endif
+                 MESSAGE ÛtExpCast(cTmsg)Û ð   // Messaggio utente

@@ -1,0 +1,25 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDPKEY
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge CAMPI CHIAVE PRIMARIA ad array control per
+.*                  : la dichiarazione delle variabili
+.* ----------------------------------------------------------------------------
+.dd_ndx->(dbSetOrder(2))
+.dd_ndx->(dbSeek( cTnSeek ))
+.foreach keyfield
+   .M->cTsym  := dd_sym->SYM_NAM
+   .M->cTsymD := alltrim(dd_sym->SYM_DES)
+   .M->cTstr  := cTdbf+[->]+trim(cTsym)
+   .M->cTdefE := toSymbol("default")
+   .M->cTdef  := ""
+   .if ! Empty( cTdefE )
+       .M->cTdef := cTsym+[ := iif(cState==DE_STATE_ADD ,]+cTdefE+[ ,]+cTstr+[)]
+   .else
+       .M->cTdef := cTsym+[ := ]+cTstr
+   .endif
+   .M->cTwri := cTdbf+[->]+LTRIM(cTsym)+[ := ]+cTsym
+   .if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+      .aadd( aTcontrol ,{ AllTrim(Lower(cTsym)) ,"keyfie" ,cTdef ,cTwri, cTsymD } )
+   .endif
+.next

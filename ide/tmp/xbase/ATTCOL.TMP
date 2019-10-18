@@ -1,0 +1,79 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTCOL.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge COLONNA a una List Box
+.* ----------------------------------------------------------------------------
+.M->cTc := ["]+tItmCol("headercolor")+[","]+tItmCol("datacolor")+[","]+;
+           tItmCol("datahilitecolor")+["]
+.M->cXTc := ""
+.if empty(toItem("xbheadercolor")) .and. empty(toItem("xbdatacolor")) .and. ;
+    empty(toItem("xbdatahilitecol")) .and. empty(toItem("xbfootercolor"))
+   .M->cXTc := "{"+cTc+"}"
+.else
+   .if empty(toItem("xbheadercolor"))
+      .M->cXTc := ["]+tItmCol("headercolor") +[","]
+   .else
+      .M->cXTc := ["]+toItem("xbheadercolor") +[","]
+   .endif
+   .if empty(toItem("xbdatacolor"))
+      .M->cXTc := cXTc+tItmCol("datacolor") +[","]
+   .else
+      .M->cXTc := cXTc+toItem("xbdatacolor") +[","]
+   .endif
+   .if empty(toItem("xbdatahilitecol"))
+      .M->cXTc := cXTc+tItmCol("datahilitecolor") +[","]
+   .else
+      .M->cXTc := cXTc+toItem("xbdatahilitecol") +[","]
+   .endif
+   .if empty(toItem("xbfootercolor"))
+      .M->cXTc := cXTc+tItmCol("footercolor") +["]
+   .else
+      .M->cXTc := cXTc+toItem("xbfootercolor") +["]
+   .endif
+   .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+.endif
+ATTACH COLUMN "ÛcIdCÛ" TO ÛcToWinÛ        ð ; // ATTCOL.TMP
+   .M->nTcnt := 1
+   .M->nTlen := Len( aTblk )
+   .do while nTcnt <= nTlen
+      .if nTcnt == 1
+                       BLOCK    ÛaTblk[nTcnt]Û
+      .else
+                                ÛaTblk[nTcnt]Û
+      .endif
+      .nTcnt := nTcnt +1
+   .enddo
+   .if !Empty( cTpic )
+                       PICTURE "ÛcTpicÛ"  ð ; // Picture visualizzazione dato
+   .endif
+   .if lThead
+                       PROMPT ÛtExpCast(cTtit)Û ð ; // Etichetta
+   .else
+      .if UPPER(ALLTRIM(cTtit)) == "TAG"
+                       PROMPT "TAG" ð ; // Etichetta
+      .endif
+   .endif
+                       WIDTH    ÛcTwidÛ   ð ; // Larghezza colonna
+   .M->cTtot := ToItem("ftdatatype")
+   .M->cTfot := ToItem("footvalue")
+   .do case
+      .case cTtot $ "1,4" .AND. Empty(cTfot) .AND. !Empty(cTfoo)
+                       TOTAL     ÛcTfooÛ  ð ; //
+                       FPICTURE "ÛcTpicÛ" ð ; // Picture Footer
+      .case cTtot $ "1,4" .AND. !Empty(cTfot)
+                       TOTAL     ÛcTfotÛ  ð ; //
+                       FPICTURE "ÛcTpicÛ" ð ; // Picture Footer
+      .case cTtot == "2" .AND. !Empty(cTfot)
+                       LABEL     ÛcTfotÛ  ð ; // Etichetta
+      .case cTtot == "3" .AND. !Empty(cTfot)
+                       INFO      ÛcTfotÛ  ð ; // Espressione aggiornata a cambio riga
+   .endcase
+   .if cTtot == "4" 
+                       COUNTMODE COLUMN_TAG_COUNT    ; // Count Mode 
+   .endif
+   .if ToItem("editcondition") == "1"
+                       EDIT     "ÛcTsymÛ" ð ; // Nome campo per edit cella
+   .endif
+                       COLOR  ÛcXTcÛ     ð ; // Array dei colori
+                       MESSAGE ÛtExpCast(cTmsg)Û ð   // Messaggio

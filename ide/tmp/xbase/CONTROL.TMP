@@ -1,0 +1,152 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : CONTROL.tmp
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Inizializza CONTROL per oggetto form
+.* ----------------------------------------------------------------------------
+.m->ntCntContr  := 0
+.m->ntFunc      := 0
+.m->ntMaxContr  := 120
+.m->nLsbControl := 10
+.*
+/*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³ Control                     ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+.*  In ordine di : OGGETTO + PAGINA + RIGA + COLONNA
+.oo_itm->(dbSetOrder(3))
+.foreach item oo_itm->TYP=="box"
+  .M->nRecItm:= oo_itm->(Recno())
+  .M->cIdC   := tControlId()
+  .M->nTr1   := str(oo_itm->ROW ,4)
+  .M->nTc1   := str(oo_itm->COL ,4)
+  .M->nTr2   := str(oo_itm->ROW1,4)
+  .M->nTc2   := str(oo_itm->COL1,4)
+  .M->cTpro  := Trim(oo_itm->ITMSAY)
+  .M->cTmsg  := tItmUsrMessage()
+  .M->cTdis  := "{||"+iif(empty(toItem('displayif')),'.T.',toItem('displayif'))+"}"
+  .M->cTrefId:= tLeadItm()+iif( Empty(toItem("refreshid")) ,"" ,"-"+toItem("refreshid"))
+  .M->cTpag  := tItemPage()
+.do ATTBOX
+  .oo_itm->(dbSetOrder(3))
+  .oo_itm->(dbGoto(nRecItm))
+  .*
+  .m->ntCntContr := m->ntCntContr + 1
+  .if m->ntCntContr > m->ntMaxContr
+      .m->ntCntContr := 0
+      .m->ntFunc     := m->ntFunc + 1
+.do subact with m->ntFunc
+  .endif
+  .*
+.next
+.*  In ordine di : OGGETTO + PAGINA + RIGA + COLONNA
+.oo_itm->(dbSetOrder(3))
+.foreach item oo_itm->TYP $ "say-fon-ico"
+  .M->nRecItm:= oo_itm->(Recno())
+  .M->cIdC   := tControlId()
+  .M->nTr1   := str(oo_itm->ROW ,4)
+  .M->nTc1   := str(oo_itm->COL ,4)
+  .M->nTr2   := str(oo_itm->ROW1,4)
+  .M->nTc2   := str(oo_itm->COL1,4)
+  .M->cTpro  := Trim(oo_itm->ITMSAY)
+  .M->cTmsg  := tItmUsrMessage()
+  .M->cTdis  := "{||"+iif(empty(toItem('displayif')),'.T.',toItem('displayif'))+"}"
+  .M->cTpag  := tItemPage()
+  .do case
+     .case oo_itm->TYP=="say"
+.do ATTSAY
+     .case oo_itm->TYP=="fon"
+.do ATTFON
+     .case oo_itm->TYP=="ico"
+.do ATTICO
+  .endcase
+  .oo_itm->(dbSetOrder(3))
+  .oo_itm->(dbGoto(nRecItm))
+  .*
+  .m->ntCntContr := m->ntCntContr + 1
+  .if m->ntCntContr >  m->ntMaxContr
+      .m->ntCntContr := 0
+      .m->ntFunc     := m->ntFunc + 1
+.do subact with m->ntFunc
+  .endif
+  .*
+.next
+.*
+.*  In ordine di : OGGETTO + PAGINA + PROGRESSIVO ORDINAMENTO
+.*
+.foreach control EMPTY(oo_itm->IDGRP).AND.!(oo_itm->TYP$"pag-say-box-fon-ico")
+  .M->nRecItm:= oo_itm->(Recno())
+  .M->cIdC   := tControlId()
+  .M->nTr1   := str(oo_itm->ROW ,4)
+  .M->nTc1   := str(oo_itm->COL ,4)
+  .M->nTr2   := str(oo_itm->ROW1,4)
+  .M->nTc2   := str(oo_itm->COL1,4)
+  .M->cTpro  := Trim(oo_itm->ITMSAY)
+  .M->cTmsg  := tItmUsrMessage()
+  .M->cTsym  := alltrim(dd_sym->SYM_NAM)
+  .M->cTpicG := tGetPicture()
+  .M->cTpicS := tSayPicture()
+  .M->cTsys  := "{|oGet|"+iif(empty(toItem('getfunction')),'.T.',toItem('getfunction'))+"}"
+  .M->cTdis  := "{||"+iif(empty(toItem('displayif')),'.T.',toItem('displayif'))+"}"
+  .M->cTpag  := tItemPage()
+  .M->cTrefId:= tLeadItm()+iif( Empty(toItem("refreshid")) ,"" ,"-"+toItem("refreshid"))
+  .M->cTrefGr:= toItem("refreshgrp")
+  .do case
+     .case oo_itm->TYP $ "txb"    
+          .if oo_itm->WDO == "rel" 
+             .if toItem( "editcondition" ) == "1"
+.do ATTGET
+             .else
+.do ATTREL
+             .endif
+          .else
+             .if toItem( "editcondition" ) == "1"
+.do ATTGET
+             .else
+.do ATTTXB
+             .endif
+          .endif
+     .case oo_itm->TYP $ "get-var-rel"
+          .M->cTpro  += IIF(!EMPTY(M->cTpro), toProject("xbpromptsepchar"),"")
+          .if toItem( "editcondition" ) == "1"
+.do ATTGET
+          .else
+.do ATTREL
+          .endif
+     .case oo_itm->TYP == "exp"
+          .M->cTpro  += IIF(!EMPTY(M->cTpro), toProject("xbpromptsepchar"),"")
+.do ATTEXP
+     .case oo_itm->TYP == "img"
+.do ATTIMG
+     .case oo_itm->TYP == "but"
+.do ATTBUT
+     .case oo_itm->TYP == "spb"
+          .M->cTpro  += IIF(!EMPTY(M->cTpro), toProject("xbpromptsepchar"),"")
+.do ATTSPB
+     .case oo_itm->TYP == "rdb"
+.do ATTRDB
+     .case oo_itm->TYP == "ckb"
+.do ATTCKB
+     .case oo_itm->TYP == "lsb"
+.do ATTLSB
+          .m->ntCntContr := m->ntCntContr + m->nLsbControl
+     .case oo_itm->TYP == "cmb"
+.do ATTLSB
+          .oo_itm->(dbGoto(nRecItm))
+          .M->cIdC   := tControlId()
+          .M->cTmsg  := tItmUsrMessage()
+          .M->cTpro  += IIF(!EMPTY(M->cTpro), toProject("xbpromptsepchar"),"")
+.do ATTCMB with cIdC
+          .m->ntCntContr := m->ntCntContr + m->nLsbControl
+  .endcase
+  .oo_itm->(dbGoto(nRecItm))
+  .*
+  .m->ntCntContr := m->ntCntContr + 1
+  .if m->ntCntContr > m->ntMaxContr
+      .m->ntCntContr := 0
+      .m->ntFunc     := m->ntFunc + 1
+.do subact with m->ntFunc
+  .endif
+  .*
+.next
+
+.oo_obj->(dbGoto(nTobjRec))

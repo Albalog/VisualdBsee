@@ -1,0 +1,29 @@
+.if !empty( cTPrintIf )
+IF €cTPrintIf€
+.endif
+.if M->lCrystal
+€space(ntMrg)€dfReportOutPut( €nTrow+[, ]+nTcol+[, ]+trim(dd_sym->SYM_NAM)+[, {"]+tControlID()+;
+              [","]+dd_sym->sym_typ+[",]+ALLTRIM(STR(dd_sym->sym_len))+[,]+ALLTRIM(STR(dd_sym->sym_dec))+[},"]+M->cBandAlias+["]€  )
+.else
+   .if toItem("bitmap") == "1"
+€space(ntMrg)€dfPrintImage( €nTrow+[, ]+nTcol+[, ]+trim(dd_sym->Sym_Nam)+[, ]+toItem("printimgsizew")+[, ]+;
+                toItem("printimgsizeh")€ )
+   .else
+      .M->cFont := toItem("fontname")
+      .if ! empty(cFont) .and. at("(", cFont) == 0
+          .M->cFont := ["]+cFont+["]
+      .endif
+      .if oo_itm->WIDTH != 0 ./  item multiriga
+€space(ntMrg)€dfPrint( €nTrow+[, ]+nTcol+[, ]+trim(dd_sym->Sym_Nam)+[, "]+ trim(oo_itm->PicO) +[", ]+;
+                cTattr+[, .T.,]+alltrim(str(oo_itm->WIDTH))+[, ]+toItem("prnprecolumn")+[, ]+toItem("prnpostcolumn")+[, ]+toItem("prnfiller")+[, ]+M->cFont€ )
+      .else
+         .if ! empty(cFont)
+             .M->cFont := ",,,,,, "+cFont
+         .endif
+€space(ntMrg)€dfPrint( €nTrow+[, ]+nTcol+[, ]+trim(dd_sym->Sym_Nam)+[ ,"]+tSayPicture() +[", ] + cTattr + cFont€ )
+      .endif
+   .endif
+.endif
+.if !empty( cTPrintIf )
+ENDIF
+.endif

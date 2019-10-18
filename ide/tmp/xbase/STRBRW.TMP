@@ -1,0 +1,19 @@
+.parameter cTAls
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : STRBRW
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Crea la stringa per item in colonna
+.* ----------------------------------------------------------------------------
+.do case
+   .case oo_itm->TYP == "get"
+        .M->cTbrwStr := cTAls+[->]+trim(dd_sym->SYM_NAM)
+   .case oo_itm->TYP == "var"
+        .M->cTbrwStr := trim(dd_sym->SYM_NAM)
+   .case oo_itm->TYP == "udf"
+        .M->cTbrwStr := trim(dd_sym->SYM_NAM)+[( ]+tItmUdfParam()+[ )]
+   .case oo_itm->TYP $ "exp-img"
+        .M->cTbrwStr := tfItmExp()
+   .otherwise
+        .M->cTbrwStr:= [/* ITEM TYP := ]+oo_itm->TYP+[  SCONOSCIUTO */]
+.endcase

@@ -1,0 +1,15 @@
+.parameter cMode
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : N121LOCK
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Append ,lock o unlock del record in rete per relazioni 1:1
+.* ----------------------------------------------------------------------------
+.do case
+   .case cMode == "app"
+ÛcTalsÛ->(dfNet(NET_APPEND,0))       ð // Append del record
+   .case cMode == "lok"
+ÛcTalsÛ->(dfNet(NET_RECORDLOCK,0))   ð // Blocco del record
+   .case cMode == "unl"
+ÛcTalsÛ->(dfNet(NET_RECORDUNLOCK))   ð // Sblocco del record
+.endcase

@@ -1,0 +1,22 @@
+.m->nTPrnPos := oo_prn->(recno())
+.oo_prn->(dbSetOrder(2) )
+.oo_prn->(dbSeek( oo_obj->OBJ+"C"+substr(oo_itm->ITMGET,1,4) ))
+.if !empty( cTPrintIf )
+IF ÛcTPrintIfÛ
+.endif
+.if M->lCrystal
+Ûspace(ntMrg)ÛdfReportOutPut( ÛnTrow+[, ]+nTcol+[, ]+trim(oo_prn->VAR_NAME)+[, {"]+tControlID()+[","]+tPrnPicture()+["},"]+M->cBandAlias+[","]+["]Û  )
+.else
+   .M->cFont := toItem("fontname")
+   .if ! empty(cFont)
+      .if at("(", cFont) == 0
+         .M->cFont := ["]+cFont+["]
+      .endif
+      .M->cFont := ",,,,,, "+cFont
+   .endif
+Ûspace(ntMrg)ÛdfPrint( ÛnTrow+[, ]+nTcol+[, ]+trim(oo_prn->VAR_NAME)+[, "]+ tPrnPicture() +[", ] + cTattr+cFontÛ )
+.endif
+.if !empty( cTPrintIf )
+ENDIF
+.endif
+.oo_prn->(dbGoto( m->nTPrnPos ) )

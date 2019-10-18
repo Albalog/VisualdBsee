@@ -1,0 +1,26 @@
+.parameter nPag
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : BUTPAGH
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab pulsante PAGINA HOME. Muove alla prima pagina
+.* ----------------------------------------------------------------------------
+.M->cItm := NewCod("itm")
+.M->nPro := NewProg("itm")
+.oo_itm->(dBnet("app",0))
+.oo_itm->OBJ         := oo_obj->OBJ
+.oo_itm->ITM         := M->cItm
+.oo_itm->BAND        := IF(nPag>1,"000","001")
+.oo_itm->ITMINCN     := M->nPro
+.oo_itm->TYP         := "but"
+.oo_itm->ITMSAY      := "|"
+.oo_itm->ITMMSG      := "Muove alla prima pagina"
+.oo_itm->ROW         := 0
+.oo_itm->COL         := 43
+.oo_itm->ROW1        := 02
+.oo_itm->COL1        := 46
+.oo_itm->(dBnet("url"))
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butmacrotype"  ,"1" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butfunction"   ,"tbPgTop(oWin)" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activeink"     ,"1" )
+.__dbFrameDis( PADR("Aggiunto PULSANTE |" ,70) )

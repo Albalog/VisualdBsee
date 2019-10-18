@@ -1,0 +1,91 @@
+<CAP> MANUTENZIONE TABELLE
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ MANUTENZIONE TABELLE ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ L'ambiente manutenzione tabelle consente la gestione dei file tabellari
+ definiti nell'applicativo generato.
+
+<BEGINBOX>
+           ÚElenco file tabellariÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+           ³ TABCAT   Tabella CATEGORIE articoli             ³
+           ³ TABGRP   Tabella GRUPPO articoli                ³
+           ³ TABIVA   Tabella CODICI iva                     ³
+           ³ TABPAG   Tabella CODICI di pagamento            ³
+           ³                                                 ³
+           ³                                                 ³
+           ³                                                 ³
+           ³                                                 ³
+           ³                                                 ³
+           ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+<ENDBOX>
+
+ L'utilizzo del tasto Invio consente la visualizzazione dei dati
+ della tabella selezionata:
+
+<BEGINBOX>
+    ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄTabella CATEGORIE articoliÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+    ³Codice categoria³Descrizione categoria                          ³
+    ³ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ³
+    ³000001          ³Primo codice categoria                         ³
+    ³000002          ³Secondo codice categoria                       ³
+    ³                ³                                               ³
+    ³                ³                                               ³
+    ³                ³                                               ³
+    ³                ³                                               ³
+    ³                ³                                               ³
+    ³                ³                                               ³
+    ³                ³                                               ³
+    ³                ³                                               ³
+    ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+<ENDBOX>
+
+ I tasti disponibili in questo ambiente sono :
+
+         TASTI DI MANUTENZIONE TABELLE
+         ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+         F1    ³ Tasti disponibili.
+                ³
+         Ins    ³ Consente l'inserimento di un nuovo record nel file
+                ³ se abilitato all'interno del file DBSTART.INI, nella
+                ³ directory ..\EXE dell'applicazione.
+                ³
+         Barra  ³ Consente la modifica di un record nel file
+                ³ se abilitata all'interno del file DBSTART.INI, nella
+                ³ directory ..\EXE dell'applicazione.
+                ³
+         <ÄÙ    ³ Consente il reperimento del dato posizionato
+                ³ dal campo di data entry chiamante.
+                ³
+         Canc   ³ Consente la cancellazione di un record del file
+                ³ se abilitata all'interno del file DBSTART.INI, nella
+                ³ directory ..\EXE dell'applicazione.
+                ³
+         ->     ³ Permette lo scroll orizzontale verso destra
+                ³ del file tabellare
+                ³
+         <-     ³ Permette lo scroll orizzontale verso sinistra
+                ³ del file tabellare
+
+ Qualora siano abilitate le funzionalit… di inserimento o di modifica,
+ all'interno del file DBSTART.INI, viene presentata la seguente
+ maschera di edit:
+
+<BEGINBOX>
+         ÚÄÄÄÄÄÄÄÄÄÄÄÄTabella CATEGORIE articoliÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+         ³ Codice categoria       000001                      ³
+         ³ Descrizione categoria  Primo codice categoria      ³
+         ³                                                    ³
+         ³         ÚÄÄÄÄÄÄÄÄÄÄ¿ ÚÄÄÄÄÄÄÄÄÄÄÄ¿                 ³
+         ³         ³ Conferma ³ ³ Abbandona ³                 ³
+         ³         ÀÄÄÄÄÄÄÄÄÄÄÙ ÀÄÄÄÄÄÄÄÄÄÄÄÙ                 ³
+         ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+<ENDBOX>
+
+In fase di data entry o di modifica di un record di una tabella,
+se queste funzionalit… sono state abilitate, dopo un tempo durante
+il quale non viene premuto alcun tasto, stabilito per default in
+60 secondi (all'interno del file DBSTART.INI) l'operazione viene
+sospesa.  Questa funzionalit… viene definita time out di
+tastiera.

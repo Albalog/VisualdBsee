@@ -1,0 +1,73 @@
+.parameter cToWin ,cTarr
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : COLLSBA
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Iniziallizazione colonne per List-Box tipo ARRAY BOX
+.* ----------------------------------------------------------------------------
+.M->nTcnt := 0
+.M->lTHead:= .T.
+.if oo_obj->TYP=="brw"
+   .M->lTHead:= IF( VAL(toObject("rowsinheader")) > 0 ,.T. ,.F. )
+.else
+   .M->lTHead:= IF( VAL(toItem("rowsinheader")) > 0 ,.T. ,.F. )
+.endif
+.M->nColCount := 0
+.foreach itemgroup
+   .M->nColCount++
+   .M->cTsym := trim(dd_sym->SYM_NAM)
+   .M->cIdC  := tControlId()
+   .M->aTblk := {}
+   .M->cTfoo := ""
+   .M->cTtot := ToItem("ftdatatype")
+   .M->cTtit := AllTrim(oo_itm->ITMSAY)
+   .M->cTwid := str(oo_itm->WIDTH,2)
+   .M->cTpic := tSayPicture()
+   .M->cTmsg := AllTrim(oo_itm->ITMMSG)
+   .M->cTarrNam := ""
+   .do case
+      .case oo_itm->TYP == "tag"
+           .*
+           .M->cTpic := ""
+           .aadd( aTblk ,[{||tbDisTag(]+cToWin+[)}  ;] )
+           .*
+      .case oo_itm->TYP $ "-exp-img-"
+           .M->cTpic    := alltrim(oo_itm->PicO)
+           .M->cTarrNam := tfItmExp()
+           .M->cTarrEle := "NIL"
+           .if "[?]" $ M->cTarrNam
+               .M->cTstr    := STRTRAN( M->cTarrNam ,"[?]" ,"" )
+               .M->cTarrNam := Token( M->cTstr ,"" ,1)
+               .M->cTarrEle := Token( M->cTstr ,"" ,2)
+               .* Modification to get more than 9 column
+               .nIni := at("[",M->cTarrEle)
+               .nFin := at("]",M->cTarrEle)
+               .* end
+               .if EMPTY(M->cTarrEle)
+                   .M->cTarrEle := "NIL"
+               .else
+                   .* M->cTarrEle := SUBS( M->cTarrEle ,2,1)  // OLD
+                   .* Modification to get more than 9 column
+                   .M->cTarrEle := SUBS( M->cTarrEle ,nIni+1,nFin-nIni-1)
+                   .* end
+               .endif
+               .aadd( aTblk ,'{|| tbGetArr('+cTowin+','+cTarrNam+','+cTarrEle+','+ ALLTRIM(STR(nColCount))+') }  ;' )
+               .if cTtot != "0"
+                  .cTfoo := 'tbGetArr('+cTowin+','+cTarrNam+','+cTarrEle +','+ ALLTRIM(STR(nColCount))+')'
+               .endif
+           .else
+               .aadd( aTblk ,'{|| tbGetArr('+cTowin+','+cTarrNam+') }  ;' )
+               .if cTtot != "0"
+                  .cTfoo := 'tbGetArr('+cTowin+','+cTarrNam+')'
+               .endif
+           .endif
+           .*
+      .otherwise
+           .aadd( aTblk ,[{||"empty"}  ;] )
+   .endcase
+   .*
+.do attcol
+   .if !EMPTY( M->cTarrNam )
+tbArrLen( €cToWin+" ,LEN("+cTarrNam€) )
+   .endif
+.next

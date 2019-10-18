@@ -1,0 +1,16 @@
+.oDlg:=DlgNew( 05 ,12 ,"Data entry su pagina singola" ,.T. ,"@" )
+.DlgRow( oDlg ,"                                                    ")
+.DlgRow( oDlg ," Etichetta di menu : @01                            ")
+.DlgRow( oDlg ," Nome archivio     : @02        Programma : @03     ")
+.DlgRow( oDlg ,"                                                    ")
+.DlgRow( oDlg ," @20                          @25  @26              ")
+.DlgRow( oDlg ,"                                                    ")
+.DlgGet( oDlg ,"mEti" ,"@01" ,{||M->mEti} ,{||.T.} ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",NIL,;
+            "Digitare titolo etichetta di menu" )
+.DlgGet( oDlg ,"mDbf" ,"@02" ,{||M->mDbf} ,{|cM,nS|FmDbfFrm(cM,nS)}  ,"XXXXXXXX" ,NIL,;
+           "Digitare nome file | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mPrgFrm1" ,"@03" ,{||M->mPrgFrm1} ,{|cM,nS|FmPrgFrm1(cM,nS,M->mDBF,"Frm")} ,"XXXXXXX" ,NIL,;
+            "Digitare nome file programma !")
+.DlgBut( oDlg ,"Butb"  ,"@20" ,{||.T.} ,{||DlgTake("StdBut.dlg",.F.)} ,"^Pulsanti standard")
+.DlgBut( oDlg ,"But1"  ,"@25" ,{||.T.} ,{||DlgWri(oDlg)}    ,"^OK")
+.DlgBut( oDlg ,"But2"  ,"@26" ,{||.F.} ,{||DlgEsc(oDlg)}    ,"^Rinuncia")

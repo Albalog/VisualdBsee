@@ -1,0 +1,332 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : NEWEXE
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab nuovo sottoprogetto
+.* NOTA BENE    : non e' necessario in questo template eseguire lock ed
+.*              : unlock records perche' queste operazioni sone gestite
+.*              : in dBsee, con il lock dei seguenti files :
+.*              : oo_exe - oo_mnu - oo_cod - oo_obj - oo_bld - oo_itm
+.* ----------------------------------------------------------------------------
+.__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: newexe.tmg in corso..." )
+.M->CodObj           := ""
+.M->CodExe           := NewCod("exe")
+.oo_exe->(dBappend())
+.oo_exe->EXE         := M->CodExe
+.oo_exe->EXENAME     := M->EXENAME
+.oo_exe->EXEDES      := M->EXEDES
+.oo_exe->PRJNAME     := M->PRJNAME
+.oo_exe->PATH        := M->EXEPATH
+.oo_exe->STARTDATE   := M->STARTDATE
+.oo_exe->LASTUPD     := M->LASTUPD
+.oo_exe->FLGUPD      := "1"
+.M->nNewExe          := oo_exe->(Recno())
+.*
+.*                      GO.bat
+.*
+.M->ProPrj           := NewProg("prj","0")
+.M->CodObj           := NewCod("obj")
+.oo_bld->(dBappend())
+.oo_bld->EXE         := oo_exe->exe
+.oo_bld->OBJ         := M->CodObj
+.oo_bld->TYP         := "spc"
+.oo_bld->WDO         := "bat"
+.oo_bld->EXT         := "bat"
+.oo_bld->PRJINCN     := M->ProPrj
+.oo_bld->SECTION     := "0"
+.oo_bld->FLGGEN      := "1"
+.__dbFrameDis( "Aggiunto oggetto nel file make/link..." ,70)
+.*
+.oo_obj->(dBappend())
+.oo_obj->OBJ         := M->CodObj
+.oo_obj->TYP         := oo_bld->TYP
+.oo_obj->WDO         := oo_bld->WDO
+.oo_obj->EXT         := oo_bld->EXT
+.oo_obj->TMPCOD      := "00"
+.oo_obj->PRG         := "Go"+AllTrim(Str(Val(oo_exe->EXE),2))
+.oo_obj->OBJDES      := "Compilazione e link"
+.oo_obj->FLGUPD      := "1"
+.*
+.*                      MAKE.PRG
+.*
+.M->ProPrj           := NewProg("prj","0")
+.M->CodObj           := NewCod("obj")
+.oo_bld->(dBappend())
+.oo_bld->EXE         := oo_exe->exe
+.oo_bld->OBJ         := M->CodObj
+.oo_bld->TYP         := "spc"
+.oo_bld->WDO         := "mke"
+.oo_bld->EXT         := "xpj"
+.oo_bld->PRJINCN     := M->ProPrj
+.oo_bld->SECTION     := "0"
+.oo_bld->FLGGEN      := "1"
+.__dbFrameDis( "Aggiunto oggetto nel file make/link..." ,70)
+.*
+.oo_obj->(dBappend())
+.oo_obj->OBJ         := M->CodObj
+.oo_obj->TYP         := oo_bld->TYP
+.oo_obj->WDO         := oo_bld->WDO
+.oo_obj->EXT         := oo_bld->EXT
+.oo_obj->TMPCOD      := "00"
+.oo_obj->PRG         := "Make"+AllTrim(Str(Val(oo_exe->EXE),2))
+.oo_obj->OBJDES      := "File di make"
+.oo_obj->FLGUPD      := "1"
+.*
+.*                      DLINK.PRG
+.*
+.*.M->ProPrj           := NewProg("prj","0")
+.*.M->CodObj           := NewCod("obj")
+.*.oo_bld->(dBappend())
+.*.oo_bld->EXE         := oo_exe->exe
+.*.oo_bld->OBJ         := M->CodObj
+.*.oo_bld->TYP         := "spc"
+.*.oo_bld->WDO         := "lnk"
+.*.oo_bld->EXT         := "lnk"
+.*.oo_bld->PRJINCN     := M->ProPrj
+.*.oo_bld->SECTION     := "0"
+.*.oo_bld->FLGGEN      := "1"
+.*.__dbFrameDis( "Aggiunto oggetto nel file make/link..." ,70)
+.*
+.*.oo_obj->(dBappend())
+.*.oo_obj->OBJ         := M->CodObj
+.*.oo_obj->TYP         := oo_bld->TYP
+.*.oo_obj->WDO         := oo_bld->WDO
+.*.oo_obj->EXT         := oo_bld->EXT
+.*.oo_obj->TMPCOD      := "00"
+.*.oo_obj->PRG         := "Dlink"+AllTrim(Str(Val(oo_exe->EXE),2))
+.*.oo_obj->OBJDES      := "File di Dlink"
+.*.oo_obj->FLGUPD      := "1"
+.*
+.*                      MENU.PRG
+.if lNewIni
+   .*
+   .M->ProPrj           := NewProg("prj","0")
+   .M->CodObj           := NewCod("obj")
+   .oo_bld->(dBappend())
+   .oo_bld->EXE         := oo_exe->exe
+   .oo_bld->OBJ         := M->CodObj
+   .oo_bld->TYP         := "frm"
+   .oo_bld->WDO         := "frm"
+   .oo_bld->EXT         := "prg"
+   .oo_bld->PRJINCN     := M->ProPrj
+   .oo_bld->FLGGEN      := "1"
+   .oo_bld->COMPILE     := "1"
+   .oo_bld->LINK        := "1"
+   .oo_bld->SECTION     := "0"
+   .*
+   .oo_obj->(dBappend())
+   .oo_obj->OBJ         := M->CodObj
+   .oo_obj->TYP         := "frm"
+   .oo_obj->WDO         := "frm"
+   .oo_obj->EXT         := "prg"
+   .oo_obj->TMPCOD      := "00"
+   .oo_obj->PRG         := M->MINILOG
+   .oo_obj->DBF         := ""
+   .oo_obj->OBJDES      := M->EXEDES
+   .oo_obj->ROW         := 01
+   .oo_obj->COL         := 01
+   .oo_obj->ROW1        := 22
+   .oo_obj->COL1        := 78
+   .oo_obj->OBJRL       := "0"
+   .oo_obj->FLGUPD      := "1"
+   .*
+   .oo_itm->(dBappend())
+   .oo_itm->OBJ         := M->CodObj
+   .oo_itm->ITM         := "0000"
+   .oo_itm->BAND        := "001"
+   .oo_itm->ITMINCN     := 0
+   .oo_itm->TYP         := "pag"
+   .oo_itm->ITMSAY      := "Pagina Nø1"
+   .*
+   .ToWrite( "obj", oo_obj->OBJ, "actionbar" ,"1" )
+   .*
+   .M->CodMnu           := NewCod("mnu")
+   .oo_mnu->(dBappend())
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := "1"
+   .oo_mnu->MNUTYP      := "lab"
+   .oo_mnu->MNULAB      := "^Gestione"
+   .oo_mnu->MNUUSR      := "Raggruppa i data entry del programma"
+   .*
+   .M->CodMnu           := NewCod("mnu")
+   .oo_mnu->(dBappend())
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := "2"
+   .oo_mnu->MNUTYP      := "lab"
+   .oo_mnu->MNULAB      := "^Stampe"
+   .oo_mnu->MNUUSR      := "Raggruppa le stampe del programma"
+   .*
+   .M->CodMnu           := NewCod("mnu")
+   .oo_mnu->(dBappend())
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := "3"
+   .oo_mnu->MNUTYP      := "lab"
+   .oo_mnu->MNULAB      := "Se^rvizio"
+   .oo_mnu->MNUUSR      := "Raggruppa le procedure di servizio del programma"
+   .*
+   .M->MINILOG  := M->CodObj
+   .*
+.else
+   .*  Carica oggetti dipendenti dal menu nuovo sottoprogetto
+   .*
+   .oo_obj->(dbSetorder(1))
+   .oo_obj->(dbSeek(M->mIniLog))
+   .M->ProPrj           := NewProg("prj","0")
+   .oo_bld->(dBappend())
+   .oo_bld->EXE         := oo_exe->EXE
+   .oo_bld->OBJ         := oo_obj->OBJ
+   .oo_bld->TYP         := oo_obj->TYP
+   .oo_bld->WDO         := oo_obj->WDO
+   .oo_bld->EXT         := oo_obj->EXT
+   .oo_bld->PRJINCN     := M->ProPrj
+   .oo_bld->COMPILE     := "1"
+   .oo_bld->LINK        := "1"
+   .oo_bld->FLGGEN      := "1"
+   .oo_bld->SECTION     := "0"
+   .do newobje
+   .*
+.endif
+.__dbFrameDis( "Aggiunto oggetto MENU..." ,70)
+.*
+.*                      FINE PROGRAMMA.PRG
+.if lNewEnd
+   .*
+   .M->ProPrj           := NewProg("prj","0")
+   .M->CodObj           := NewCod("obj")
+   .oo_bld->(dBappend())
+   .oo_bld->EXE         := oo_exe->exe
+   .oo_bld->OBJ         := M->CodObj
+   .oo_bld->TYP         := "frm"
+   .oo_bld->WDO         := "frm"
+   .oo_bld->EXT         := "prg"
+   .oo_bld->PRJINCN     := M->ProPrj
+   .oo_bld->FLGGEN      := "1"
+   .oo_bld->COMPILE     := "1"
+   .oo_bld->LINK        := "1"
+   .oo_bld->SECTION     := "0"
+   .*
+   .oo_obj->(dBappend())
+   .oo_obj->OBJ         := M->CodObj
+   .oo_obj->TYP         := "frm"
+   .oo_obj->WDO         := "frm"
+   .oo_obj->EXT         := "prg"
+   .oo_obj->TMPCOD      := "00"
+   .oo_obj->PRG         := M->MENDLOG
+   .oo_obj->DBF         := ""
+   .oo_obj->OBJDES      := M->MENDLOG
+   .oo_obj->ROW         := 01
+   .oo_obj->COL         := 01
+   .oo_obj->ROW1        := 22
+   .oo_obj->COL1        := 78
+   .oo_obj->OBJRL       := "0"
+   .oo_obj->FLGUPD      := "1"
+   .*
+   .oo_itm->(dBappend())
+   .oo_itm->OBJ         := M->CodObj
+   .oo_itm->ITM         := "0000"
+   .oo_itm->BAND        := "001"
+   .oo_itm->ITMINCN     := 0
+   .oo_itm->TYP         := "pag"
+   .oo_itm->ITMSAY      := "Pagina Nø1"
+   .*
+   .M->MENDLOG  := M->CodObj
+   .*
+.else
+   .*  Carica oggetti dipendenti da oggetto fine programma
+   .*
+   .oo_obj->(dbSetorder(1))
+   .oo_obj->(dbSeek(M->mEndLog))
+   .M->ProPrj           := NewProg("prj","0")
+   .oo_bld->(dBappend())
+   .oo_bld->EXE         := oo_exe->EXE
+   .oo_bld->OBJ         := oo_obj->OBJ
+   .oo_bld->TYP         := oo_obj->TYP
+   .oo_bld->WDO         := oo_obj->WDO
+   .oo_bld->EXT         := oo_obj->EXT
+   .oo_bld->PRJINCN     := M->ProPrj
+   .oo_bld->SECTION     := "0"
+   .oo_bld->COMPILE     := "1"
+   .oo_bld->LINK        := "1"
+   .oo_bld->FLGGEN      := "1"
+   .do newobje
+   .*
+.endif
+.*
+.foreach file
+   .if ! Empty( dd_dbf->FILE_OBJ )
+      .if ! TobjInExe( dd_dbf->FILE_OBJ )
+         .oo_obj->(dbSetorder(1))
+         .oo_obj->(dbSeek( dd_dbf->FILE_OBJ ))
+         .do appbld
+         .__dbFrameDis( "Incluso oggetto :"+oo_obj->PRG ,70)
+         .do newobje
+      .endif
+   .endif
+   .foreach index
+      .if ! Empty( dd_ndx->KEY_WIN )
+         .if ! TobjInExe( dd_ndx->KEY_WIN )
+            .oo_obj->(dbSetorder(1))
+            .oo_obj->(dbSeek( dd_ndx->KEY_WIN ))
+            .do appbld
+            .__dbFrameDis( "Incluso oggetto :"+oo_obj->PRG ,70)
+            .do newobje
+         .endif
+      .endif
+   .next
+.next
+.*
+.dd_rel->(dbGoTop())
+.do while ! dd_rel->(Eof())
+   .if ! Empty( dd_rel->ALWIN )
+      .if ! TobjInExe( dd_rel->ALWIN )
+         .oo_obj->(dbSetorder(1))
+         .oo_obj->(dbSeek( dd_rel->ALWIN ))
+         .do appbld
+         .__dbFrameDis( "Incluso oggetto :"+oo_obj->PRG ,70)
+         .do newobje
+      .endif
+   .endif
+   .dd_rel->(dbSkip(1))
+.enddo
+.*
+.*                      SPECIALI DBUDF.PRG
+.*
+.M->ProPrj           := NewProg("prj","1")
+.oo_bld->(dBappend())
+.oo_bld->EXE         := oo_exe->exe
+.oo_bld->OBJ         := "0008"
+.oo_bld->TYP         := "spc"
+.oo_bld->WDO         := "udf"
+.oo_bld->EXT         := "prg"
+.oo_bld->PRJINCN     := M->ProPrj
+.oo_bld->SECTION     := "1"
+.oo_bld->COMPILE     := "1"
+.oo_bld->LINK        := "1"
+.oo_bld->FLGGEN      := "1"
+.__dbFrameDis( "Aggiunto dbUdf.prg nel file make/link..." ,70)
+.*
+.*                      SPECIALI DBRID.PRG
+.*
+.M->ProPrj           := NewProg("prj","1")
+.oo_bld->(dBappend())
+.oo_bld->EXE         := oo_exe->exe
+.oo_bld->OBJ         := "0009"
+.oo_bld->TYP         := "spc"
+.oo_bld->WDO         := "rid"
+.oo_bld->EXT         := "prg"
+.oo_bld->PRJINCN     := M->ProPrj
+.oo_bld->SECTION     := "1"
+.oo_bld->COMPILE     := "1"
+.oo_bld->LINK        := "1"
+.oo_bld->FLGGEN      := "1"
+.__dbFrameDis( "Aggiunto dbRid.prg nel file make/link..." ,70)
+.*
+.oo_exe->(dbGoto(M->nNewExe))
+.oo_exe->OBJINI      := M->MINILOG
+.oo_exe->OBJEND      := M->MENDLOG
+.*
+.__dbFrameOff()
+.msg "FINE INSERIMENTO NUOVO SOTTOPROGETTO"

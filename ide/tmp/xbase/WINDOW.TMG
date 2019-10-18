@@ -1,0 +1,84 @@
+.parameter cPar1, cPar2
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : WINDOW
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab oggetto tipo finestra
+.* ----------------------------------------------------------------------------
+.M->cTmgName := "window.tmg "
+.if "ins" $ cPar1
+    .*
+    .M->ProPrj := NewProg("prj","1")
+    .M->CodObj := NewCod("obj")
+    .*
+    .*------------------------------------------- Aggiunge nel file MAKE/LINK
+    .oo_bld->(dBnet("app",0))
+    .oo_bld->EXE         := oo_exe->exe
+    .oo_bld->OBJ         := M->CodObj
+    .oo_bld->TYP         := "brw"
+    .oo_bld->WDO         := "win"
+    .oo_bld->EXT         := "prg"
+    .oo_bld->PRJINCN     := M->ProPrj
+    .oo_bld->FLGGEN      := "1"
+    .oo_bld->COMPILE     := "1"
+    .oo_bld->LINK        := "1"
+    .oo_bld->SECTION     := "1"
+    .oo_bld->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto nel file make/link..." ,70) )
+    .*
+    .*-------------------> Aggiunge oggetto FINESTRA
+    .oo_obj->(dBnet("app",0))
+    .oo_obj->OBJ         := M->CodObj
+    .oo_obj->TYP         := "brw"
+    .oo_obj->WDO         := "win"
+    .oo_obj->EXT         := "prg"
+    .oo_obj->TMPCOD      := "00"
+    .oo_obj->PRG         := Token(cPar2,[/],1)
+    .oo_obj->DBF         := Token(cPar2,[/],2)
+    .oo_obj->OBJREL      := M->CodRel
+    .oo_obj->OBJDES      := M->cTitle
+    .oo_obj->ROW         := 01
+    .oo_obj->COL         := 01
+    .oo_obj->ROW1        := 22
+    .oo_obj->COL1        := 78
+    .oo_obj->OBJRL       := "0"
+    .oo_obj->FLGUPD      := "1"
+    .oo_obj->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto window..."+Trim(oo_obj->OBJDES) ,70) )
+    .*
+    .oo_itm->(dBnet("app",0))
+    .oo_itm->OBJ         := M->CodObj
+    .oo_itm->ITM         := "0000"
+    .oo_itm->BAND        := "001"
+    .oo_itm->ITMINCN     := 0
+    .oo_itm->TYP         := "pag"
+    .oo_itm->ITMSAY      := "Pagina Nø1"
+    .oo_itm->(dBnet("url"))
+    .*
+    .oo_itm->(dBnet("app",0))
+    .oo_itm->OBJ         := oo_obj->obj
+    .oo_itm->ITM         := "0001"
+    .oo_itm->BAND        := "001"
+    .oo_itm->ITMINCN     := 5
+    .oo_itm->IGC         := "0000"
+    .oo_itm->TYP         := "lsb"
+    .oo_itm->FONT        := "-1 "
+    .oo_itm->ROW         := 0
+    .oo_itm->COL         := 0
+    .oo_itm->ROW1        := oo_obj->ROW1-oo_obj->ROW
+    .oo_itm->COL1        := oo_obj->COL1-oo_obj->COL
+    .oo_itm->(dBnet("url"))
+    .*
+    .tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"titlebar"    ,"0" )
+    .tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"horscrollbar","0" )
+    .tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"verscrollbar","0" )
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunge list-box..." ,70) )
+    .msg "Aggiunto oggetto :" + Trim(oo_obj->OBJDES)
+    .*
+.endif
+.if "mnu" $ cPar1
+    .do MnuBrw with "file/ret"
+.endif

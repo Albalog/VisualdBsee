@@ -1,0 +1,421 @@
+<xml>
+   <messagefile>
+      <type>HIT</type>
+      <author>Visual dBsee Property Table</author>
+      <language>English</language>
+      <englishlanguage>English</englishlanguage>
+      <langcode>en_US</langcode>
+      <tablelen>102</tablelen>
+      <table>
+         <message>
+            <base>&apos;(Lista Progetti Vuota)&apos;</base>
+            <translated>&apos;(Project List Empty)&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;A^bbandona&apos;</base>
+            <translated>&apos;^Cancel&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Abbandona&apos;</base>
+            <translated>&apos;Cancel&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Abbandona senza formulare la query&apos;</base>
+            <translated>&apos;Cancel without making the query&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Aggiornamento Indice...Attendere.&apos;</base>
+            <translated>&apos;Updating Index... Please wait.&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Apre una finestra per consultazione records&apos;</base>
+            <translated>&apos;Open a window for record consultation&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Attendere...&apos;</base>
+            <translated>&apos;Please Wait...&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Attenzione// Le modifiche apportate alla caratteristiche del Campo// verranno applicate anche nelle eventuali altre tabelle in cui Š utilizzato.&apos;</base>
+            <translated>&apos;Attention// The modifications made to the characteristics of the Field// will be applied also in the other tables in which it is used.&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Avviare la creazione del File di Installazione?&apos;</base>
+            <translated>&apos;Start the creation of the Setup File?&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Azioni sul file della browse&apos;</base>
+            <translated>&apos;Actions on the browse file&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;CAP                       : &apos;</base>
+            <translated>&apos;Postal code               : &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;C^anc.&apos;</base>
+            <translated>&apos;^Del&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;C^ancellazione&apos;</base>
+            <translated>&apos;D^elete&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Cancella&apos;</base>
+            <translated>&apos;Delete&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Cancella la riga&apos;</base>
+            <translated>&apos;Delete the row&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Cancellazione record corrente&apos;</base>
+            <translated>&apos;Deletion of current record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Citt…                     : &apos;</base>
+            <translated>&apos;City                      : &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Cliente                   : &apos;</base>
+            <translated>&apos;Client                    : &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Conferma la selezione&apos;</base>
+            <translated>&apos;Confirm the selection&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Copiare il file &lt;%1%&gt; nella cartella &lt;..\Source&gt; del progetto corrente?&apos;</base>
+            <translated>&apos;You want copy the file &lt;%1%&gt; in the project directory &lt;..\Source&gt;?&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Download File &lt;%1%&gt; in corso...%LF%%LF%A Fine Download Š necessario copiare il file nella cartella %2% e lanciare il file RAR autoestraente scaricato!&apos;</base>
+            <translated>&apos;File Download &lt;%1%&gt; in progress...%LF%%LF%At end Download it is necessary to copy the file in the  Directory %2% and run the File.&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Download in corso...&apos;</base>
+            <translated>&apos;Download in progress...&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Duplica Tabella %1% in corso...&apos;</base>
+            <translated>&apos;Table duplicate &lt;%1%&gt; in progress...&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore allineamento DBF&apos;</base>
+            <translated>&apos;Alignment DBF Error&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in Inserimento Transazione!&apos;</base>
+            <translated>&apos;Error in Transaction Insertion!&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in Lock File: OO_OBJ.dbf&apos;</base>
+            <translated>&apos;Error in Lock File: OO_OBJ.dbf&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in Modifica Transazione!&apos;</base>
+            <translated>&apos;Error in Transaction Edit!&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in allineamento Archivi.//Eseguire ricostruzione Indici!&apos;</base>
+            <translated>&apos;Error in alignment Repository! Execute Index Reconstruction.&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in allineamento Archivio %1%&apos;</base>
+            <translated>&apos;Error in alignment of Archive %1%&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in allineamento Archivio DD_KEY&apos;</base>
+            <translated>&apos;Error in alignment of Archive DD_KEY&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in allineamento Archivio DD_SYM&apos;</base>
+            <translated>&apos;Error in alignment of Archive DD_SYM&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in inserimento Transazione!&apos;</base>
+            <translated>&apos;Error in Transaction insertion!&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in lock File BIN in creazione sottoprogetti&apos;</base>
+            <translated>&apos;Error in lock BIN File in subproject creation&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in modifica Transazione!&apos;</base>
+            <translated>&apos;Error in Transaction edit!&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore in posizionamento Transazione!&apos;</base>
+            <translated>&apos;Error in Transaction position!&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore inserimento nuova Tabella&apos;</base>
+            <translated>&apos;Error inserting New Table&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Errore nel Lock della chiave&apos;</base>
+            <translated>&apos;Error in the key Lock&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Gestione ^Tabelle&apos;</base>
+            <translated>&apos;^Tables Management&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Gestione archivio tabelle. Inserimento, modifica, cancellazione.&apos;</base>
+            <translated>&apos;Tables Management. Add, modify and delete.  &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Help di programma&apos;</base>
+            <translated>&apos;Program Help&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Il File di Setup per il runtime di Crystal 10 non Š stato trovato!// // Effettuare ora il download da Internet// altrimenti non sar… possibile creare il file di Setup dell&apos;Applicativo?&apos;</base>
+            <translated>&apos;The setup file for the rountime of Crystal 10 is not found! // //Do now the download form Internet?//Otherwise it will not be possible to create the Stup File of the Application.&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Il File di Setup per il runtime di Crystal 11 non Š stato trovato!// // Effettuare ora il download da Internet// altrimenti non sar… possibile creare il file di Setup dell&apos;Applicativo?&apos;</base>
+            <translated>&apos;The setup file for the rountime of Crystal 11 is not found! // //Do now the download form Internet?//Otherwise it will not be possible to create the Stup File of the Application.&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Il file %1% deve essere aggiornato.//Lanciare la generazione?&apos;</base>
+            <translated>&apos;The file %1% must be updated.//Launch the Generation?&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Il file %1% non esiste!//Lanciare la generazione?&apos;</base>
+            <translated>&apos;The file %1% not exist!//Run the generation?  &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Impossibile trovare il compilatore Inno Setup //%1%&apos;</base>
+            <translated>&apos;Impossible to find the Inno Setup compiler//%1%&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Impossibile trovare il file di installazione//%1%&apos;</base>
+            <translated>&apos;Unable to find the setup file//%1%&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Impossibile trovare il file di setup //%1%&apos;</base>
+            <translated>&apos;Impossible to find the Application Setup File// %1% &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;In modifica&apos;</base>
+            <translated>&apos;In modify&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Indirizzo                 : &apos;</base>
+            <translated>&apos;Address                   : &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Inserimento&apos;</base>
+            <translated>&apos;Insert&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Inserimento nuova riga&apos;</base>
+            <translated>&apos;Insert New row&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Inserimento nuovo record&apos;</base>
+            <translated>&apos;Insert New record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Modifica&apos;</base>
+            <translated>&apos;Modify&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Modifica record corrente&apos;</base>
+            <translated>&apos;Modify current record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Modifica riga&apos;</base>
+            <translated>&apos;Modify row&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Muove al primo record&apos;</base>
+            <translated>&apos;Move to first record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Muove al record precedente&apos;</base>
+            <translated>&apos;Move to previous record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Muove al record successivo&apos;</base>
+            <translated>&apos;Move to next record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Muove all&apos;ultimo record&apos;</base>
+            <translated>&apos;Move to last record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;NTX Index can use only 15 index;Use more than 15 index only in CDX Index&apos;</base>
+            <translated>&apos;NTX Index can use only 15 index;Use more than 15 index only in CDX Index&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Nel sottoprogetto corrente non vi Š nessun file//speciale per Inno Setup!// //Avviare adesso il Wizard creazione nuovo file//speciale per Inno setup?&apos;</base>
+            <translated>&apos;In the current subproject there is not// a special file for Inno Setup!// //Run now the Wizard for the to creation of a Special File for Inno Setup //to create after a Application Setup File?&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Non Š possibile aggiungere altri Indici alla Tabella!&apos;</base>
+            <translated>&apos;It is not possible to add others Index to the Table!&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;O^k&apos;</base>
+            <translated>&apos;O^k&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Operazioni su file corrente&apos;</base>
+            <translated>&apos;Operations on current file&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Pagina n. %1%&apos;</base>
+            <translated>&apos;Page n. %1%&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Pagina n.1&apos;</base>
+            <translated>&apos;Page n.1&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Progetto                  : &apos;</base>
+            <translated>&apos;Project                   : &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Raggruppa i data entry del programma&apos;</base>
+            <translated>&apos;It bundle the application date entry&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Raggruppa le procedure di servizio del programma&apos;</base>
+            <translated>&apos;It bundle the application service procedures&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Raggruppa le stampe del programma&apos;</base>
+            <translated>&apos;It bundle the application Reports&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Record ^successivo&apos;</base>
+            <translated>&apos;^Next Record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Record pr^ecedente&apos;</base>
+            <translated>&apos;Pr^evious Record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Registra e chiude&apos;</base>
+            <translated>&apos;Save and close&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Release Visual dBsee: &apos;</base>
+            <translated>&apos;Visual dBsee release : &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Ricerca record su chiavi&apos;</base>
+            <translated>&apos;Search record on keys&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Ricerca su chiavi&apos;</base>
+            <translated>&apos;Search on keys&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Richiama la calcolatrice.&apos;</base>
+            <translated>&apos;Call the calculating machine.&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Ricordarsi di Copiare il file &lt;%1%&gt; //scaricato nella cartella %2% // e successivamente lanciare il file RAR autoestraente scaricato!&apos;</base>
+            <translated>&apos;Remember to copy the File &lt; %1% &gt; downloaded in the folder %2% and subsequently run the downloaded RAR file!&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Ricostruzione periodica indici.&apos;</base>
+            <translated>&apos;Rebuild the applications Index.&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Salvare le modifiche&apos;</base>
+            <translated>&apos;Save the changes&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Se^rvizio&apos;</base>
+            <translated>&apos;Se^rvice&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Seleziona la riga sul cursore e chiude la finestra&apos;</base>
+            <translated>&apos;Select the line with the cursor and close the window&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Selezionare i File speciali Inno Setup da Compilare&apos;</base>
+            <translated>&apos;Select the Special Inno Setup File to compile&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Tel.                      : &apos;</base>
+            <translated>&apos;Phone                     : &apos;</translated>
+         </message>
+         <message>
+            <base>&apos;Testare il file di installazione creato?// %1%&apos;</base>
+            <translated>&apos;Test the Installation File created?// %1%&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^?&apos;</base>
+            <translated>&apos;^?&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Calcolatrice&apos;</base>
+            <translated>&apos;^Calculator&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^File&apos;</base>
+            <translated>&apos;^File&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Finestra di ricerca&apos;</base>
+            <translated>&apos;^Search Window&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Gestione&apos;</base>
+            <translated>&apos;^Management&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Help&apos;</base>
+            <translated>&apos;^Help&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Inserim.&apos;</base>
+            <translated>&apos;^Insert&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Inserimento&apos;</base>
+            <translated>&apos;^Insert&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Modif.&apos;</base>
+            <translated>&apos;^Modify&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Modifica&apos;</base>
+            <translated>&apos;^Modify&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Primo record&apos;</base>
+            <translated>&apos;^First record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Ric.&apos;</base>
+            <translated>&apos;^Find&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Ricerca su chiavi&apos;</base>
+            <translated>&apos;^Search on keys&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Ricostruzione Indici&apos;</base>
+            <translated>&apos;^Rebuild Index&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Stampe&apos;</base>
+            <translated>&apos;Re^ports&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;^Ultimo record&apos;</base>
+            <translated>&apos;^Last record&apos;</translated>
+         </message>
+         <message>
+            <base>&apos;ita&apos;</base>
+            <translated>&apos;eng&apos;</translated>
+         </message>
+      </table>
+   </messagefile>
+</xml>
+

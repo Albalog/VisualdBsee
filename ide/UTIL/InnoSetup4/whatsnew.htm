@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>Inno Setup 4.2 Revision History</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<style type="text/css">
+	body		{ font: small verdana, arial, sans-serif; color: black; background-color: white }
+	a:link		{ color: #264b99; background-color: white }
+	a:visited	{ color: #5e85d7; background-color: white }
+	a:active	{ color: #7799dd; background-color: white }
+	tt		{ font: small "courier new", monospace }
+	li		{ margin-top: 0.15em; margin-bottom: 0.15em }
+	div.bluehead	{ text-align: center; color: white; background-color: #264b99; padding: 5px; font-weight: bold }
+	.head1		{ font-size: xx-large }
+	.head2		{ font-size: large }
+	.ver		{ font-size: large; font-weight: bold }
+	.date		{ font-size: x-small; font-weight: bold }
+</style>
+</head>
+<body>
+
+<!-- $jrsoftware: issrc/whatsnew.htm,v 1.318.2.1 2004/06/27 06:38:57 jr Exp $ -->
+
+<div class="bluehead"><span class="head1">Inno Setup 4.2</span><br /><span class="head2">Revision History</span></div>
+
+<p>Copyright &copy; 1997-2004 <a href="http://www.jrsoftware.org/">Jordan Russell</a>. All rights reserved.<br />
+Portions Copyright &copy; 2000-2004 Martijn Laan. All rights reserved.<br />
+For conditions of distribution and use, see <a href="http://www.jrsoftware.org/files/is/license.txt">LICENSE.TXT</a>.
+</p>
+
+<p><a name="4.2.7"></a><span class="ver">4.2.7 </span><span class="date">(2004-06-27)</span></p>
+<ul>
+<li><i>Fix:</i> The [Files] section's <tt>nocompression</tt> flag disabled compression but not the EXE "call instruction optimization" algorithm. Now it does.</li>
+<li><i>Fix:</i> The LZMA decompressor would raise a bogus error with streams larger than 4 gigabytes in size. (The other compression algorithms did not exhibit this problem.)</li>
+<li><i>Fix:</i> During installation, it now processes input events while seeking backwards in a solid chunk.</li>
+</ul>
+
+<p><a name="4.2.6"></a><span class="ver">4.2.6 </span><span class="date">(2004-06-19)</span></p>
+<ul>
+<li>Brought back the <tt>zip</tt> compress algorithm, this time in an external DLL like <tt>bzip</tt> to keep the ~6 KB savings.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.2.5"></a><span class="ver">4.2.5 </span><span class="date">(2004-06-14)</span></p>
+<ul>
+<li>[Setup] section directive <tt>AppId</tt> may now include constants. If you use a {code:..} constant to allow your user to customize <tt>AppId</tt>, you do not need to return the real value until just before the installation starts: if necessary you may return an empty or generic value at earlier times. If not empty, this value will only be used to attempt to restore previous install settings (like the settings stored by [Setup] section directive <tt>UsePreviousAppDir</tt>). If empty, it isn't used for anything. (ML)</li>
+<li>If <tt>AppName</tt> includes constants, it will now again be used as the default for <tt>AppId</tt> just like before 4.2.1 when <tt>AppName</tt> didn't support constants yet. (ML)
+<li>Removed support for the obsolete <tt>zip</tt> compression algorithm. This decreases the size of compiled installations by about 6 KB.</li>
+<li>Setup now displays task group descriptions in the <i>Ready to Install</i> memo too. (ML)</li>
+<li>New flag supported by the [Files] section: <tt>nocompression</tt>, which prevents the compiler from attempting to compress the file. Use this flag on file types that you know can't benefit from compression (for example, JPEG images) to speed up the compilation process and save a few bytes in the resulting installation.</li>
+<li>New flag supported by the [Files] section: <tt>dontverifychecksum</tt>, which prevents Setup from verifying the file checksum after extraction. Use this flag on files you wish to modify while already compiled into Setup. If used, must be combined with <tt>nocompression</tt>. (ML)</li>
+<li>New [Setup] section directive <tt>MergeDuplicateFiles</tt>, which replaces the confusingly-named <tt>DontMergeDuplicateFiles</tt> directive.</li>
+<li>Setup now supports a /PASSWORD= command line parameter. (ML)<br />
+Note: if you have a <tt>CheckPassword</tt> event function and your users run Setup with both the /PASSWORD= and /SILENT command line parameters set, your <tt>CheckPassword</tt> function will be called *before* any other event function is called, including <tt>InitializeSetup</tt>.</li>
+<li>The uninstaller now supports a /VERYSILENT command line parameter just like Setup. /VERYSILENT does the same as /SILENT but additionally hides the progress window and reboots when necessary without asking (unless /NORESTART is also used). (ML)</li>
+<li>Setup now supports a /RESTARTEXITCODE= command line parameter. (ML)<br />
+<li>Replaced support functions <tt>GetTimeString</tt>, <tt>GetDateString</tt> and <tt>GetDateTimeString</tt> with a single extended version of <tt>GetDateTimeString</tt>. (ML)
+<li>Changed the prototype of support function <tt>ScriptDlgProcessCustom</tt> to: <tt>function ScriptDlgPageProcessCustom(ActivateControl: TWinControl): Boolean;</tt>. If not <tt>nil</tt>, focus will be initially set to <tt>ActivateControl</tt>. See the <i>CodeClasses.iss</i> example script. (ML)</li>
+<li>Compiler IDE: you can now drag and drop files and directories onto the <i>Application Files</i> listbox of the New Script Wizard. (ML)</li>
+<li>Based on RemObjects Pascal Script SVN code revision 916.</li>
+<li>The uninstall program's version is now 51.15.0.0.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.2.4"></a><span class="ver">4.2.4 </span><span class="date">(2004-06-01)</span></p>
+<ul>
+<li>The uninstaller now does all DLL/TLB/font unregistration in a separate step before any files are deleted. Previously, each file was unregistered just before it was deleted.</li>
+<li>Added new [Setup] section directive <tt>AppModifyPath</tt> which enables you to display a separate "Modify" button in the Add/Remove Programs Control Panel applet in Windows 2000/XP. (ML)</li>
+<li>Added new [Setup] section directives <tt>AppComments</tt>, <tt>AppContact</tt> and <tt>AppReadmeFile</tt> which are all used for display purposes on the "Support" dialog of the Add/Remove Programs Control Panel applet in Windows 2000/XP. (ML)</li>
+<li>Added new event function: <tt>GetCustomSetupExitCode</tt>. (ML)</li>
+<li>Added new support functions: <tt>RegGetValueNames</tt>, <tt>RegDeleteKeyIncludingSubKeys</tt>, <tt>RegDeleteKeyIfEmpty</tt>, <tt>RegDeleteValue</tt> and <tt>CoFreeUnusedLibraries</tt>. (ML)</li>
+<li>The automatic Windows File Protection checking introduced in 4.2.1 is no longer done on Windows Me. Two Me users reported that this made the file extraction part of the install process (where SfcIsFileProtected was called) dramatically slower. I have no idea why; I could not reproduce the slowness in my tests on Windows Me. Nevertheless, it's been disabled on Windows Me. It wasn't important anyway.</li>
+<li>CodeClasses.iss wouldn't compile in 4.2.3 due to changed TNewCheckListBox function prototypes. Fixed.</li>
+<li>The uninstall program's version is now 51.14.0.0.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.2.3"></a><span class="ver">4.2.3 </span><span class="date">(2004-05-20)</span></p>
+<ul>
+<li>New flag supported by the [Components] and [Tasks] sections: <tt>dontinheritcheck</tt>, which specifies that the component/task should not automatically become checked when its parent is checked.</li>
+<li>Added support function <tt>MakePendingFileRenameOperationsChecksum</tt>. (ML)</li>
+<li>The components and tasks list boxes now include support for Active Accessibility. This should make it possible for MSAA-aware screen readers (including Windows' Narrator) to determine the types of items and whether they are checked.</li>
+<li>Compiler: Decreased memory requirements and improved speed when compiling scripts containing tens of thousands of files.</li>
+<li><i>Fix:</i> Uninstaller: When administrative privileges are required for the uninstall and the user doesn't have write permission to the program directory, display OnlyAdminCanUninstall message instead of "Access denied".</li>
+<li><i>Fix:</i> When using InstExec() on version 4.2.1 and 4.2.2, the focus in some cases didn't return to Setup after the spawned program terminated.</li>
+<li><i>Fix:</i> Fixed problem reported by Rich B in "Error on reboot - File Not Found" thread on newsgroup, 2004-05-14.</li>
+<li><i>Fix:</i> Compiler IDE: Work around Windows 9x WM_COPYDATA bug that may have resulted in a fatal page fault error while debugging.</li>
+<li>The compiler now flags two more DLLs as "unsafe": URLMON.DLL and WININET.DLL.</li>
+<li>Added official Portuguese (Standard) translation.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.2.2"></a><span class="ver">4.2.2 </span><span class="date">(2004-04-27)</span></p>
+<ul>
+<li>Added support for file encryption: if [Setup] section directive <tt>Password</tt> is set, you can now enable 128-bit ARCFOUR encryption on your files by setting the new [Setup] section directive <tt>Encryption</tt> to <tt>yes</tt>. Thanks to Andrew Fiddian-Green for his initial work on this. (ML)<br />
+<i>Note:</i> Because of encryption import/export laws in some countries, encryption support is not included in the main Inno Setup installer and must be downloaded and installed separately. See the <a href="http://www.jrsoftware.org/isdl.php">Inno Setup Downloads</a> page for more information.</li>
+<li>New [Files] section flag: <tt>noencryption</tt>, which prevents a file from being stored encrypted. Use this flag on an entry if you have enabled encryption but want to be able to extract the file using the [Code] section support function <tt>ExtractTemporaryFile</tt> before the user has entered the correct password.</li>
+<li>Added a new <tt>NameAndVersion</tt> message to the [CustomMessages] section of Default.isl and all official translations.</li>
+<li>Added official Catalan, Polish and Russian translations.</li>
+<li>The <tt>LanguageName</tt> directive of the [LangOptions] section is now internally stored as a Unicode string. This allows languages of different code pages to displayed simultaneously and correctly in the <i>Select Language</i> dialog's combo box on NT-based platforms. To embed Unicode characters, use "&lt;nnnn&gt;", where "nnnn" is the 4-digit hexadecimal Unicode character code. You can find Unicode character codes of characters using the Character Map accessory included with Windows 2000 and later.</li>
+<li>The [LangOptions] section now supports a new directive: <tt>LanguageCodePage</tt>. By default, languages whose code page does not match the active code page of the user's system will not be presented as an option in the <i>Select Language</i> dialog's combo box. The goal of this is to hide languages that can't be displayed properly on the user's system. For example, Russian text can't be displayed properly unless the code page is 1251, so there is little reason to list Russian as an option if the system is running in a different code page.<br />
+If you wish to restore the old behavior -- that is, show all languages regardless of the active code page -- add the following lines to your script:<br />
+<blockquote><tt>
+[LangOptions]<br />
+LanguageCodePage=0
+</tt></blockquote>
+</li>
+<li>The log file (/LOG) now shows the date/time stamps of files.</li>
+<li>Based on RemObjects Pascal Script SVN code revision 898. See the <a href="http://www.remobjects.com/news/?id=02F23D41-28D7-4751-AAC8-0CE6AEBFE5EA">RemObjects Pascal Script announcement<a> for more information about the name change of Innerfuse Pascal Script. (ML)</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.2.1"></a><span class="ver">4.2.1 </span><span class="date">(2004-04-02)</span></p>
+<ul>
+<li>Added a new [CustomMessages] section and new "custom message" constant: <tt>{cm:...}</tt>. This new feature allows you to easily add multiple language versions of, for example, your own entry descriptions and messages. See the help file for full details. (ML)</li>
+<li>[Setup] section directives <tt>AppName</tt>, <tt>AppVerName</tt>, <tt>AppCopyright</tt>, <tt>AppPublisher</tt>, <tt>AppPublisherURL</tt>, <tt>AppSupportURL</tt>, <tt>AppUpdatesURL</tt> and <tt>AppVersion</tt> may now include constants. Among other things, this makes it possible to translate <tt>AppName</tt>, see the <i>Languages.iss</i> example script. <i>Note:</i> if <tt>AppName</tt> includes constants, <tt>DisableStartupPrompt=yes</tt> must be used (which is the default setting) and you must set <tt>AppId</tt>. <b>[Update: In 4.2.5 and later if <tt>AppName</tt> includes constants, it will still be used as the default for <tt>AppId</tt>.]</b> (ML)</li>
+<li>The checking for any mutexes specified by [Setup] section directive <tt>AppMutex</tt> is now done after event function <tt>InitializeSetup</tt> is called. (ML)</li>
+<li>Compiler IDE: The New Script Wizard no longer adds English phrases to the generated scripts, but uses "custom message" constants instead. This means that if you enable multiple language support in a script generated by the New Script Wizard, you no longer have to worry about translating the generated English phrases in it. (ML)</li>
+<li>New [Files] section flag: <tt>replacesameversion</tt>. In 4.2.0, by default, when a file already existed on the user's system and it had the same version number as the file being installed, Setup would compare the files and replace the existing file if their contents were different. In response to user feedback, <b>this behavior has been made optional.</b> Use the new <tt>replacesameversion</tt> flag to enable it. The default behavior is now identical to that of pre-4.2.0 versions.</li>
+<li>New /LOG parameter supported by Setup, which causes Setup to create a log file in the user's TEMP directory detailing file installation actions taken during the installation process. This can be a helpful debugging aid. See the <i>Setup Command Line Parameters</i> topic in the help file for further details.</li>
+<li>Now skips the installation of files that are registered with Windows File Protection on the user's system. (This does not apply to Windows 95, 98, and NT 4.0 as they do not support Windows File Protection.)</li>
+<li>Added support functions <tt>Log</tt>, <tt>GetWindowsVersion</tt>, <tt>GetWindowsVersionString</tt>, <tt>IsProtectedSystemFile</tt>, <tt>GetMD5OfString</tt>. (ML, JR)</li>
+<li>Added official Czech, French, Norwegian, and Slovenian translations.</li>
+<li>Added a [CustomMessages] section to Default.isl containing some commonly used strings (like "Create a desktop icon").
+  When translating Default.isl, the [CustomMessages] section should be translated as well.
+  (<a href="http://cvs.jrsoftware.org/view/issrc/Files/Default.isl?r1=1.53&amp;r2=1.55">View differences in Default.isl</a>)
+</li>
+<li><i>Fix:</i> In 4.2.0, the progress bar didn't update correctly when wildcards were used on [Files] section entries with the <tt>external</tt> flag.</li>
+<li><i>Fix:</i> In earlier versions it was possible for users to interact with Setup's UI during an <tt>InstExec</tt> call. Now, it disables the Setup window until the call returns.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.2.0"></a><span class="ver">4.2.0 </span><span class="date">(2004-03-19)</span></p>
+<ul>
+<li><b>[Update: In 4.2.1 and later, the following behavioral change only applies when the <tt>replacesameversion</tt> flag is used.]</b><br />
+  Changed the way Setup handles situations where a file already exists on the user's system and it has the same version number as the file being installed.
+  <ul>
+    <li>The <b>new</b> behavior: It now compares the contents of the two files, and replaces the existing file if they are different in any way. (The <tt>comparetimestamp</tt> flag has no effect.)</li>
+    <li>The <b>old</b> behavior: Before, it never replaced the existing file, except when the <tt>comparetimestamp</tt> flag was used and the existing file had an older time stamp.</li>
+  </ul>
+  The new behavior has two advantages:
+  <ol>
+    <li>If an existing file is partially corrupted, it will now be replaced. Previously, it compared only the version numbers and not the content of the files; as long as the version info portion of the existing file was intact, the file would not be replaced.</li>
+    <li>It is now less critical that you increment the version numbers of your executables with every release. Previously, if you forgot to increment a file's version number in a new release, that file wouldn't be replaced on the user's system (assuming you didn't use the <tt>ignoreversion</tt> flag). Now that it additionally checks the contents of the files, this is no longer an issue.</li>
+  </ol>
+</li>
+<li>It's now possible to set the time/date stamps of installed files by using the new <tt>touch</tt> flag supported by the [Files] section, and the new [Setup] section directives <tt>TouchDate</tt> and <tt>TouchTime</tt>.</li>
+<li>Improved the "auto-retry" feature of the [Files] section:
+  <ul>
+    <li>Now, it only automatically retries when an existing file cannot be replaced because it is in use (as opposed to retrying on every error condition, which wasn't very helpful).</li>
+    <li>It now retries on both silent on non-silent installs (as opposed to just silent installs).</li>
+  </ul>
+  This feature is now documented in the <i>Remarks</i> section of the [Files] section documentation.
+</li>
+<li>Added a Languages subdirectory with official Dutch and German translations. (ML & Michael Reitz)</li>
+<li>Added new <i>Languages.iss</i> and <i>Components.iss</i> example scripts. (ML, JR)</li>
+<li>Now ensures file I/O error messages are always properly localized. Previously, certain rarely-encountered I/O error messages were fixed in English.</li>
+<li>Now internally uses MD5 instead of CRC for file checksums.</li>
+<li>Added support function <tt>GetMD5OfFile</tt>. (ML)</li>
+<li>Based on Innerfuse Pascal Script 3 CVS code from 2004-03-19 13:00 GMT.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<hr />
+
+<p><a name="4.1.8"></a><span class="ver">4.1.8 </span><span class="date">(2004-02-25)</span></p>
+<ul>
+<li>Two new [Setup] section directives have been introduced:
+  <ul>
+    <li><tt>AppendDefaultDirName</tt>, which defaults to <tt>yes</tt> and reintroduces the "AppendDir" behavior of Inno Setup 4.1.0 and earlier -- that is, when a new folder is clicked on the Browse dialog displayed by the <i>Select Destination Location</i> wizard page, Setup will automatically append the last component of <tt>DefaultDirName</tt> onto the new path.</li>
+    <li><tt>AppendDefaultGroupName</tt>, which also defaults to <tt>yes</tt> and provides similar behavior for the <i>Select Start Menu Folder</i> wizard page.</li>
+  </ul>
+</li>
+<li>Changed the prototype of support function <tt>InputDir</tt> to: <tt>function InputDir(const AppendDir: Boolean; const NewFolderName: String; var Value: String): Boolean;</tt></li>
+<li>The <tt>Compression</tt> [Setup] section directive now defaults to <tt>lzma</tt>. In almost all cases, <tt>lzma</tt> compresses better than the other supported methods. Previously, <tt>zip</tt> was the default. (ML)</li>
+<li>Executable files are now compressed even better, thanks to a new encoding/decoding pass that optimizes x86 JMP & CALL instructions. The size of the installer for Inno Setup itself has dropped almost 50 KB due to this change.
+<li>On [Files] entries, the flags <tt>external</tt> and <tt>recursesubdirs</tt> may now be combined. (ML)</li>
+<li>Livened up the <i>Select Destination Location</i> and <i>Select Start Menu Folder</i> wizard pages by adding icons to them.</li>
+<li>Added edit boxes to the folder browser dialogs.</li>
+<li>Some messages have been added and removed in this version.
+  (<a href="http://cvs.jrsoftware.org/view/issrc/Files/Default.isl?r1=1.51&amp;r2=1.53">View differences in Default.isl</a>)
+  <ul>
+    <li><b>New messages:</b> SelectDirLabel3, SelectDirBrowseLabel, SelectStartMenuFolderLabel3, SelectStartMenuFolderBrowseLabel.</li>
+    <li><b>Removed messages:</b> SelectDirLabel2, SelectStartMenuFolderLabel2.</li>
+  </ul>
+</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.1.7"></a><span class="ver">4.1.7 </span><span class="date">(2004-02-20)</span></p>
+<ul>
+<li>On a disk-spanned installation, it now prefixes the current name of setup.exe when searching for the *.bin files. Previously, it prefixed the value of compile-time setting <tt>OutputBaseFilename</tt>, which meant that if you renamed setup.exe after compiling the installation, you couldn't also rename the *.bin files.</li>
+<li>When <tt>UseSetupLdr</tt> is set to <tt>no</tt>, SETUP.0 is now named <i>OutputBaseFilename</i>-0.bin.</li>
+<li><i>Fix:</i> If a Flags parameter contained two or more consecutive spaces, flags after the consecutive spaces were ignored.</li>
+</ul>
+
+<p><a name="4.1.6"></a><span class="ver">4.1.6 </span><span class="date">(2004-02-19)</span></p>
+<ul>
+<li>Decreased the size of compiled installations by 80 KB or more with no loss of functionality:
+  <ul>
+    <li>Completely rewrote the LZMA decompression support to use the new, more compact <a href="http://www.7-zip.org/sdk.html">LZMA SDK</a>. This makes installations which use LZMA compression over 20 KB smaller.</li>
+    <li>LZMA compression is now used on Setup's internal structures instead of "zip" compression. This saves 60 KB or more.</li>
+    <li>Note that if you previously ran UPX on the *.e32 stubs, you shouldn't anymore because you will most likely wind up with a <i>larger</i> installation now.</li>
+  </ul>
+</li>
+<li>The [Files] section now supports an <tt>Excludes</tt> parameter to specify a list of comma separated filename wildcards to exclude. (ML)</li>
+<li>The [Files] section now supports a <tt>sortfilesbyextension</tt> flag to instruct the compiler to compress the found files sorted by extension befores it sorts by path name. This potentially decreases the size of Setup if the <tt>SolidCompression</tt> [Setup] section directive is also used. (ML)</li>
+<li>The values accepted by the <tt>InternalCompressLevel</tt> directive have changed.</li>
+<li>Compiler IDE: Smoother-moving progress bar when LZMA compression is used.</li>
+<li>Some corner case MBCS support improvements.</li>
+<li>Based on Innerfuse Pascal Script 3 CVS code from 2004-02-18 00:00 GMT.</li>
+<li>The uninstall program's version is now 51.13.0.0.</li>
+<li>Minor tweaks and fixes.</li>
+</ul>
+
+<p><a name="4.1.5"></a><span class="ver">4.1.5 </span><span class="date">(2004-02-11)</span></p>
+<ul>
+<li>A new compression method has been implemented: <tt>lzma</tt>. LZMA is the algorithm that Igor Pavlov's excellent <a href="http://www.7-zip.org/">7-Zip</a> archiver uses by default. Typically it compresses at least 20% better than the existing <tt>bzip</tt> method. (By using LZMA compression, the installer for Inno Setup itself is now 150 KB smaller than before, despite the inclusion of two new DLLs!)<br />
+LZMA compression may be activated using the <tt>Compression</tt> [Setup] section directive. For maximum compression, also set <tt>SolidCompression=yes</tt>. See the help file for full details.<br />
+<i>Note:</i> Since the support for LZMA compression is brand new, it hasn't undergone widespread testing yet. Use with caution in production installations.</li>
+<li>Compiler IDE improvements:
+  <ul>
+    <li>Added new <i>Build | Low Priority During Compile</i> option. When checked, the IDE will run as a low-priority process during compilation, which helps prevent the compile process from monopolizing CPU resources.</li>
+    <li>Now shows an animated icon during compilation, as well as a progress bar that shows the percentage of files that have been compressed thus far.</li>
+  </ul>
+</li>
+<li>The obsolete <tt>CompressLevel</tt> [Setup] section directive is no longer recognized by the compiler. Use <tt>Compression</tt> instead.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.1.4"></a><span class="ver">4.1.4 </span><span class="date">(2004-02-08)</span></p>
+<ul>
+<li>Compiler IDE improvements:
+  <ul>
+    <li>Added new <i>Run | Terminate</i> command.</li>
+    <li>Now shows the exit code Setup returns.</li>
+  </ul>
+</li>
+<li>Setup now supports delay loaded DLLs in the [Code] section. See the <i>CodeDll.iss</i> example script for an example. (ML)</li>
+<li>Added new "Using DLL's" and "Using COM Automation objects" topics to the help file. (ML)</li>
+<li>Added a Microsoft IIS virtual dir creation example to <i>CodeAutomation.iss</i>. (ML)</li>
+<li>On [Registry] entries, constants may now be used in the <tt>ValueData</tt> parameter when <tt>ValueType</tt> is set to <tt>dword</tt>.</li>
+<li>Previously, it was possible to circumvent the destination and Start Menu folder name length limits by selecting a folder using the browser. Now it checks the length of the entered paths when Next is clicked.</li>
+<li><i>Fix:</i> the COM Automation object support wasn't working for COM methods with more than 1 parameter.</li>
+<li>Some messages have been added in this version.
+  (<a href="http://cvs.jrsoftware.org/view/issrc/Files/Default.isl?r1=1.49&amp;r2=1.51">View differences in Default.isl</a>)
+  <ul>
+    <li><b>New messages:</b> DirNameTooLong, GroupNameTooLong.</li>
+  </ul>
+</li>
+<li>Based on Innerfuse Pascal Script 3 CVS code from 2004-02-08 00:00 GMT.</li>
+</ul>
+
+<p><a name="4.1.3"></a><span class="ver">4.1.3 </span><span class="date">(2004-01-28)</span></p>
+<ul>
+<li>Wizard images will now be stretched or shrunk if the wizard is larger or smaller than normal, e.g. if the user is running in Large Fonts. If you prefer the old behavior (centered or clipped images), set the new [Setup] section directive <tt>WizardImageStretch</tt> to <tt>no</tt>.</li>
+<li>The folder browser now hides folders with both the hidden and system attributes set ("protected operating system files"), such as "RECYCLER".</li>
+<li>In multi-monitor configurations, dialogs should now appear on the same monitor as the wizard.</li>
+<li>The uninstall program's version is now 51.12.0.0.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.1.2"></a><span class="ver">4.1.2 </span><span class="date">(2004-01-26)</span></p>
+<ul>
+<li>The <i>Select Destination Location</i> and <i>Select Start Menu Folder</i> pages of the wizard have evolved further:
+  <ul>
+    <li>The lists of folders have moved into separate dialogs, accessible via <i>Browse...</i> buttons.</li>
+    <li>The directory and drive browsers have been replaced with a modern, Explorer-like tree control.</li>
+    <li>The list of existing Start Menu folders has likewise been replaced with a tree control. (Previously, you could only select top-level folders.)</li>
+    <li>Both dialogs feature <i>Make New Folder</i> buttons which make it easy to install to subfolders of existing folders. The icon of a "new" folder has a dimmed appearance, which indicates that the folder does not currently exist but will be created later.</li>
+  </ul>
+</li>
+<li>The [Setup] section directive <tt>DisableAppendDir</tt> is now obsolete and is no longer recognized. (To install to a subfolder of an existing folder, use the <i>Make New Folder</i> button on the folder selection dialog.)</li>
+<li>Updated the custom wizard page shown by support function <tt>InputDir</tt> to use the new Browse dialog and tree control. The first parameter to <tt>InputDir</tt> has been renamed from <tt>AppendDir</tt> to <tt>NewFolderName</tt>. (ML)</li>
+<li>Added support classes <tt>TBitmap</tt>, <tt>TBitmapImage</tt>, <tt>TFolderTreeView</tt> and <tt>TStartMenuFolderTreeView</tt>. See the <i>CodeClasses.iss</i> example script for examples. (ML)</li>
+<li>Added support object <tt>MainForm</tt> of type <tt>TMainForm</tt>. See the <i>CodeClasses.iss</i> example script for an example that places a <tt>TBitmapImage</tt> on <tt>MainForm</tt>. <i>Note:</i> <tt>MainForm</tt> is only visible if [Setup] section directive <tt>WindowVisible</tt> is set to <tt>yes</tt>. (ML)</li>
+<li>Removed support classes <tt>TNewDirectoryListBox</tt>, <tt>TNewDriveComboBox</tt> and <tt>TNewPathLabel</tt>. (ML)</li>
+<li>Added support function <tt>CurrentFileName</tt> which returns the destination name of the [Files] entry that is currently being processed. The returned name may include constants. <i>Note:</i> Do not attempt to call this function from outside a <tt>Check</tt>, <tt>BeforeInstall</tt> or <tt>AfterInstall</tt> event function belonging to a [Files] entry. (ML)</li>
+<li>Compiler IDE: added an option to the Welcome dialog to open the Examples directory.</li>
+<li><i>Fix:</i> the <i>CodeAutomation.iss</i> example script was missing.</li>
+<li>Some messages have been added, changed, and removed in this version.
+  (<a href="http://cvs.jrsoftware.org/view/issrc/Files/Default.isl?r1=1.42&amp;r2=1.49">View differences in Default.isl</a>)
+  <ul>
+    <li><b>New messages:</b> ButtonWizardBrowse, ButtonNewFolder, BrowseDialogTitle, BrowseDialogLabel, NewFolderName.</li>
+    <li><b>Changed messages:</b> SelectDirLabel2, SelectStartMenuFolderLabel2.</li>
+    <li><b>Removed messages:</b> ButtonBrowseOpen, ButtonBrowseClose.</li>
+  </ul>
+</li>
+<li>Based on Innerfuse Pascal Script 3 CVS code from 2004-01-26 00:00 GMT.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.1.1"></a><span class="ver">4.1.1 </span><span class="date">(2004-01-21)</span></p>
+<ul>
+<li>Added COM Automation object support. This opens up many new possibilities including the ability to configure IIS, add databases to MS SQL Server, read and write XML, and call VB ActiveX DLLs from Setup. See the <i>CodeAutomation.iss</i> example script for examples. (CK &amp; ML)</li>
+<li>The <i>Select Destination Directory</i> page of the wizard has undergone a facelift:
+  <ul>
+    <li>The page has been renamed to <i>Select Destination Location</i>.</li>
+    <li>Simplified the wording of the text preceding the edit box. Also changed some of the messages to use the word "folder" instead of "directory".</li>
+    <li>In an effort to make Setup more friendly to novice users, the directory and drive browsers are now hidden by default; to see them, one must click the new <i>Browse &gt;&gt;</i> button.</li>
+    <li>The drive browser now uses shell display names.</li>
+  </ul>
+</li>
+<li>The <i>Select Start Menu Folder</i> page of the wizard has also undergone a facelift:
+  <ul>
+    <li>Simplified the wording of the text preceding the edit box.</li>
+    <li>In an effort to make Setup more friendly to novice users, the list of existing folders is now hidden by default; to see it, one must click the new <i>Browse &gt;&gt;</i> button.</li>
+  </ul>
+</li>
+<li>Compiler IDE improvements:
+  <ul>
+    <li>The F1 key is now context sensitive. (ML)</li>
+    <li>New option: <i>Tab Width</i>. (ML)</li>
+  </ul>
+</li>
+<li>Changed the way the default font is determined, again: In 4.1.0, it used the "default GUI font", but it was found that this had undesirable results on Simplified Chinese editions of Windows (some text was getting clipped). Now, it uses Microsoft Sans Serif (if it exists) or MS Sans Serif as the default font. (MS Shell Dlg is not used since it maps to a font that is too small on Japanese Windows XP.) </li>
+<li>A Browse button was added to the custom wizard page shown by support function <tt>InputDir</tt>. (ML)</li>
+<li>Partial version numbers are now allowed in <tt>VersionInfoVersion</tt>. Missing numbers will be appended as zeros.</li>
+<li>Some messages have been added, changed, and removed in this version.
+  (<a href="http://cvs.jrsoftware.org/view/issrc/Files/Default.isl?r1=1.34&amp;r2=1.42">View differences in Default.isl</a>)
+  <ul>
+    <li><b>New messages:</b> ButtonBrowseOpen, ButtonBrowseClose, SelectDirLabel2, InvalidDirName, SelectStartMenuFolderLabel2, InvalidGroupName.</li>
+    <li><b>Changed messages:</b> WizardSelectDir, DiskSpaceMBLabel, BadDirName32, DirExistsTitle, DirExistsTitle, DirDoesntExistTitle, DirDoesntExist, ReadyMemoDir.</li>
+    <li><b>Removed messages:</b> SelectDirLabel, SelectStartMenuFolderLabel, SelectDirectory.</li>
+  </ul>
+</li>
+<li>Based on Innerfuse Pascal Script 3 CVS code from 2004-01-21 00:00 GMT.</li>
+<li>Minor tweaks.</li>
+</ul>
+
+<p><a name="4.1.0"></a><span class="ver">4.1.0 </span><span class="date">(2004-01-16)</span></p>
+<ul>
+<li>New features:
+  <ul>
+  <li>It's now possible to use custom icons for the Setup and Uninstall programs by setting the new [Setup] section directives <tt>SetupIconFile</tt> and <tt>UninstallIconFile</tt>. The custom Uninstall icon will be displayed in the upper right corner of the Uninstall Progress window too. <i>Note:</i> These directives are not supported if you're compiling under Windows 95/98/Me. (ML)</li> 
+  <li>The Setup program now contains version info that may be customized via these new [Setup] section directives:
+    <ul>
+    <li><tt>VersionInfoVersion</tt> (defaults to 0.0.0.0)</li>
+    <li><tt>VersionInfoCompany</tt> (defaults to the value of <tt>AppPublisher</tt>)</li>
+    <li><tt>VersionInfoDescription</tt> (defaults to the value of <tt>AppName</tt> + " Setup")</li>
+    <li><tt>VersionInfoTextVersion</tt> (defaults to the value of <tt>VersionInfoVersion</tt>)</li>
+    </ul>
+  (JR &amp; ML)</li> 
+  <li>Added <tt>BeforeInstall</tt> and <tt>AfterInstall</tt> parameter support to the [Dirs], [Files], [Icons], [INI], [InstallDelete], [Registry], [Run], [UninstallDelete] and [UninstallRun] sections. They allow you to make Setup call a function once just before and once just after an entry is installed. See the <i>CodeExample1.iss</i> example script for an example. (ML)</li> 
+  <li>The [Files] section now supports a <tt>Permissions</tt> parameter too. It is identical in syntax to the <tt>Permissions</tt> parameter already supported by the [Dirs] section but applies to files instead.</li>
+  <li>The file time stamp rounding introduced in version 4.0.11 can now be customized or disabled by setting the new [Setup] section directive <tt>TimeStampRounding</tt>.</li>
+  </ul>
+</li>
+<li>Changes/Improvements:
+  <ul>
+  <li>Enhanced the <tt>Permissions</tt> parameters introduced in version 4.0.11. Many new groups and access types are now supported. See the help file for details.</li>
+  <li>Changed the way the default font is determined: Instead of checking for MS Shell Dlg and then MS Sans Serif, it now uses the "default GUI font", which is the ideal font and font size even on Asian editions of Windows.
+  <b>[Update: The preceding is no longer the case in 4.1.1.]</b>
+  In addition, [LangOptions] directives that specify font names (e.g. <tt>DialogFontName</tt>) can now be set to an empty string, which forces usage of the "default GUI font".</li>
+  <li>Improved the way the dialogs are scaled when non-standard fonts or font sizes are used.</li>
+  <li>The /NORESTART command line parameter supported by the Setup and Uninstall programs no longer has to be combined with /SILENT or /VERYSILENT in order to have an effect. (ML)</li>
+  <li>The /DIR command line parameter supported by Setup is no longer ignored when <tt>DisableDirPage=yes</tt>.</li>
+  <li>Now checks for invalid-looking <tt>{app}</tt> directory values on silent and <tt>DisableDirPage=yes</tt> installs too.</li>
+  <li>The [Files] section flag <tt>skipifsourcedoesntexist</tt> now works on non-<tt>external</tt> files too.</li>
+  <li>The 'Browse for Folder' dialogs in Setup now use the 'new dialog interface' style if possible. This style provides the user with a larger dialog box that can be resized. The dialog box has several new capabilities including: drag and drop capability within the dialog box, reordering, shortcut menus, delete, and other shortcut menu commands. (ML)</li>
+  <li>Updated the password fields in Setup to display dots instead of '*' on Windows XP and later. (ML)</li>
+  </ul>
+</li>
+<li>[Code] section improvements/changes:
+  <ul>
+  <li>Added <tt>NewFolderButton</tt> parameter to support function <tt>BrowseForFolder</tt>. <i>Note:</i> not all Windows versions support a <tt>NewFolderButton</tt> parameter set to <tt>False</tt> and will act as if <tt>NewFolderButton</tt> was set to <tt>True</tt> regardless. (ML)</li>
+  <li>Replaced support functions <tt>DiskFree</tt> and <tt>DiskSize</tt> with <tt>GetSpaceOnDisk</tt>. <tt>GetSpaceOnDisk</tt> returns the free and total size in megabytes and therefore does not suffer from the same limitations as <tt>DiskFree</tt> and <tt>DiskSize</tt> did. (ML)</li>
+  <li>Added support functions <tt>TStrings.LoadFromFile</tt> and <tt>TStrings.SaveToFile</tt>. (ML)</li>
+  <li>Added support classes <tt>TStream</tt>, <tt>THandleStream</tt> and <tt>TFileStream</tt>. (ML)</li>
+  <li>Added support property <tt>TControl.Cursor</tt> and constant <tt>crHand</tt>. See the <i>CodeClasses.iss</i> example script for an example. (ML)</li>
+  <li>Added support class <tt>TPasswordEdit</tt>. See the <i>CodeClasses.iss</i> example script for an example. (ML)</li>
+  </ul>
+</li>
+<li>Minor documentation fixes.</li>
+<li>Based on Innerfuse Pascal Script 3 CVS code from 2004-01-11 00:00 GMT.</li>
+<li>The uninstall program's version is now 51.11.0.0.</li>
+</ul>
+
+<p><a href="http://www.jrsoftware.org/files/is4.0-whatsnew.htm">Inno Setup 4.0 Revision History</a></p>
+
+</body>
+</html>

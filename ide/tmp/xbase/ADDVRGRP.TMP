@@ -1,0 +1,61 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDVRGRP.TMP
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge all'array del record virtuale il gruppo corrente
+.* ----------------------------------------------------------------------------
+
+/* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+   ³ raggruppamento ³
+   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+
+aGrp  := dfGrpCreate()
+
+aGrp[VR_GRP_BLK      ] := {||ÛtoReport("grpexpr")Û}    ð // Espressione di gruppo
+.if toReportHea("bandactive") == "1"
+aGrp[VR_GRP_HEADER   ] := {||ÛtRepAliasName()+tRepLevGrp()ÛH()}  ð // Code block di attivazione banda
+aGrp[VR_GRP_POSHEADER] := ÛtoReportHea("bandpos")Û ð // Posizionamento banda ( 0=relativo )
+aGrp[VR_GRP_ROWHEADER] := ÛtoReportHea("bandheight")Û  ð // numero di righe banda
+.*
+.nTBrk := toReportHea("breakinband")
+.cTBrk := if(m->nTBrk == "1", ".T.", ".F.")
+aGrp[VR_GRP_BRKHEADER] := Ûm->cTBrkÛ            ð // salto pagina nella banda
+   .if !EMPTY(toReportHea("printif"))
+aGrp[VR_GRP_CANHEADER] := {||ÛtoReportHea("printif")Û}
+   .endif
+.endif
+
+.if toReportFoo("bandactive") == "1"
+aGrp[VR_GRP_FOOTER   ] := {||ÛtRepAliasName()+tRepLevGrp()ÛF()} ð // Code block di attivazione banda
+aGrp[VR_GRP_POSFOOTER] := ÛtoReportFoo("bandpos")Û ð // Posizionamento banda ( 0=relativo )
+aGrp[VR_GRP_ROWFOOTER] := ÛtoReportFoo("bandheight")Û  ð // numero di righe banda
+.*
+.nTBrk := toReportFoo("breakinband")
+.cTBrk := if(m->nTBrk == "1", ".T.", ".F.")
+aGrp[VR_GRP_BRKFOOTER] := Ûm->cTBrkÛ            ð // salto pagina nella banda
+   .if !EMPTY(toReportFoo("printif"))
+aGrp[VR_GRP_CANFOOTER] := {||ÛtoReportFoo("printif")Û}
+   .endif
+.endif
+
+.nTEject := toReport("breakafterfoot")
+.cTEject := if(m->nTEject == "1", ".T.", ".F.")
+aGrp[VR_GRP_EJECT    ] := Ûm->cTEjectÛ          ð // salto pagina dopo gruppo
+
+.* funzioni per le variabili di calcolo prevalorizzate
+.*
+.nTptr := Ascan( m->aTprc, {|x|x[3]==oo_prn->FILE .AND. x[4]==oo_prn->GRP .AND. x[6] .AND. x[7]==oo_prn->TYPCOD} )
+.if nTptr != 0
+aGrp[VR_GRP_PRECALC_CLEAR ] := {||ÛtRepAliasName()+"Clear( "+tRepLevGrp()Û, PRN_PRECALC )} ð // funzione di azzeramento precalcoli
+aGrp[VR_GRP_PRECALC_ADD   ] := {||ÛtRepAliasName()+"Add  ( "+tRepLevGrp()Û, PRN_PRECALC )} ð // funzione di totalizzazione precalcoli
+.endif
+.*
+.* funzioni per le variabili di calcolo non prevalorizzate
+.*
+.nTptr := Ascan( m->aTprc, {|x|x[4]==oo_prn->GRP .AND. !x[6]} )
+.if nTptr != 0
+aGrp[VR_GRP_CALC_CLEAR    ] := {||ÛtRepAliasName()+"Clear( "+tRepLevGrp()Û, PRN_CALC )} ð // funzione di azzeramento calcoli
+.endif
+
+.tPutInj( 0 ,[.inj VRG0] )
+aAdd( VRLoc[VR_GRP_ARR], aGrp   )               ð // rottura su ÛtoReport("grpexpr")Û

@@ -1,0 +1,15 @@
+------
+REPORT
+------
+
+L'oggetto Report ä l'oggetto principale di ogni gestiobçne di stampa e
+realizza una interfaccia che consente di invare le informazioni
+memorizzate nella base dati alla stampante.  Un oggetto REPORT specifica
+come i dati debbano essere stampati ed ä invisibile all'utente
+dell'applicazione.
+
+Dopo avere lanciato una stampa viene richiesta la configurazione della
+stampante, quindi i dati viengono stampati.
+
+Ad un oggetto REPORT puï essere associato un oggetto QUERY per filtrare i
+dati che devono essere stampati.

@@ -1,0 +1,55 @@
+<CAP> FUNZIONAMENTO DEL MENU GENERALE
+
+ Il Menu Generale consente di attivare tutte le Sessioni di lavoro
+ dell'Applicazione ed Š associato alla finestra principale
+ dell'applicativo.  Viene visualizzato nella parte superiore del video
+ nella schermata principale.
+
+ Nel caso in cui il menu si presenti CHIUSO, quindi con le voci di
+ menu appartenenti al menu generale non visibili, per aprirlo si pu•
+ procedere in diversi modi:
+
+ - Premendo il tasto ALT
+
+ - Premendo i tasti ALT-BARRA SPAZIO
+
+ - Premendo il tasto caldo (Hot-Key:  Alt-lettera evidenziata)
+   associato alla voce principale di menu
+
+ - Utilizzando il pulsante sinistro del mouse facendo clic
+   sulla voce di menu principale desiderata
+
+ Mediante i tasti Freccia di spostamento orizzontale oppure con
+ l'utilizzo del mouse, possono essere selezionati i titoli di menu
+ desiderati; nessuna di queste voci pu• attivare direttamente una
+ funzionalit…, ma tutte aprono un secondo menu verticale.  Ogni voce
+ di questo menu pu• aprire un livello inferiore di menu.
+
+ Mediante i tasti Freccia di spostamento verticale oppure il puntatore
+ del mouse, Š possibile selezionare le scelte presentate, ovvero le
+ sessioni di lavoro da attivare.
+
+ Sono attivi i 'Tasti caldi' che si presentano, all'interno delle
+ diverse voci di menu, come una lettera di diversa colorazione; le
+ voci di menu principali sono attivabili dalla pressione contemporanea
+ del tasto ALT e della lettera evidenziata.
+
+ Le voci appartenenti ai menu secondari aperti da quello principale,
+ possono anch'esse essere richiamate in diverse modalit…:
+
+ - a menu chiuso, attraverso la pressione dei tasti funzione
+   associati alle diverse voci durante la definizione
+   dell'applicazione (a menu aperto i tasti funzione non sono attivi)
+
+ - a menu aperto digitando la lettera corrispondente al
+   tasto caldo (Hot-Key) associato alla voce di menu
+
+ - selezionando la voce desiderata e confermando utilizzando
+   il tasto INVIO
+
+ - utilizzando il mouse e selezionando direttamente la voce
+   desiderata
+
+ Sull'ultima riga dello schermo a sinistra verr… visualizzato un
+ messaggio contestuale alla scelta di menu evidenziata.
+

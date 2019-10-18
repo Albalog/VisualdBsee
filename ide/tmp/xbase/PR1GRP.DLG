@@ -1,0 +1,62 @@
+.M->_mGrpExpr1:=M->mGrpExpr1
+.M->_mGrpExpr2:=M->mGrpExpr2
+.M->_mGrpExpr3:=M->mGrpExpr3
+.M->_mGrpExpr4:=M->mGrpExpr4
+.M->_mGrpExpr5:=M->mGrpExpr5
+.M->_mGrpExpr6:=M->mGrpExpr6
+.M->_mGrpExpr7:=M->mGrpExpr7
+.M->_mGrpExpr8:=M->mGrpExpr8
+.M->_mGrpExpr9:=M->mGrpExpr9
+.*
+.oPr1Grp:=DlgNew( 07,09,"Espressioni di raggruppamento:" ,.T. ,"@" )
+.DlgRow( oPr1Grp,"                                                            ")
+.DlgRow( oPr1Grp,"Espressione indice  : @10                                   ")
+.DlgRow( oPr1Grp,"                                                            ")
+.DlgRow( oPr1Grp," Rottura  gruppo 1  : @01                                   ")
+.DlgRow( oPr1Grp," Rottura  gruppo 2  : @02                                   ")
+.DlgRow( oPr1Grp," Rottura  gruppo 3  : @03                                   ")
+.DlgRow( oPr1Grp," Rottura  gruppo 4  : @04                                   ")
+.DlgRow( oPr1Grp," Rottura  gruppo 5  : @05                                   ")
+.DlgRow( oPr1Grp," Rottura  gruppo 6  : @06                                   ")
+.DlgRow( oPr1Grp," Rottura  gruppo 7  : @07                                   ")
+.DlgRow( oPr1Grp," Rottura  gruppo 8  : @08                                   ")
+.DlgRow( oPr1Grp," Rottura  gruppo 9  : @09                                   ")
+.DlgRow( oPr1Grp,"                                                            ")
+.DlgRow( oPr1Grp," @20  @25                                                   ")
+.*
+.DlgGet( oPr1Grp,"_mGrpExpr1" ,"@01" ,{||M->_mGrpExpr1} ,{|cM,nS|.T.}  ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S37",;
+           "Digitare espressione di raggruppamento di primo livello"    )
+.DlgGet( oPr1Grp,"_mGrpExpr2" ,"@02" ,{||M->_mGrpExpr2} ,{|cM,nS|.T.}  ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S37",;
+           "Digitare espressione di raggruppamento di secondo livello"    )
+.DlgGet( oPr1Grp,"_mGrpExpr3" ,"@03" ,{||M->_mGrpExpr3} ,{|cM,nS|.T.}  ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S37",;
+           "Digitare espressione di raggruppamento di terzo livello"    )
+.DlgGet( oPr1Grp,"_mGrpExpr4" ,"@04" ,{||M->_mGrpExpr4} ,{|cM,nS|.T.}  ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S37",;
+           "Digitare espressione di raggruppamento di quarto livello"    )
+.DlgGet( oPr1Grp,"_mGrpExpr5" ,"@05" ,{||M->_mGrpExpr5} ,{|cM,nS|.T.}  ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S37",;
+           "Digitare espressione di raggruppamento di quinto livello"    )
+.DlgGet( oPr1Grp,"_mGrpExpr6" ,"@06" ,{||M->_mGrpExpr6} ,{|cM,nS|.T.}  ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S37",;
+           "Digitare espressione di raggruppamento di sesto livello"    )
+.DlgGet( oPr1Grp,"_mGrpExpr7" ,"@07" ,{||M->_mGrpExpr7} ,{|cM,nS|.T.}  ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S37",;
+           "Digitare espressione di raggruppamento di settimo livello"    )
+.DlgGet( oPr1Grp,"_mGrpExpr8" ,"@08" ,{||M->_mGrpExpr8} ,{|cM,nS|.T.}  ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S37",;
+           "Digitare espressione di raggruppamento di ottavo livello"    )
+.DlgGet( oPr1Grp,"_mGrpExpr9" ,"@09" ,{||M->_mGrpExpr9} ,{|cM,nS|.T.}  ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S37",;
+           "Digitare espressione di raggruppamento di nono livello"    )
+.*
+.DlgExp( oPr1Grp,"Exp1","@10" ,{||tRepNdxExp( m->Mdbf, m->Mndx  )} ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" )
+.*
+.DlgBut( oPr1Grp,"But1"  ,"@20" ,{||.T.} ,{||DlgWri(oPr1Grp)}    ,"^OK")
+.DlgBut( oPr1Grp,"But2"  ,"@25" ,{||.F.} ,{||DlgEsc(oPr1Grp)}    ,"^Rinuncia")
+.*
+.DlgShow(oPr1Grp)
+.IF DlgInkey(oPr1Grp)
+    .M->mGrpExpr1:=M->_mGrpExpr1
+    .M->mGrpExpr2:=M->_mGrpExpr2
+    .M->mGrpExpr3:=M->_mGrpExpr3
+    .M->mGrpExpr4:=M->_mGrpExpr4
+    .M->mGrpExpr5:=M->_mGrpExpr5
+    .M->mGrpExpr6:=M->_mGrpExpr6
+    .M->mGrpExpr7:=M->_mGrpExpr7
+    .M->mGrpExpr8:=M->_mGrpExpr8
+    .M->mGrpExpr9:=M->_mGrpExpr9
+.endif

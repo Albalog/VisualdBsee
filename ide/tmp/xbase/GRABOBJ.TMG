@@ -1,0 +1,313 @@
+.parameter cP1, cP2, cP3 ,cDBF
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GRABOBJ
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Grag oggetti
+.* ----------------------------------------------------------------------------
+.private WDO
+.private MPRGNAM
+.private MPRGFRM1
+.private MDBF
+.private MORIF
+.private OBJREL
+.M->cTmgName := "grabobj.tmg "
+.M->CodGrp   := ""
+.M->CodRel   := ""
+.M->NumPag   := 0
+.M->oDlg     := NIL
+.*----------- DEFAULT variabili per pulsanti su oggetto
+.M->lHome    := .F.
+.M->lSkpp    := .F.
+.M->lSkpn    := .F.
+.M->lEnd     := .F.
+.M->lIns     := .F.
+.M->lMod     := .F.
+.M->lWri     := .F.
+.M->lEsc     := .F.
+.M->lDel     := .F.
+.M->lKey     := .F.
+.if "frmfrm" $ cP1 .AND. cP2 == "frm"
+   .M->cTitle:= PadR("Form : "+cP3,60)
+   .M->oDlg  := NIL
+   .if dBMsgDis( "tgrbfrm",0 ) == 1
+      .M->MPrgNam := cP3
+      .M->Mdbf    := if( empty(M->File), NewCod("dbf"), M->File)
+      .*
+      .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: form.tmg in corso..." )
+      .do form with "ins/mnu", M->MPrgNam+"/"+M->Mdbf
+      .__dbFrameDis( PadR(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+      .__dbFrameOff()
+      .M->lAppend := .T.
+   .endif
+.endif
+.if "frmfrm" $ cP1 .AND. cP2 == "obf"
+   .M->WDO      := "frm"
+   .M->MPrgFrm1 := cP3
+   .M->Mdbf     := space(08)
+   .M->cTitle   := PadR("Titolo : "+cP3,60)
+   .M->MOrif    := ""
+   .M->EnvId    := "GrabFrm"
+   .do form.dlg
+   .DlgShow(oDlg)
+   .if DlgInkey(oDlg)
+      .dd_dbf->(dbSetOrder(2))
+      .dd_dbf->(dbSeek( upper(M->MDbf) ))
+      .dd_dbf->(dbSetOrder(1))
+      .M->MDbf1 := dd_dbf->FILE
+      .*
+      .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: form.tmg in corso..." )
+      .do form with "ins/mnu", M->MprgFrm1+"/"+M->Mdbf1
+      .*
+      .do stdbut with 1
+      .*
+      .M->DBF    := M->MDBF1
+      .M->OBJREL := ""
+      .*
+      .if (!Empty( M->MDBF1 )) .AND. (M->MDBF1 != M->cDBF)
+         .if dbMsgDis("ButRel",0,"1:1") == 1
+             .if ! SeekRelTyp( M->MDBF1, "1:1" )
+                 .dbmsgDis( "dbmsk3",0,"1:1",M->MDBF)
+             .else
+                 .if FButSelRel( NIL ,'grb',"frm" )
+                    .oo_obj->( dbNet("rec") )
+                    .oo_obj->OBJREL := M->OBJREL
+                    .oo_obj->( dbNet("url") )
+                 .endif
+             .endif
+         .endif
+      .endif
+      .__dbFrameDis( PadR(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+      .__dbFrameOff()
+      .M->lAppend := .T.
+   .endif
+.endif
+.if "frmedr" $ cP1 .AND. cP2 == "edr"
+   .if dBMsgDis( "tgrbedr",0 ) == 1
+      .M->MPrgNam := cP3
+      .M->Mdbf    := M->DBF
+      .M->cTitle  := "Edit "+dfGetDbf( M->Mdbf ,{||dd_dbf->FILE_NAME} )
+      .*
+      .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: brwedt.tmg in corso..." )
+      .do brwedt with "ins/mnu", M->MPrgNam+"/"+M->Mdbf ,cTitle
+      .__dbFrameDis( PadR(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+      .__dbFrameOff()
+      .M->lAppend := .T.
+   .endif
+.endif
+.if "frmedr" $ cP1 .AND. cP2 == "obf"
+   .M->WDO     := "edr"
+   .M->MPrgFrm1:= cP3
+   .M->Mdbf    := IF( !EMPTY(M->cDBF) ,PADR(M->cDBF,8) ,space(08) )
+   .M->cTitle  := PadR("Titolo : "+cP3,60)
+   .M->MOrif   := space(07)
+   .M->EnvId   := "GrabEdb"
+   .do BrwEdt.dlg
+   .DlgShow(oDlg)
+   .if DlgInkey(oDlg)
+      .dd_dbf->(dbSetOrder(2))
+      .dd_dbf->(dbSeek( upper(M->MDbf) ))
+      .dd_dbf->(dbSetOrder(1))
+      .M->MDbf1   := dd_dbf->FILE
+      .*
+      .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: brwedt.tmg in corso..." )
+      .do brwedt with "ins/mnu", M->MprgFrm1+"/"+M->Mdbf1 ,cTitle
+      .__dbFrameDis( PadR(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+      .__dbFrameOff()
+      .M->lAppend := .T.
+   .endif
+.endif
+.if "brwbrw" $ cP1 .AND. cP2 == "obf"
+   .M->WDO     := "brw"
+   .M->MPrgFrm1:= cP3
+   .M->Mdbf    := space(08)
+   .M->cTitle  := PadR("Titolo : "+cP3,60)
+   .M->MOrif   := ""
+   .M->MPrgEdb := SPACE(8)
+   .M->cTitle1 := SPACE(60)
+   .M->EnvId   := "GrabBrw"
+   .do Browse.dlg
+   .DlgShow(oDlg)
+   .if DlgInkey(oDlg)
+      .M->nRecBrw := 0
+      .dd_dbf->(dbSetOrder(2))
+      .dd_dbf->(dbSeek( upper(M->MDbf) ))
+      .dd_dbf->(dbSetOrder(1))
+      .M->MDbf1   := dd_dbf->FILE
+      .*
+      .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: browse.tmg in corso..." )
+      .do browse with "ins", M->MprgFrm1+"/"+M->Mdbf1
+      .*
+      .if !empty( M->MPrgEdb )
+          .do MnuBrw with "file/anr/mcr/ecr" ,M->MprgFrm1
+          .M->CodFat  := oo_obj->OBJ
+          .M->Mdbf1   := oo_obj->DBF
+          .M->CodEdr  := ""
+          .do brwedt with "ins/mnu", M->MprgEdb+"/"+M->Mdbf1 ,cTitle1
+          .oo_obj->(dbGoto( M->nRecBrw ))
+          .oo_obj->( dbNet("rec") )
+          .oo_obj->OBJ2OBJ := M->CodEdr
+          .oo_obj->( dbNet("url") )
+      .endif
+      .private DBF
+      .M->DBF    := M->MDBF1
+      .M->OBJREL := ""
+      .if dbMsgDis("ButRel",0,"1:N") == 1
+          .if ! SeekRelTyp( M->MDBF1, "1:N" )
+              .dbmsgDis( "dbmsk3",0,"1:N",M->MDBF)
+          .else
+              .if FButSelRel(NIL,'grb',"brw")
+                 .oo_obj->(dbGoto( M->nRecBrw ))
+                 .oo_obj->( dbNet("rec") )
+                 .oo_obj->OBJREL := M->OBJREL
+                 .oo_obj->( dbNet("url") )
+              .endif
+          .endif
+      .endif
+      .__dbFrameDis( PadR(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+      .__dbFrameOff()
+      .M->lAppend := .T.
+   .endif
+.endif
+.if "brwwin" $ cP1 .AND. cP2 $ "ndx/alk"
+   .M->cTitle  := PadR("Titolo  : "+cP3,60)
+   .if dBMsgDis( "tgrbwin",0 ) == 1
+      .M->jjFile  := dd_dbf->file
+      .M->MWinNam := cP3
+      .M->Mdbf    := jjFile
+      .*
+      .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: window.tmg in corso..." )
+      .do window with "ins/mnu", M->MWinNam+"/"+M->Mdbf
+      .__dbFrameDis( PadR(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+      .__dbFrameOff()
+      .M->lAppend := .T.
+   .endif
+   .return
+.endif
+.if "brwwin" $ cP1 .AND. cP2 == "obf"
+   .M->WDO     := "win"
+   .M->MPrgFrm1:= cP3
+   .M->Mdbf    := space(08)
+   .M->cTitle  := PadR("Titolo  : "+cP3,60)
+   .M->MOrif   := ""
+   .M->EnvId   := "GrabWin"
+   .do Window.dlg
+   .DlgShow(oDlg)
+   .if DlgInkey(oDlg)
+      .dd_dbf->(dbSetOrder(2))
+      .dd_dbf->(dbSeek( upper(M->MDbf) ))
+      .dd_dbf->(dbSetOrder(1))
+      .M->MDbf1   := dd_dbf->FILE
+      .*
+      .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: window.tmg in corso..." )
+      .do window with "ins/mnu", M->MprgFrm1+"/"+M->Mdbf1
+      .__dbFrameDis( PadR(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+      .__dbFrameOff()
+      .M->lAppend := .T.
+   .endif
+.endif
+.if "qryqry" $ cP1 .AND. cP2 == "prn"
+    .M->cTitle  := PadR("Titolo  : "+cP3,60)
+    .M->MPrgDrv := space(7)
+    .M->MDbf    := oo_obj->DBF
+    .dd_dbf->( dbSetOrder(1) )
+    .dd_dbf->( dbSeek( m->MDbf ) )
+    .M->MDbfName := tDbfAliasName()
+    .M->EnvId    := "GrabQpr"
+    .do Query.dlg with "qpr"
+    .DlgShow(oDlg)
+    .if DlgInkey(oDlg)
+        .M->CodObj  := NewCod("obj")
+        .*
+        .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: query.tmg in corso..." )
+        .do query with "prn/def/ins", MprgDrv+"/"+Mdbf
+        .__dbFrameDis( PadR(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+        .__dbFrameOff()
+        .M->lAppend := .T.
+    .endif
+.endif
+.if "qryqry" $ cP1 .AND. cP2 == "obf"
+   .M->WDO     := "qry"
+   .M->MPrgDrv := cP3
+   .M->cTitle  := PadR("Titolo  : "+cP3,60)
+   .M->Mdbf    := space(08)
+   .M->EnvId   := "GrabQry"
+   .do Query.dlg with "qry"
+   .DlgShow(oDlg)
+   .if DlgInkey(oDlg)
+      .dd_dbf->(dbSetOrder(2))
+      .dd_dbf->(dbSeek( upper(M->MDbf) ))
+      .M->MDbf  := dd_dbf->FILE
+      .M->MNdx  := ""
+      .dd_dbf->(dbSetOrder(1))
+      .*
+      .M->CodObj := NewCod("obj")
+      .*
+      .__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: query.tmg in corso..." )
+      .do query with "def/ins/mnu", M->MprgDrv+"/"+M->Mdbf
+      .__dbFrameDis( PadR(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,70) )
+      .__dbFrameOff()
+      .M->lAppend := .T.
+   .endif
+.endif
+.if "prnprn" $ cP1 .AND. cP2 == "obf"
+   .M->WDO     := "prn"
+   .M->MPrgDrv := cP3
+   .M->cTitle  := PadR("Stampa  : "+cP3,60)
+   .M->Mdbf    := space(08)
+   .M->MNdx    := space(08)
+   .M->EnvId   := "GrabPrn"
+   .MGrpExpr1   := space(78)
+   .MGrpExpr2   := space(78)
+   .MGrpExpr3   := space(78)
+   .MGrpExpr4   := space(78)
+   .MGrpExpr5   := space(78)
+   .MGrpExpr6   := space(78)
+   .MGrpExpr7   := space(78)
+   .MGrpExpr8   := space(78)
+   .MGrpExpr9   := space(78)
+   .mnGrp       := 0
+   .oDlg        := NIL
+   .lRepStd     := .F.
+   .*
+   .do report.dlg
+   .DlgShow(oDlg)
+   .if DlgInkey(oDlg)
+       .*-----------------------------> Prelevo il codice del FILE
+       .dd_dbf->(DbSetOrder(2))
+       .dd_dbf->(DbSeek(upper(m->MDbf)))
+       .MDbf  := dd_dbf->FILE
+       .dd_dbf->(DbSetOrder(1))
+       .*-----------------------------> Prelevo il codice dell'INDICE
+       .NotFound := .t.
+       .*
+       .dd_ndx->(DbSetOrder(1))
+       .dd_ndx->(DbSeek(m->Mdbf))
+       .do while dd_ndx->file = m->Mdbf .and. NotFound .and. !dd_ndx->(eof())
+           .if upper(dd_ndx->ndx_nam) = upper(m->Mndx)
+               .m->Mndx  := dd_ndx->ndx
+               .NotFound := .f.
+           .endif
+           .dd_ndx->(DbSkip())
+       .enddo
+       .__dbFrameOn( 05 ,02, 15, 77, "Esecuzione GRAB: report1.tmg in corso..." )
+       .*-----------------------------> Dichiarazione variabili di registrazione
+       .tcCurrGrp  := ""
+       .CntGrp   := 1
+       .*
+       .*---------------------------------- AGGIUNGE OGGETTI
+       .M->CodObj := ""
+       .do report1 with "ins/grp"
+       .*
+       .__dbFrameOff()
+       .*
+       .tFlgIni()
+       .M->lAppend := .T.
+       .*
+       .msg [Operazione ultimata !]
+       .*
+       .if m->lRepStd                 ./ Impostazione report standard?
+           .do RepStd with "pr1"      ./ Attivazione report standard
+       .endif
+   .endif
+.endif

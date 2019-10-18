@@ -1,0 +1,9 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : NUNLOCK
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Sblocco del record in rete
+.* ----------------------------------------------------------------------------
+.if !Empty(cTdbf)
+ÛcTdbfÛ->(dfNet(NET_RECORDUNLOCK))
+.endif

@@ -1,0 +1,22 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDLSB
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge ITEM LIST BOX ad array control per la
+.*                  : dichiarazione delle variabili
+.* ----------------------------------------------------------------------------
+.M->cTsym := tControlId()
+.if ! Empty( cTsym )
+    .if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+       .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,"lsbobj" ,"" ,"", "identificatore control list box" } )
+    .endif
+.endif
+.if toItem("lsbdatatype") == "1"
+   .M->cTsym := toItem("lsbroworigin")
+   .if ! Empty( cTsym )
+       .M->cTdef := cTsym+[ := ]+toItem("lsbarraydef")
+       .if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+          .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,"lsbarr"+M->cTsym ,cTdef ,"", "" } )
+       .endif
+   .endif
+.endif

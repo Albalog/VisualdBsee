@@ -2,7 +2,7 @@
 xppload version
 
 :: versione definitiva
-strtran _gotutto.base  _gotutto.bat rel=..\output\lib190\rel   setreldate=reldate.exe defines= cur=%cd%\ lib="<<'XppRt0.lib'+chr(13)+chr(10)+'XppRt1.lib'+chr(13)+chr(10)+'XppUi2.lib'>>" xpprel=v:\alaska190\xppw32\lib\
+strtran _gotutto.base  _gotutto.bat rel=..\output\lib190\rel   setreldate=reldate.exe defines= cur=%cd%\ lib="<<'XppRt0.lib'+chr(13)+chr(10)+'XppRt1.lib'+chr(13)+chr(10)+'XppRt2.lib'+chr(13)+chr(10)+'XppUi2.lib'+chr(13)+chr(10)+'Xppui3.lib'+chr(13)+chr(10)+'Xppsys.lib'>>" xpprel=v:\alaska190\xppw32\lib\
 
 echo "--- STATIC LIB ---"
 call _gotutto.bat /STATIC %1 %2 %3

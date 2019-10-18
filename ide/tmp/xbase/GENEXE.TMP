@@ -1,0 +1,57 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GENEXE
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Rigenera tutto il sottoprogetto
+.* ----------------------------------------------------------------------------
+.tExeBuild()
+.foreach source
+   .M->nBld := oo_bld->(recno())
+   .M->nTObjLock := oo_obj->(recno())
+   .*
+   .if oo_obj->(dbNet("rec"))
+.do ÛtObjTemplate("tmp")Û
+   .endif
+   .oo_bld->(dbGoto(nBld))
+   .oo_obj->(dbGoto(nTObjLock))
+   .oo_obj->PRGDATE := date()
+   .oo_obj->PRGTIME := dfTimeStd()
+   .oo_obj->FLGUPD  := ""
+   .oo_obj->(dbNet("url"))
+
+   .if oo_obj->WDO=="mke"
+       .oo_obj->(DbGotop())
+       .do while !oo_obj->(EOF())
+           .if (oo_obj->TYP $ "lib-ext-spc")
+               .if oo_obj->(dbNet("rec"))
+                   .oo_obj->PRGDATE := date()
+                   .oo_obj->PRGTIME := dfTimeStd()
+                   .oo_obj->FLGUPD  := ""
+                   .oo_obj->(dbNet("url"))
+               .endif
+           .endif
+           .oo_obj->(dbSkip())
+       .enddo
+       .oo_obj->(DbGoto( nTObjLock ))
+   .endif
+   .tUpgradeEnv()
+   .*
+.next
+.do genfile
+.Tone(1000,1)
+
+.* .if VdbYesNo("Avviare Generazione File di Help?") 
+.*  .if !ALLTRIM(toExeEnv( "helpformat" ,.F.))== "1"
+.*    .if ! file( M->ExePath+"dbHlp.dbf" )
+.*       .tCopyFile( dfExeTmp()+"dbHlp.dbf" ,M->ExePath+"dbHlp.dbf" )
+.*    .endif
+.*  .endif
+.*  .msg [Generazione file di HELP del progetto in corso.]
+.*  .GenHlp()
+.*.endif
+
+.if !type("OS()")=="C"
+   .inkey(5)
+.endif
+
+

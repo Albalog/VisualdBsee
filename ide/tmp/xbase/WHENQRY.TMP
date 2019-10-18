@@ -1,0 +1,16 @@
+.parameter nTSpace
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : WHENQRY
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Controlli prima della get per oggetto query
+.* ----------------------------------------------------------------------------
+.oo_cod->(dbSeek("00"+oo_obj->OBJ+oo_itm->ITM+oo_itm->IGC+"000000"+"000000"+"OO_ITM"+"EDTB"+"I"))
+.tPutInj( nTSpace ,[.inj EDTB] )
+.*------------------------------------- SALTA L'EDIT SE
+.if ! empty(toItem("jumpif"))
+//  EDIT CONDIZIONALE
+IF ÛtoItem("jumpif")Û
+   lRet := .F.
+ENDIF
+.endif

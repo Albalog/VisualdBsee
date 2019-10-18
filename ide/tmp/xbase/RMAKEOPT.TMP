@@ -1,0 +1,67 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : RMAKEOPT
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Genera il file di make ottimizzato per rmake.exe
+.* ----------------------------------------------------------------------------
+.tExeBuild()
+.M->cTtitle   := Trim(oo_obj->ObjDes)
+.M->MstObjRec := oo_obj->(recno())
+.M->MstPrgNam := alltrim(oo_obj->PRG)
+.out ÛtSourcePath()+"\"+MstPrgNam+"."+oo_obj->EXTÛ
+.msg [GENERA :]+cTtitle+[ : ]+tSourcePath()+"\"+MstPrgNam+"."+oo_obj->EXT
+.if (toExeEnv("compiler")=="3")
+.do rmakex
+.else
+/*
+ Progetto       : Ûoo_app->PRJÛ
+ Sottoprogetto  : Ûoo_exe->EXEDESÛ
+ Programma      : ÛtSourcePath()+"\"+MstPrgNam+"."+oo_obj->EXTÛ
+ Template       : ÛtGenTemplate()Û
+ Descrizione    : ÛcTtitleÛ
+ Programmatore  : Ûoo_exe->PRJNAMEÛ
+ Data           : Ûdtoc(date())Û
+ Ora            : Ûtime()Û
+*/
+
+..prg.dmm:
+   dbCompil  $**    $*.dmm
+
+..dmm.obj:
+   clipper $** ÛtoExeEnv("compileroption")Û
+
+..prg.obj:
+   clipper $** ÛtoExeEnv("compileroption")Û
+
+.M->cTini := tInitProc()
+ÛPadR(cTini+".dmm",13)+" : ..\source\"+cTiniÛ.prg
+ÛPadR(cTini+".obj",13)+" : ..\source\"+cTiniÛ.dmm
+
+.foreach make oo_bld->EXT=="prg"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   .if !(Lower(cTini) == Lower(cTprg))
+ÛPadR(cTprg+".dmm",13)+" : ..\source\"+cTprgÛ.prg
+ÛPadR(cTprg+".obj",13)+" : ..\source\"+cTprgÛ.dmm
+
+   .endif
+.next
+
+.inj RMK4 In coda ai programmi in compilazione. (Lasciare una riga vuota!!)
+
+Dmm.exe      : ÛcTiniÛ.obj
+.foreach special
+   .if tObjtype() == "scriptlink"
+      .M->cLinker := ALLTRIM(SUBS(toExeEnv("linker",.T.),1,8))
+      .if LOWER(cLinker) == "causeway"
+               wl32 /lc:exospace.def @Ûalltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+      .else
+               ÛcLinker+" @"+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+      .endif
+   .endif
+.next
+
+.close
+
+.endif
+
+.oo_obj->(dbGoto(M->MstObjRec))

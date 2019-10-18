@@ -1,0 +1,1105 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : DBSTART for Visual dBsee
+.* RELEASE      : 5.0
+.* VERSION      :
+.* DESCRIZIONE  : File di start-up applicazione
+.* ----------------------------------------------------------------------------
+.msg [Genera il file dbStart.ini]
+.out ÛtExePath()+"\"Ûdbstart.ini
+;                                 .                      .
+;       .    +    +          +                     +         +  .           .
+;   .     .   ____  .   .  .  .    \ú/   . +    .    .  +          +     .
+;        /| +|  _ \        ________ú*_________       _   . ____  .  _________
+;  +  + < |. | | \ \ . +  / ______//ú\__   __/      / |   |  _ \    \__   __/
+;       | |  | | / /     / /    .     . | |        /  |   | | \ \ .ú . | |
+;    ___| |  | |/ <  .  +\ \_____   +   | | .     / / | . | |+/ /      | | .
+;  +/ __> | .| <__ \   .  \_____ \      | |  +   / /| |   | |/ / + +   | |  +
+;  / /  | |+ | |  \ \           \ \   . | |  .  / / | |  .| < <      . | |  .
+;  \ \__| |  | |__/ /   ________/ /  +  | |    / /. |_|   | |\ \\ú/ +  | |
+; + \_____|úú|_____/    \________/       \| .  \ \ +    + |_| \ \*úú    \| .
+;  .  .   +  ú .  +          +  .    .  +   . + \/  .        + \/ú\
+;    .  .   +       .    +  .      +       .     .       . .   .     . .
+;      +     .     +                              +            +      .    .
+;                     úÄÍşÍÄú Initialization File úÄÍşÍÄú
+;_____________________________________________________________________________
+;==========/===========/==============³==============\=============\==========
+;--------/------------/---------------³---------------\--------------\--------
+;ÄÄÄÄÄÄ/ÄÄÄÄÄÄÄÄÄÄÄÄÄ/ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ³ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ\ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ\ÄÄÄÄÄÄ
+;____/______________/_________________³_________________\________________\____
+; _/               /                  ³                  \                 \_
+;/________________/___________________³___________________\_______________³’ï\
+;
+
+.if toProject("skipapps")=="0"
+; Settaggi base dell'applicazione
+[apps]
+IniVersion=5.0
+
+; Pack prima dell'indicizzazione
+FilePack = ÛIF(toProject("filepack")=="0","NO","YES")Û
+
+; NetWork Attiva
+LockRepeatTime = ÛtoProject("lockrepeattime")Û
+GetTimeOut     = ÛtoProject("gettimeout")Û
+GetWarning     = ÛtoProject("getwarning")Û
+
+
+; Disabilita il ripristino dell'indice base dell'entit… all'uscita della DDKEY 
+;XbaseDisableDDKEYSetOrder=YES 
+
+;Disabilita il check degli Archivi ad ogni apertura entit… per intercettare runtime 
+;YES -> DEFAULT   
+;NO     
+;NO_MSG 
+;XbaseUserPathChk=NO
+
+; Nome Tabelle
+; Tabelle modificabili
+TabName  =ÛtoPrjTab("tabname")Û
+TabIndex1=ÛtoPrjTab("tabindex1")Û
+TabModify=ÛIF(toProject("tabmodify")=="0","NO","YES")Û
+
+;Disable The Button F9 on memo Field to call the function "Save Memo on Disk..."
+;XbaseDisableSaveMemoOnDisk=YES
+
+;Disable to Add the label <Print Database> in entity Form or Listbox.
+;XbaseDisablePrintDatabase=YES 
+
+; Edit su finestre automatiche
+FileModify=ÛIF(toProject("filemodify")=="0","NO","YES")Û
+
+; Numero di righe all'attivazione
+; 25    = Setta la modalita' 25 righe
+; 50    = Setta la modalita' 50 righe
+; Vuoto = Non modifica la risoluzione
+ConsoleLines=
+
+; Colore dell'ombra
+; Dato che la palette puo' cambiare il default dell'ombra potrebbe variare
+ShadowColor= ÛdfNum2Col(VAL(toProject("shadowcolor")))Û
+
+; Stampante di DEFAULT e
+; Porta di DEFAULT
+DefaultPrinter=107
+DefaultPort=Lpt1
+
+; Colore di OFF
+ObjectOffColor= ÛdfNum2Col(VAL(toProject("actionbaroffcol")))Û
+
+; Cls alla partenza
+; ScreenColor
+ClearScreen = ÛIF(toProject("clearscreen")=="0","YES","NO")Û
+ScreenColor = ÛdfNum2Col(VAL(toProject("screencolor")))Û
+ScreenSaverActive = ÛIF(toProject("screensaveract")=="0","NO","YES")Û
+ScreenSaverTime   = ÛtoProject("screensavertime")Û
+
+; Abilito la ridefinizione dei caratteri
+FontRedefinition=YES
+
+; Messaggi durante la lettura dell'ini
+IniMessage=ÛIF(toProject("inimessage")=="0","NO","YES")Û
+
+; Enable automatic application exit
+;EXITAPPS=YES
+
+; timeout for exit application
+;EXITAPPSTIME=40
+
+;
+; User Fonts
+;
+XbaseApplicationFont01=ÛtoProject("appfont01")Û
+XbaseApplicationFont02=ÛtoProject("appfont02")Û
+XbaseApplicationFont03=ÛtoProject("appfont03")Û
+XbaseApplicationFont04=ÛtoProject("appfont04")Û
+XbaseApplicationFont05=ÛtoProject("appfont05")Û
+XbaseApplicationFont06=ÛtoProject("appfont06")Û
+XbaseApplicationFont07=ÛtoProject("appfont07")Û
+XbaseApplicationFont08=ÛtoProject("appfont08")Û
+XbaseApplicationFont09=ÛtoProject("appfont09")Û
+
+XbaseTreeMenu=NO
+XbasePromptAlign=6
+XbaseShowToolBar=YES
+XbaseAppColorGpr=1
+XbaseAppColorFun=9
+XbaseEnableWinPrinters=YES
+
+;
+; This setting is the default backgound bitmap. Change it to change the
+; default background bitmap
+; EX.
+; XbaseBackgroundBmp=10
+XbaseBackgroundBmp=
+
+;
+; This setting allow to exclude menubar to display
+;
+;XbaseCheckMenu=no
+
+;
+; If you change it to NO, the GET control don't' have the box
+;
+XbaseGetBorder=YES
+
+.if type("OS()")=="C"
+  .* Visual dBsee
+
+;
+; Default application font
+;
+XbaseApplicationFont=ÛtoProject("xbapplicationfo")Û
+
+;
+; These are the fonts used by all the control that is possible to add
+; inside a form
+;
+XbaseCtrlFont=ÛtoProject("xbctrlfont")Û
+XbaseSayFont=ÛtoProject("xbsayfont")Û
+XbaseBtnFont=ÛtoProject("xbbtnfont")Û
+XbaseCkbFont=ÛtoProject("xbckbfont")Û
+XbaseRadFont=ÛtoProject("xbradfont")Û
+XbaseCmbFont=ÛtoProject("xbcmbfont")Û
+XbaseSpnFont=ÛtoProject("xbspnfont")Û
+XbaseGetFont=ÛtoProject("xbgetfont")Û
+XbasePromptGetFont=ÛtoProject("xbpromptgetfont")Û
+XbaseLsbFont=ÛtoProject("xblsbfont")Û
+XbaseFunFont=ÛtoProject("xbfunfont")Û
+XbaseTxtFont=ÛtoProject("xbtxtfont")Û
+;Fancy Wait Form Style
+;XbaseWaitFormFont=13.Verdana
+
+;
+; set the default font of the Alerts
+;
+XbaseAlertFont=ÛtoProject("xbalertfont")Û
+
+;
+; Change this font to change the default font of the dfArrWin()
+;
+XbaseArrWinFont=ÛtoProject("xbarrwinfont")Û
+
+;
+; Change this font to change the default font of the browse
+;
+XbaseBrowseFont=ÛtoProject("xbbrowsefont")Û
+
+.else
+;
+; Default application font
+;
+XbaseApplicationFont=10.Courier new
+
+;
+; These are the fonts used by all the control that is possible to add
+; inside a form
+;
+XbaseCtrlFont=8.tahoma
+;XbaseBtnFont
+;XbaseCkbFont
+;XbaseRadFont
+XbaseCmbFont=8.Courier new
+;XbaseSpnFont
+
+;
+; This font is a little bit more small. Try it if you have display problem
+;
+XbaseGetFont=8.Courier new
+
+;
+; Change this font to change the default font of the dfAlert()
+;
+;XbaseAlertFont=8.Courier new
+
+;
+; Change this font to change the default font of the dfArrWin()
+;
+XbaseArrWinFont=8.Courier new
+
+;
+; Change this font to change the default font of the browse
+;
+XbaseBrowseFont=8.tahoma
+.endif
+
+;
+; This switch enable browse moving like windows and not like Visual dBsee
+;
+;XbaseBrowseMove=yes
+
+;
+; If your application is too big, this switch help to release memory
+; when application close the form. By default form are not destroied for
+; a faster display
+;
+;XbaseObjectDestroy=yes
+
+;
+; This color is used in foreground of disabled edit control
+;
+XbaseGetDisabledColorFG=0
+
+;
+; This color is used in background of disabled edit control
+;
+XbaseGetDisabledColorBG=8
+;XbaseGetDisabledColorBG=[193-210-238]
+
+;
+; Color of GET border (style FLAT)
+;
+;XbaseGetBorderColor=[200-200-200]
+
+
+; Set the Control Function with BOX (e.g. Memo Fields) to have 
+; the caption inside or outside: 
+; XbasePromptMode=INTERNAL|EXTERNAL 
+; default INTERNAL
+;XbasePromptMode=INTERNAL 
+
+;
+; Enable the realtime only in current window. Disable the background realtime
+;
+XbaseRealTimeFast=YES
+
+;
+; Start report in a different thread
+;
+;XbasePrintThread=YES
+
+; To have the preview in PDF format:
+; YES    : Active the preview in PDF format
+; NO     : Not active the preview in PDF format
+; THREAD : is to create the PDF files in background
+;
+;Default=NO 
+;XbasePreviewPDF=THREAD
+
+; Decide how to open Acrobat Reader. 
+; /n     : open Acrobat in a other Window
+; /s     : don't open the Acrobat splash screen 
+; NOPARAM: no parameter used for Acrobat
+;
+;DEFAULT=/n /s  
+;XbasePDFViewParam=/n/s  
+
+
+;
+; Name of SMTP server
+;
+;XbaseSMTPServer=mail.server.com
+
+;
+; Email sender
+;
+;XbaseSMTPFrom=me@server.com
+
+;
+; Email reply to
+;
+;XbaseSMTPReplyTo=replytome@server.com
+
+;
+; Email Authentication User
+;
+;XbaseSMTPUser=
+
+;
+; Email Authentication Password
+;
+;XbaseSMTPPassword=
+
+;
+; Email Login Method
+;
+;XbaseSMTPLoginMethod= 
+
+;
+; Path to .RPT or .REP files for Crystal Reports and Report Manager
+;
+;XbaseCRWPath           -> Path only for Crystal Reports file  
+;XbaseReportManagerPath -> Path only for Report Managers file  
+;XbaseReportPath        -> Path for both Reports file
+;exp.:
+;XbaseReportPath=CRW_REPMAN_FILES\
+
+;
+; Path to store temporary Reports DBF files 
+;
+.* ;XbaseCRWTemp           -> Path for temporary Crystals DBF files
+.* ;XbaseReportManagerTemp -> Path for temporary Report Manager DBF files
+.* ;XbaseReportTemp        -> Path for both temporary Reports DBF files
+.* ;exp.:
+;XbaseReportTemp=C:\TEMP\REPTEMP
+
+;
+; Database engine to use with Crystal Reports
+;
+XbaseCrwRDD=DBFNTX 
+
+.if type("OS()")=="C"
+.* Visual dBsee
+XbasePaletteMode=WIN
+.else
+;
+; Specifies if the palette settings can vary from 0-63 or 0-255
+; the values accepted are DOS (0-63) or WIN (0-255)
+; default = DOS, see also Palette00-99
+;
+; XbasePaletteMode=DOS
+; XbasePaletteMode=WIN
+.endif
+
+;
+; Automatically change page in a multipage form on cursor skip
+;
+; XbaseAutoChangePage=YES|NO 
+
+;
+; Set the window for graphic function to fullscreen with scaling
+; of the graphics
+;
+; XbaseGraphicWindowSize=MAX
+
+;
+; Set the toolbar color (in this sample set to gray)
+;
+; XbaseToolBarColor=[15]
+
+;
+; Send the Text of a Fax as Attach
+;
+; XbaseTxtFaxAttach=YES
+
+;
+; Define the type of Bmp conversion to create a Pdf File
+; Valid Values: TIFF|JPEG/1|JPEG/2|JPEG/3|JPEG/4|JPEG/5|JPEG/6|JPEG/7
+; Default     : JPEG/6
+; XbasePdfBMPConversion=JPEG/7
+
+;
+; Toolbar Settings
+;
+;XbaseToolBarFont=8.Verdana
+;XbaseToolBarColor=[213-230-255]
+;XbaseToolBarColor=[255-255-255]
+
+;
+; StatusLine Settings
+;
+;XbaseStatusLineFont=8.Verdana
+
+;
+; MultiPage Settings
+;
+;XbaseMultiPageFont=8.Verdana
+
+;
+; Menu "toolbar" style settings
+;
+;XbaseMenuToolbarFont=12.Verdana
+;XbaseMenuToolbarColor=[193-210-238]
+;
+;XbaseSubMenuToolbarFont=8.Verdana
+;XbaseSubMenuToolbarColor=[-57]
+;XbaseSubMenuToolbarFocusColor=
+;XbaseSubMenuToolbarFocusBorder=
+
+;
+; BOX settings
+;
+;XbaseBoxHeaderAlign=left
+;XbaseBoxHeaderAlign=center
+;XbaseBoxHeaderAlign=right
+;XbaseBoxHeaderColorBG=[193-210-238]
+;XbaseBoxColorBG=[-57]
+;XbaseBoxBorderColor=[60-160-250]
+
+.endif
+.if toProject("skipfonts")=="0"
+;//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+; Settaggi per Font dell'applicazione
+[fonts]
+
+; Per Font vi e' la possibilita' di utilizzare una variabile di ENVIRONMENT
+; per indirizzarlo
+
+; In questo modo il font viene preso dal direttorio settato nel
+; settaggio di ENVIRONMENT MySet a DOS
+
+;FontFile=%MySet%COURIER.vgf
+FontFile=ÛtoProject("fontfile")Û
+
+; Definisce il file con la ridefinizione dei
+; caratteri di riempimento degli sfondi
+ScreenFile=ÛtoProject("screenfile")Û
+
+; CARATTERI RIDEFINITI PER DESIGN CONTROL :
+boxcharacters       = 199 ,200 ,184 ,226 ,190 ,202 ,201 ,181
+buttoncharacters    = 202 ,202 ,202 ,226 ,200 ,200 ,200 ,181
+ledbutton           = 143
+checkboxoff         = 213 ,233
+checkboxon          = 214 ,235
+dropdownicon        = 212 ,231
+horizontalcursor    = 220
+horizontalscrollbar = 223
+maximizeicon        = 206 ,232
+minimizeicon        = 203 , 15
+MouseCharacters     = 221 ,198 ,222 ,205
+radiobuttonoff      = 215 ,237
+radiobuttonon       = 216 ,239
+screencharacters    = 158 ,159
+scrolldownarrow     = 208 ,227
+scrollleftarrow     = 210 ,238
+scrollrightarrow    = 211 ,236
+scrolluparrow       = 209 ,229
+sizingicon          = 204 ,234
+systemmenuicon      = 207 ,230
+verticalcursor      = 181 ,226
+verticalscrollbar   =   9 ,243
+
+escapeicon          =   5 ,  6
+helpicon            =   7 ,  8
+helponkeysicon      =  11 ,244
+writeicon           =  19 , 20
+
+.endif
+.if toProject("skippath")=="0"
+;//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+[Path]
+; Percorsi nei quali andare ad aprire i file di sistema
+
+; TabPath     = Tabelle dell'applicazione (dbTabd.dbf)
+; HelpPath    = File di HELP              (dbHlp.dbf)
+; dbDDPath    = Dizionario dei simboli    (dbDD.dbf)
+; dbLoginPath = File delle PASSWORD       (dbLogin.dbf)
+
+TabPath=ÛtoProject("tabpath")Û
+HelpPath=ÛtoProject("helppath")Û
+dbDDPath=ÛtoProject("dbddpath")Û
+dbLoginPath=ÛtoProject("dbloginpath")Û
+
+; PATH Utente
+UserPath01=ÛtoProject("userpath01")Û
+UserPath02=ÛtoProject("userpath02")Û
+UserPath03=ÛtoProject("userpath03")Û
+UserPath04=ÛtoProject("userpath04")Û
+UserPath05=ÛtoProject("userpath05")Û
+UserPath06=ÛtoProject("userpath06")Û
+UserPath07=ÛtoProject("userpath07")Û
+UserPath08=ÛtoProject("userpath08")Û
+UserPath09=ÛtoProject("userpath09")Û
+UserPath10=ÛtoProject("userpath10")Û
+UserPath11=ÛtoProject("userpath11")Û
+UserPath12=ÛtoProject("userpath12")Û
+UserPath13=ÛtoProject("userpath13")Û
+UserPath14=ÛtoProject("userpath14")Û
+UserPath15=ÛtoProject("userpath15")Û
+UserPath16=ÛtoProject("userpath16")Û
+UserPath17=ÛtoProject("userpath17")Û
+UserPath18=ÛtoProject("userpath18")Û
+UserPath19=ÛtoProject("userpath19")Û
+
+.endif
+.if toProject("skipcolor")=="0"
+;//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+[Color]
+ID=Color
+Info=Colori Video a Colori
+
+; Ridefinizione dei Colori Fondamentali di CLIPPER
+
+; 00N  01B  02G  03BG  04R  05RB  06GR  07W
+; 08N+ 09B+ 10G+ 11BG+ 12R+ 13RB+ 14GR+ 15W+
+
+; Per ogni Componente di Colore RGB posso dare delle varianze da 0 a 63
+
+Palette00= ÛtoProject("palette00")Û, Nero
+Palette01= ÛtoProject("palette01")Û, Grigio scuro
+Palette02= ÛtoProject("palette02")Û, Grigio chiaro
+Palette03= ÛtoProject("palette03")Û, Blu scuro
+Palette04= ÛtoProject("palette04")Û, Blu
+Palette05= ÛtoProject("palette05")Û, Blu chiaro
+Palette06= ÛtoProject("palette06")Û, Verde scuro
+Palette07= ÛtoProject("palette07")Û, Verde
+Palette08= ÛtoProject("palette08")Û, Verde chiaro
+Palette09= ÛtoProject("palette09")Û, Rosso scuro
+Palette10= ÛtoProject("palette10")Û, Rosso
+Palette11= ÛtoProject("palette11")Û, Rosso chiaro
+Palette12= ÛtoProject("palette12")Û, Giallo scuro
+Palette13= ÛtoProject("palette13")Û, Giallo
+Palette14= ÛtoProject("palette14")Û, Giallo chiaro
+Palette15= ÛtoProject("palette15")Û, Bianco
+
+; Palette16-Palette99 Can be used only in Xbase++
+; Format:
+;   PaletteXX=Red, Green, Blue
+;   Red, Green, Blue are numbers from 0-63 (or 0-255 see XbasePaletteMode=)
+;
+; Example: 
+;   Palette16=30, 20, 10
+;
+;Palette16=
+;Palette17=
+;Palette18=
+;Palette19=
+;Palette20=
+;Palette21=
+;Palette22=
+;Palette23=
+;Palette24=
+;Palette25=
+;    .
+;    .
+;Palette99=
+
+; See also the setting XbasePaletteMode=
+
+; Definizione di
+
+; ş AutoWindow          Finestre Automatiche
+; ş dfArrWin            Window su Array
+; ş dbWif               Window su File
+; ş dbTab               Window su tabelle
+; ş List Box su browse e array
+; ş Browse di Default
+; ...
+
+; 1) Bordi e fondo del BOX
+; 2) TOP-LEFT del BOX
+; 3) HEADER
+; 4) Bottom-RIGHT / OPZIONI
+; 5) HEADER Attuale
+;----------------------------- Da questo punto partono i colori delle COLONNE
+; 6) HOT HEADER
+; 7) LABEL
+; 8) FONDO
+; 9) CURSOR
+;10) FREE
+;11) FREE
+;12) FREE
+;13) FREE
+;14) FREE
+;15) FREE
+;16) FREE
+;                 1      2       3       4      5       6      7      8      9     10     11   12     13    14    15    16
+Browse      = N/GR*, N/GR*,   W+/G, BG/GR*,  W+/R, BG/GR*,  W+/R,  W+/N,  W+/G, N+/BG, R+/BG, B/W, W+/BG, R/BG, W+/B, W+/N
+BrowseBox   =  W+/R,   B/R,    G/B,   W+/R, W+/G*,   W+/B,  W+/R, W+/BG,  W+/R, N+/BG, R+/BG, B/W, W+/BG, R/BG, W+/B, W+/N
+ArrayBox    =  W+/R,   B/R,    G/B,   W+/R, W+/G*,   W+/B,  W+/R,  W+/R, W+/BG, N+/BG, R+/BG, B/W, W+/BG, R/BG, W+/B, W+/N
+ArrayWindow = GR+/B, GR+/B,  W+/B*,    G/B, GR/RB,  GR+/B,  W+/B,  W+/B,  W+/G, N+/BG, R+/BG, B/W, W+/BG, R/BG, W+/B, W+/N
+Window      =  GR/R,  GR/R, RB+/B*,  BG/RB,  W+/R,  W+/RB,  W+/R,  W+/N,  W+/G, N+/BG, R+/BG, B/W, W+/BG, R/BG, W+/B, W+/N
+
+
+; Definizione di
+
+; ş Form Automatici    Quadri di Data Entry Automatici
+; ş DEFAULT Form
+
+; 1) Box quadro
+; 2) Fondo del BOX
+; 3) HEADER/PAGINE
+; 4) OPZIONI
+; 5) CURSORE --> Nei FORM e' il colore del CONTROL attuale
+;---------------------Da questo punto partono i colori dei CONTROL
+; 6) SAY
+; 7) BOXNORMAL
+; 8) BOXSHADOW
+; 9) FUNZIONI
+;10) PROMPT
+;11) HOT dei PROMPT
+;12) GET
+;13) COMBO delle GET
+;14) COMBO
+;15) TEXFIELD
+;16) CHECKBOX/RADIOBUTTON
+
+;               1      2       3      4      5      6      7     8      9     10     11     12     13    14     15      16
+Form     =   B+/G,  B+/G, RB+/B*, W+/BG, W+/G*,  BG/G,  W+/G,  B/G,  W+/R, GR+/G,  G+/G,  W+/B,  W+/G, W+/G, BG+/R,  W+/G*
+
+
+; Definizione di
+
+; ş Menu dell'applicazione
+
+; 1. First Row
+; 2. Label Color
+; 3. Label Hot Color
+; 4. Label Selected Color
+; 5. Label Selected Hot Color
+; 6. Label Off
+; 7. Label Box
+; ...
+MenuDefault = ÛtMnuColor()Û
+
+; Definizione di
+
+; ş Bottoni Standard
+
+; Radice fissa = BUTTON
+
+; 1. ButtonNORMAL
+; 2. ButtonHOTNORMAL
+; 3. ButtonTNORMAL
+; 4. ButtonBNORMAL
+; 5. ButtonSELECTED
+; 6. ButtonUNSELECTABLE
+; ...
+ButtonDefault = BG/G, G+/G, W+/G, B/G, W+/G*, W/G
+ButtonMessage = W+/B, G+/B, W+/B, G/B, W+/G*, G/B
+
+; Definizione di
+
+; ş Sfondi
+
+; 1. Say
+; 2. Box
+; 3. Font
+; ...
+
+WallPaperColor= W+/B, R+/B, GR/B
+
+; Definizione di
+
+; ş Messaggi
+
+; 1. Say Normale
+; 2. Box Normale
+; 3. Say Errore
+; 4. Box Errore
+; 5. Say Residente
+; 6. Box Residente
+; 7. Say nella window
+; 8. Box nella window
+; ...
+
+MessageColor= W+/G, RB+/G, W+/G*, RB+/G*, N+/R, W+/R, N+/R, W+/R
+
+; Definizione di
+
+; ş User Line
+
+; 1. Normal
+; 2. State
+; 3. Icon
+; ...
+
+UserLineColor= W+/B, W+/B, RB+/B
+
+; Definizione di
+
+; ş Frame
+
+; 1. Box
+; 2. Header
+; 3. Wall
+; 4. Line
+; ...
+
+FrameColor= W+/RB, G+/GB, N/RB, GR/RB
+
+; Definizione di
+
+; ş KEY Chiavi di ricerca
+
+; 1. Box
+; 2. Header
+; 3. Keynormal
+; 4. Keyselected
+; 5. Say
+; 6. Getnormal
+; 7. Getselected
+; ...
+KeyColor = N/RB, W+/RB, BG/RB, G+/RB, W+/RB, W+/B, RB/B
+
+; Definizione di
+
+; ş dfTView
+
+; 1. Box
+; 2. Header
+; 3. Control
+; 4. Normal
+; 5. Cursor
+; 6-10. Text Control Color
+; ...
+tViewDefault = W+/B, W+/B*, W+/BG, W+/B, W+/BG, W+/R, W+/G, W+/B, W+/W
+
+; Definizione di
+
+; ş HELP
+
+; 1. AC_HLP_BACK
+; 2. AC_HLP_BRWBACK
+; 3. AC_HLP_BRWBOX
+; 4. AC_HLP_BRWHEAD
+; 5. AC_HLP_OPTION
+; 6. AC_HLP_NORMAL
+; 7. AC_HLP_SELECT
+; 8. AC_HLP_HEADER
+; 9. AC_HLP_TITLE
+; ...
+Help = B+/G, N/W*, N/W*, W+/R, W+/BG, N/W*, W+/N, G+/W*, RB+/B*
+
+; Definizione di
+
+; ş Progress Indicator
+
+; 1. Box
+; 2. Box Shadow
+; 3. Header
+; 4. Say
+; 5. Progress
+; ...
+ProgressIndicator = W+/RB, N/RB, RB+/B*, B+/RB, GR/RB
+
+; Definizione di
+
+; ş Calc
+
+; 1. Box
+; 2. Display box
+; 3. Total
+; 4. Char 1
+; 5. Char 2
+; 6. Char 3
+; 7. Char 4
+; 8. Char 5
+; ...
+Calculator = W+/R, W+/N, W+/N, G+/R, RB/R, BG+/R, R+/R, RB+/R
+
+; Definizione di
+
+; ş dfWait
+
+; 1. BoxTopLeft
+; 2. BoxBottomRight
+; 3. Prompt
+; ...
+Wait = W+/G, N/G, R/G
+
+; Definizione di
+
+; ş dfLogin
+
+; 1. Box
+; 2. Header
+; 3. Esc Icon
+; 4. SAY
+; 5. PASSWORD
+; ...
+dfLogin = W+/R*, W+/R*, W+/B*, GR+/R*, GR+/R*
+
+; ş Calendar
+
+; 1. AC_CALC_BACK
+; 2. AC_CALC_ICON
+; 3. AC_CALC_DAY
+; 4. AC_CALC_CURRENT
+; 5. AC_CALC_MONTH
+; ...
+dfcalendar = W+/RB, W+/B, W+/B, W+/G*, W+/B
+
+.endif
+.if toProject("skipprinter")=="0"
+;//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+; Printer
+
+; ID = Identificativo con il quale legare la porta di stampa
+; Info = Descrizione
+; Layout =
+;  1) Righe di pagina
+;  2) Margine TOP
+;  3) Margine BOTTOM
+;  4) Margine LEFT
+;  5) Condensed 1/0
+;  6) NLQ       1/0
+
+; Tutti gli altri rappresentano i settaggi della stampante
+
+[printer]
+ID=0
+Info=Stampante Senza Caratteri d'escape
+Setup=
+Reset=
+BoldON=
+BoldOFF=
+EnlargedON=
+EnlargedOFF=
+UnderlineON=
+UnderlineOFF=
+SuperscriptON=
+SuperscriptOFF=
+SubscriptON=
+SubscriptOFF=
+CondensedON=
+CondensedOFF=
+ItalicON=
+ItalicOFF=
+NlqON=
+NlqOFF=
+User01on=
+User01off=
+User02on=
+User02off=
+User03on=
+User03off=
+
+ID=107
+Info=Epson FX-80
+Setup=27,64
+BoldON=27,71
+BoldOFF=27,72
+EnlargedON=27,87,1
+EnlargedOFF=27,87,0
+UnderlineON=27,45,1
+UnderlineOFF=27,45,0
+SuperscriptON=27,83,1
+SuperscriptOFF=27,84
+SubscriptON=27,83,0
+SubscriptOFF=27,84
+CondensedON=15
+CondensedOFF=27,80,18
+ItalicON=27,52
+ItalicOFF=27,53
+NlqON=27,120,1
+NlqOFF=27,120,0
+
+ID=158
+Info=HP LaserJet Plus
+Setup=12
+BoldON=27,40,115,52,66
+BoldOFF=27,40,115,48,66
+EnlargedON=27,40,115,53,72
+EnlargedOFF=27,40,115,49,48,72
+UnderlineON=27,38,100,68
+UnderlineOFF=27,38,100,64
+SuperscriptON=27,40,115,45,49,85,27,40,115,54,86
+SuperscriptOFF=27,40,115,48,85,27,40,115,49,50,86
+SubscriptON=27,40,115,43,49,85,27,40,115,54,86
+SubscriptOFF=27,40,115,48,85,27,40,115,49,50,86
+CondensedON=27,38,107,50,83
+CondensedOFF=27,38,107,48,83
+ItalicON=27,40,115,49,83
+ItalicOFF=27,40,115,48,83
+NlqON=27,40,115,50,81
+NlqOFF=27,40,115,49,81
+
+ID=999
+Info=HTML Driver
+Setup=<HTML> <HEAD><TITLE>dBsee 4 Report</TITLE></HEAD> <BODY> <PRE>
+Reset=</PRE> </BODY> </HTML>
+BoldON=<B>
+BoldOFF=</B>
+EnlargedON=<FONT SIZE=5>
+EnlargedOFF=</FONT>
+UnderlineON=<U>
+UnderlineOFF=</U>
+SuperscriptON=<SUP>
+SuperscriptOFF=</SUP>
+SubscriptON=<SUB>
+SubscriptOFF=</SUB>
+CondensedON=<FONT SIZE=1>
+CondensedOFF=</FONT>
+ItalicON=<I>
+ItalicOFF=</I>
+NlqON=<STRONG>
+NlqOFF=</STRONG>
+.endif
+.if toProject("skipport")=="0"
+;//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+; Porte Fisiche
+[Port]
+LPT1=
+LPT2=
+LPT3=
+LPT4=
+LPT5=
+LPT6=
+LPT7=
+LPT8=
+LPT9=
+COM1=9600,n,8,1,x
+COM2=9600,n,8,1,x
+COM3=9600,n,8,1,x
+COM4=9600,n,8,1,x
+FILE=
+
+.endif
+.if toProject("skipreport")=="0"
+;//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+[Report]
+;  1) Righe di pagina
+;  2) Margine TOP
+;  3) Margine BOTTOM
+;  4) Margine LEFT
+;  5) Condensed 1/0
+;  6) NLQ       1/0
+;  7) Id. stampante
+;  8) Porta di uscita
+.foreach object oo_obj->TYP == "prn"
+Ûoo_obj->PRGÛ = 66, 5, 5, 5, 0, 0, 107, LPT1
+.next
+
+.endif
+.if toProject("skipact")=="0"
+;//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+; Action
+[Act]
+  1=hom,Home
+  2=Cra,Ctrl-Fr.Destra
+  3=pgd,Pag.gi—
+  4=rar,Fr.Destra
+  5=uar,Fr.s—
+  6=end,Fine
+  7=ecr,Canc
+  8=bks,BackSpace
+  9=tab,Tab
+ -1=qdr,F2
+ -2=add,F3
+ -3=mod,F4
+ -4=f05,F5
+ -5=del,F6
+ -6=win,F7
+ -7=wis,F8
+ -8=new,F9
+ -9=wri,F10
+ 10=Crt,Ctrl-Invio
+ 13=ret,Invio
+ 18=pgu,Pag.s—
+ 19=lar,Fr.sin.
+ 22=anr,Ins
+ 23=Cen,Ctrl-Fine
+ 24=dar,Fr.gi—
+ 26=Cla,Ctrl-Fr.sin.
+ 27=esc,Esc
+ 28=hlp,F1
+ 29=Cho,Ctrl-Home
+ 30=Cpd,Ctrl-Pag.gi—
+ 31=Cpu,Ctrl-Pag.s—
+ 32=mcr,Barra
+ 43=skn,+
+ 45=skp,-
+ 60=usl,<
+ 62=usr,>
+-10=ush,Shift-F1
+-11=S02,Shift-F2
+-12=S03,Shift-F3
+-13=S04,Shift-F4
+-14=S05,Shift-F5
+-15=S06,Shift-F6
+-16=S07,Shift-F7
+-17=S08,Shift-F8
+-18=S09,Shift-F9
+-19=S10,Shift-F10
+-20=C01,Ctrl-F1
+-21=C02,Ctrl-F2
+-22=C03,Ctrl-F3
+-23=C04,Ctrl-F4
+-24=C05,Ctrl-F5
+-25=C06,Ctrl-F6
+-26=C07,Ctrl-F7
+-27=C08,Ctrl-F8
+-28=C09,Ctrl-F9
+-29=doc,Ctrl-F10
+-30=A01,Alt-F1
+-31=A02,Alt-F2
+-32=A03,Alt-F3
+-33=A04,Alt-F4
+-34=A05,Alt-F5
+-35=A06,Alt-F6
+-36=A07,Alt-F7
+-37=A08,Alt-F8
+-38=A09,Alt-F9
+-39=sho,Alt-F10
+127=Cbs,Ctrl-BackSpace
+257=Aes,Alt-Esc
+270=Abs,Alt-BackSpace
+271=Stb,Shift-Tab
+272=A_q,Alt-Q
+273=A_w,Alt-W
+274=A_e,Alt-E
+275=A_r,Alt-R
+276=A_t,Alt-T
+277=A_y,Alt-Y
+278=A_u,Alt-U
+279=A_i,Alt-I
+280=A_o,Alt-O
+281=A_p,Alt-P
+282=A_Š,Alt-Š
+283=A_+,Alt-+
+334=A_+,Alt-+
+284=Art,Alt-Invio
+286=A_a,Alt-A
+287=A_s,Alt-S
+288=A_d,Alt-D
+289=A_f,Alt-F
+290=A_g,Alt-G
+291=A_h,Alt-H
+292=A_j,Alt-J
+293=A_k,Alt-K
+294=A_l,Alt-L
+295=A_•,Alt-•
+296=A_…,Alt-…
+297=A_\,Alt-Backslash
+299=A_—,Alt-—
+300=A_z,Alt-Z
+301=A_x,Alt-X
+302=A_c,Alt-C
+303=A_v,Alt-V
+304=A_b,Alt-B
+305=A_n,Alt-N
+306=A_m,Alt-M
+307=A_,,Alt-,
+308=A_.,Alt-.
+309=A_-,Alt--
+330=A_-,Alt--
+376=A_1,Alt-1
+377=A_2,Alt-2
+378=A_3,Alt-3
+379=A_4,Alt-4
+380=A_5,Alt-5
+381=A_6,Alt-6
+382=A_7,Alt-7
+383=A_8,Alt-8
+384=A_9,Alt-9
+385=A_0,Alt-0
+386=A_',Alt-'
+387=A_,Alt-
+389=f11,F11
+390=f12,F12
+391=S11,Shift-F11
+392=S12,Shift-F12
+393=C11,Ctrl-F11
+394=C12,Ctrl-F12
+395=A11,Alt-F11
+396=A12,Alt-F12
+397=Cua,Ctrl-Fr.s—
+401=Cda,Ctrl-Fr.gi—
+402=Cin,Ctrl-Ins
+403=Cde,Ctrl-Canc
+404=Ctb,Ctrl-Tab
+405=tai,Ctrl-Slash
+407=Aho,Alt-Home
+408=Aua,Alt-Fr.s—
+409=Apu,Alt-Pag.s—
+411=Ala,Alt-Fr.sin.
+413=Ara,Alt-Fr.Destra
+415=Aen,Alt-Fine
+416=Ada,Alt-Fr.gi—
+417=Apd,Alt-Pag.gi—
+418=Ain,Alt-Ins
+419=Ade,Alt-Canc
+421=Atb,Alt-Tab
+506=C_f,Ctrl-F
+512=C_l,Ctrl-L
+516=C_p,Ctrl-P
+520=C_t,Ctrl-T
+528=uai,Ctrl-Backslash
+532=tsi,Ctrl-Barra
+632=smp,Alt-Barra
+707=Sde,Shift-Canc
+722=Sin,Shift-Ins
+786=A_?,Alt-?
+921=Ast,Alt-Shift-Tab
+.endif
+.close

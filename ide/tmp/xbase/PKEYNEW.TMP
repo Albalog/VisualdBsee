@@ -1,0 +1,20 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : PKEYNEW
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Valorizza progressivi automatici per i CAMPI della
+.*                  : CHIAVE PRIMARIA
+.* ----------------------------------------------------------------------------
+.if nTpOrde > 0
+
+    .dd_ndx->(dbSetOrder(2))
+    .dd_ndx->(dbSeek( cTnSeek ))
+    .foreach keyfield
+       .if toKeyField("keytype") == "1"
+          .M->cTsym := ALLTRIM(dd_sym->SYM_NAM)
+          .M->cTStp := if( Val(ToKeyField("keystep")) > 0 ,ToKeyField("keystep") ,"1" )
+€cTdbf+[->(dfPkNew( {|x|if(x==NIL,]+cTsym+[,]+cTsym+[:=x)}, ]+str(nTpOrde,2)+[ ,"]+cTsym+[" ,oWin:W_PRIMARYKEY ,]+cTStp€) )
+       .endif
+    .next
+
+.endif

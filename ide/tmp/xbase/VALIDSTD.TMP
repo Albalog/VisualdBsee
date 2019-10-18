@@ -1,0 +1,201 @@
+.parameter nTSpace
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : VALIDSTD
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Codice standard nella validazione get.
+.* ----------------------------------------------------------------------------
+.M->cTsym    := ALLTRIM(dd_sym->SYM_NAM)
+.M->nTSymPos := dd_sym->(RECNO())
+.M->MimmoIdx := 0
+.*------------------------------------- POST-EDIT
+.if ! empty(toSymbol("postedit"))
+//  POST-EDIT
+ÛcTsym+[ := ]+toSymbol("postedit")Û
+
+.endif
+.*
+.*------------------------------------- LOOK-UP
+.if tItmLkUpGet( oo_itm->ITMGET, if(oo_itm->TYP=="get", oo_obj->DBF, oo_itm->ALS ))
+   .*
+   .dd_dbf->(dbSetorder(1))
+   .dd_dbf->(dbSeek(dd_rel->FILE1))
+   .M->cTdbfRel  := tDbfAliasName()
+   .M->cTmod     := toRelation("lookupmode")
+   .M->cTDefMode := "LT_MANDATORY"
+   .do case
+       .case cTmod=="0"
+             .cTDefMode := "LT_NOTMANDATORY"
+       .case cTmod=="2"
+             .cTDefMode := "LT_FREE"
+   .endcase
+   .*
+   .if dd_dbf->FILE_TYP == "0"
+      .dd_ndx->(dbSetorder(2))
+      .dd_ndx->(dbSeek( dd_rel->RELNDX))
+      .dd_ndx->(dbSetorder(1))
+      .M->cTe := alltrim( Str( dd_ndx->NdxIncN,3 ) )
+aDbl           := ARRAY(LK_ARRAYLEN)
+aDbl[LK_ORDER] := ÛcTeÛ ð   //  Order (numerico)
+aDbl[LK_WINDOWORDER] := ÛcTeÛ ð   // numeric Help window order 
+      .M->cTe := toRelation("relkey",,"mem")
+aDbl[LK_SEEK]  := ÛcTeÛ ð   //  Chiave di ricerca
+aDbl[LK_VAL]   := {}    ð   //  Dati da ereditare nel file figlio
+      .foreach vallookup
+        .M->cTs := alltrim(dd_sym->SYM_NAM)
+        .M->MimmoIdx++
+.******************** AADD( aDbl[LK_VAL] , { "ÛcTs+[" ,{||]+toInherit("prevalexpr")Û } }) 
+AADD( aDbl[LK_VAL] , { "ÛcTsÛ" ,{|| xValÛMimmoIdxÛ } }) // ValidStd.Tmp modified by Mimmo
+      .next
+      .dd_sym->( dbGoto( M->nTSymPos ) )
+aDbl[LK_FIELD] := "ÛtItmLkUpLnk()Û" ð   //  Nome campo relazionato
+      .M->cTe := "NIL"
+      .oo_obj->(dbSetorder(1))
+      .if oo_obj->(dbSeek( dd_rel->ALWIN ))
+         .M->cTe := [{|a,b,c,d|]+alltrim( oo_obj->PRG )+[Exe(a,b,c,d)}]
+      .endif
+aDbl[LK_WIN]   := ÛcTeÛ ð   //  Nome finestra
+      .M->cTe := toRelation("winkey")
+      .M->cTe := if( Empty(cTe),"NIL",[{||]+cTe+[}] )
+aDbl[LK_KEY]   := ÛcTeÛ ð   //  Chiave finestra
+      .M->cTe := toRelation("winfilter")
+      .M->cTe := [{||]+ if( Empty(cTe),".T.",cTe) +[}]
+aDbl[LK_FILTER]:= ÛcTeÛ ð   //  Filtro finestra
+      .M->cTe := toRelation("winbreak")
+      .M->cTe := [{||]+ if( Empty(cTe),".F.",cTe) +[}]
+aDbl[LK_BREAK] := ÛcTeÛ ð   //  Break finestra
+aDbl[LK_TYPE]  := ÛcTDefModeÛ ð   //  Modalita' Look-Up
+      .M->cTe := "NIL"
+      .if oo_obj->(dbSeek(dd_dbf->FILE_OBJ))
+         .M->cTe := "{||"+alltrim(oo_obj->PRG)+"Exe(DE_STATE_ADD,aDbl[LK_ORDER],,,,,aDbl[LK_VAL])}"
+      .endif
+      .oo_obj->(dbGoto( nTobjRec))
+aDbl[LK_EDIT]  := ÛcTeÛ ð   //  Nome quadro edit
+      .M->cTe := iif(empty(toItem("lookupif")), "NIL", [{||]+ toItem("lookupif") +[}])
+aDbl[LK_INS]   := ÛcTeÛ ð   //  Abilita edit se...
+aDbl[LK_KBD]   := .T.   ð   //  If true and key found skip to the next control
+.tPutInj( nTSpace ,[.inj GSF4] )
+.M->cTe := toRelation("winkey")
+.M->cTe := if( Empty(cTe),"NIL", cTe )
+.if ! empty(cTe)
+xValKey := ÛcTeÛ ð   //  Chiave finestra
+.endif
+.M->MimmoIdx:=0
+.foreach vallookup
+  .M->MimmoIdx++
+xValÛMimmoIdxÛ := ÛtoInherit("prevalexpr")Û // UdfGet.Tmp modified by Mimmo 
+.next
+.dd_sym->( dbGoto( M->nTSymPos ) )
+
+IF ! ÛcTdbfRelÛ->(dbLooK( aDbl ))
+   lRet := .F.
+ELSE
+      .if M->cTmod=="2"
+   IF (! ÛcTdbfRelÛ->(EOF())) .AND. (nPrePost==FORM_POSTGET)
+      .else
+   IF nPrePost == FORM_POSTGET
+      .endif
+      .foreach inhlookup
+      Ûdd_sym->SYM_NAM+[ := ]+toInherit("inheritexpr")Û
+      .next
+      .M->cItmDis := ""
+      .foreach inhlookup
+         .if Lower(cTsym) != Lower(AllTrim(dd_sym->SYM_NAM))
+            .M->cItmDis := cItmDis+"-"+AllTrim(dd_sym->SYM_NAM)
+      tbDisRef( oWin ,"ÛAllTrim(dd_sym->SYM_NAM)Û" )
+         .endif
+      .next
+      .if !Empty(cItmDis)
+      tbDisItm( oWin ,"ÛcItmDisÛ" )
+      .endif
+      tbDisRef( oWin ,"ÛcTsymÛ" )
+   END
+ENDIF
+
+   .else
+IF !dBtabChk("ÛcTdbfRel+[" ,{|x|if(x==NIL,]+cTsym+[,]+cTsym+[:=x)}, ]+cTDefModeÛ  )
+   lRet := .F.
+ELSE
+   IF nPrePost == FORM_POSTGET
+      .M->cItmDis := ""
+      .foreach inhlookup
+         .if Lower(cTsym) != Lower(AllTrim(dd_sym->SYM_NAM))
+            .M->cItmDis := cItmDis+"-"+AllTrim(dd_sym->SYM_NAM)
+      Ûdd_sym->SYM_NAM+[ := ]+toInherit("inheritexpr")Û
+      tbDisRef( oWin ,"ÛAllTrim(dd_sym->SYM_NAM)Û" )
+         .endif
+      .next
+      .if !Empty(cItmDis)
+      tbDisItm( oWin ,"ÛcItmDisÛ" )
+      .endif
+      tbDisRef( oWin ,"ÛcTsymÛ" )
+   END
+ENDIF
+
+   .endif
+.endif
+.dd_sym->( dbGoto( M->nTSymPos ) )
+.*------------------------------------- CAMPO OBBLIGATORIO
+.m->lTMandItm := .F.
+.if toItem("mandatoryitm")=="1"
+   .m->lTMandItm := .T.
+.else
+   .if toItem("mandatoryitm")!="2" .AND. toSymbol("mandatory") == "1"
+       .m->lTMandItm := .T.
+   .endif
+.endif
+.if lTMandItm
+//  CAMPO OBBLIGATORIO
+   .M->cTe := ALLTRIM(STRTRAN(IF(!EMPTY(oo_itm->ITMSAY),oo_itm->ITMSAY,dd_sym->SYM_DES),"^",""))
+IF (lRet) .AND. EMPTY(ÛcTsymÛ)
+   dbMsgErr("ÛcTeÛ//"+dfStdMsg(MSG_VALID01))
+   lRet := .F.
+ENDIF
+
+.endif
+.*------------------------------------- VALIDAZIONE
+.M->cTval := toSymbol("validation")
+.if ! Empty(cTval)
+   .M->cTmes := toSymbol("valmessage")
+//  VALIDAZIONE CAMPO
+IF (lRet) .AND. ÛcTvalÛ
+   .if ! Empty(cTmes)
+   dbMsgErr(ÛtExpCast(cTmes)Û)
+   .endif
+   lRet := .F.
+ENDIF
+
+.endif
+.dd_dbf->(dbGoto(nTdbfRec))
+.oo_obj->(dbGoto(nTobjRec))
+.*
+.if (nTpOrde > 0)  .and. nTpkMode != -1 .and. cTsym == nTpkLast
+   .M->cTMsgDup := toIndex("indexmsgdup")
+   .if empty( M->cTMsgDup )
+IF !ÛcTdbfÛ->(ddPkChk( Ûstr(nTpOrde,2)Û ,tbPkExp(oWin), NIL, cState ))
+   .else
+      .M->cTMsgDup := tExpCast(M->cTMsgDup)
+IF !ÛcTdbfÛ->(ddPkChk( Ûstr(nTpOrde,2)Û ,tbPkExp(oWin) ,;  //
+   ÛM->cTMsgDupÛ, cState ))
+   .endif
+   RETURN .F.
+ENDIF
+.endif
+.M->nTukf := Ascan( aTukLast ,{|eL|eL[1]==cTsymCod} )
+.do while nTukf > 0
+   .M->nTrec := aTukLast[nTukf][2]
+   .dd_ndx->(dbGoto(nTRec))
+   .M->nTuOrde:= dd_ndx->NDXINCN
+   .M->cTuExpr:= tIndexExp(dd_ndx->FILE ,dd_ndx->NDX )
+   .M->cTMsgDup := toIndex("indexmsgdup")
+   .if empty( M->cTMsgDup )
+IF !ÛcTdbfÛ->(ddPkChk( Ûstr(nTuOrde,2)+[ ,]+cTuExprÛ, NIL, cState ))
+   .else
+      .M->cTMsgDup := tExpCast(M->cTMsgDup)
+IF !ÛcTdbfÛ->(ddPkChk( Ûstr(nTuOrde,2)+[ ,]+cTuExprÛ ,;  //
+   ÛM->cTMsgDupÛ, cState ))
+   .endif
+   RETURN .F.
+ENDIF
+   .M->nTukf := Ascan( aTukLast ,{|eL|eL[1]==cTsymCod}, M->nTukf+1 )
+.enddo

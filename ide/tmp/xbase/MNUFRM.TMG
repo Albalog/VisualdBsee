@@ -1,0 +1,172 @@
+.parameter cTact
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : MNUFRM
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab etichette di menu (tasti) per oggetto form
+.* ----------------------------------------------------------------------------
+.M->cTmgName := "mnufrm.tmg "
+.M->Crlf   := chr(13) + chr(10)
+.M->cTprg  := alltrim(oo_obj->PRG)
+.dd_dbf->(dbSetOrder(1))
+.dd_dbf->(dbSeek(oo_obj->DBF))
+.cTdbf     := tDbfAliasName()
+.*
+.if "file" $ cTact
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := "1"
+   .oo_mnu->MNUTYP      := "lab"
+   .oo_mnu->MNULAB      := "^File"
+   .oo_mnu->MNUUSR      := "Operazioni su file corrente"
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.M->nTcho     := 10
+.if "add" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "^Inserimento"
+   .oo_mnu->MNUUSR      := "Inserimento nuovo record"
+   .oo_mnu->PFKACT      := "add"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,cTprg+[Get(DE_STATE_ADD)] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.if "mod" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "^Modifica"
+   .oo_mnu->MNUUSR      := "Modifica record corrente"
+   .oo_mnu->PFKACT      := "mod"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,cTprg+[Get(DE_STATE_MOD)] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.if "del" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "C^ancellazione"
+   .oo_mnu->MNUUSR      := "Cancellazione record corrente"
+   .oo_mnu->PFKACT      := "del"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,cTprg+[Del(.T.)] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.*
+.if "win" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "^Ricerca su chiavi"
+   .oo_mnu->MNUUSR      := "Ricerca su chiavi"
+   .oo_mnu->PFKACT      := "win"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,cTdbf+[->(ddKey())] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.if "A07" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "^Finestra di ricerca"
+   .oo_mnu->MNUUSR      := "Apre una finestra per consultazione records"
+   .oo_mnu->PFKACT      := "A07"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,cTdbf+[->(ddWin())] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.if "skn" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "Record ^successivo"
+   .oo_mnu->MNUUSR      := "Muove al record successivo"
+   .oo_mnu->PFKACT      := "skn"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,[tbDown(oWin)] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.if "skp" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "Record pr^ecedente"
+   .oo_mnu->MNUUSR      := "Muove al record precedente"
+   .oo_mnu->PFKACT      := "skp"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,[tbUp(oWin)] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.if "cho" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "^Primo record"
+   .oo_mnu->MNUUSR      := "Muove al primo record"
+   .oo_mnu->PFKACT      := "cho"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,[tbTop(oWin)] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.if "cen" $ cTact
+   .M->nTcho  := nTcho+1
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := AllTrim(str(nTcho))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := "^Ultimo record"
+   .oo_mnu->MNUUSR      := "Muove all'ultimo record"
+   .oo_mnu->PFKACT      := "cen"
+   .tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,[tbBottom(oWin)] )
+   .tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif

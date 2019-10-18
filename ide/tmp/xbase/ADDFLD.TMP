@@ -1,0 +1,21 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDFLD
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge CAMPO file MASTER precalcolato
+.* ----------------------------------------------------------------------------
+.M->cTsymTYP := dd_sym->SYM_TYP
+.M->cTsym    := dd_sym->SYM_NAM
+.M->cTsymD   := alltrim(dd_sym->SYM_DES)
+.M->cTstate  := toSymbol("computedstate")
+.M->cTdef    := cTsym+[ := ]+M->cTPreExp
+.M->cTwri    := cTdbf+[->]+ALLTRIM(cTsym)+[ := ]+M->cTPreExp
+.do case
+   .case cTstate == "1"
+        .M->cTwri:= [IF cState==DE_STATE_ADD ;]+cTwri+[ ;END]
+   .case cTstate == "2"
+        .M->cTwri:= [IF cState==DE_STATE_MOD ;]+cTwri+[ ;END]
+.endcase
+.if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+   .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,"getpre" ,cTdef ,cTwri, cTsymD } )
+.endif

@@ -1,0 +1,58 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTLSB.tmp
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Aggiunge control LIST BOX ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTcnd    := ["]+tItmActive()+["]
+.if !empty(toItem("lsbcondition")) .AND. toItem("lsbcondition")!=".T."
+   .M->cTcnd := cTcnd + ".AND.(" + toItem("lsbcondition")+")"
+.endif
+.M->cTlsbTyp := toItem("lsbdatatype")
+.M->cFont    := toItem("fontname")
+.M->cPFont   := toItem("promptfontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.if ! empty(cPFont) .and. at("(", cPFont) == 0
+    .M->cPFont := ["]+cPFont+["]
+.endif
+.M->cIdcOld  := cIdc
+.M->cTlsbAli := dfGetDbf( PADR(toItem("lsbroworigin"),6) ,{||tDbfAliasName()} )
+.if cTlsbTyp == "0"
+   .if !EMPTY(cTlsbAli)
+.do actlsbb with cTlsbAli
+   .endif
+.else
+.do actlsba
+.endif
+.if oo_itm->TYP != "cmb"
+  .if !Empty(cFont)
+ÛcIdC+':setFontCompoundName('+cFont+')'Û
+  .endif
+.do pfkitm
+.endif
+.do case
+   .case cTlsbTyp == "0" .AND. !EMPTY(cTlsbAli)
+.do collsbb with cIdc ,oo_itm->ITM ,cTlsbAli
+   .case cTlsbTyp == "1"
+.do collsba with cIdc ,toItem("lsbroworigin")
+.endcase
+.if oo_itm->TYP == "lsb"
+   .M->cIdc     := cIdcOld
+ATTACH "ÛcIdCÛ" TO oWin:W_CONTROL GET AS LISTBOX USING ÛcIdCÛ ð ; // ATTLSB.tmp
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 COORDINATE  W_COORDINATE_PIXEL  ð ; // Coordinate in Pixel
+.endif
+   .if !(cTpag=="1")
+                PAGE        ÛcTpagÛ  ð ; // Pagina
+   .endif
+   .if !Empty(cTrefId)
+                REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+   .endif
+   .if !Empty(cPFont)
+                FONT       ÛcPFontÛ ð ; // Font Name (XBASE)
+   .endif
+                ACTIVE   {||cState $ ÛcTcndÛ } ð   // Stato di attivazione
+.endif

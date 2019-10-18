@@ -1,0 +1,16 @@
+.oDlg:=DlgNew( 05 ,14 ,"Inserimento oggetto FORM" ,.T. ,"@" )
+.DlgRow( oDlg ,"                                                    ")
+.DlgRow( oDlg ," Nome archivio     : @01        Programma : @02     ")
+.DlgRow( oDlg ," Intestazione      : @03                            ")
+.DlgRow( oDlg ,"                                                    ")
+.DlgRow( oDlg ," @20                          @25  @26              ")
+.DlgRow( oDlg ,"                                                    ")
+.DlgGet( oDlg ,"mDbf" ,"@01" ,{||M->mDbf} ,{|cM,nS|FmDbfFrm(cM,nS)}  ,"XXXXXXXX" ,NIL,;
+           "Digitare nome file in uso su form. | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mPrgFrm1" ,"@02" ,{||M->mPrgFrm1} ,{|cM,nS|FmPrgFrm1(cM,nS,m->mDbf,"Frm")} ,"XXXXXXX" ,NIL,;
+            "Digitare nome programma per oggetto Form.")
+.DlgGet( oDlg ,"cTitle" ,"@03" ,{||M->cTitle} ,{||.T.} ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S30",;
+            "Digitare l'intestazione dell'oggetto." )
+.DlgBut( oDlg ,"Butb"  ,"@20" ,{||.T.} ,{||DlgTake("StdBut.dlg",.F.)} ,"^Pulsanti standard")
+.DlgBut( oDlg ,"But1"  ,"@25" ,{||.T.} ,{||DlgWri(oDlg)}    ,"^OK")
+.DlgBut( oDlg ,"But2"  ,"@26" ,{||.F.} ,{||DlgEsc(oDlg)}    ,"^Rinuncia")

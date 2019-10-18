@@ -1,0 +1,26 @@
+.parameter nPag
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : BUTINS
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab pulsante INSERIMENTO record.
+.* ----------------------------------------------------------------------------
+.M->cItm := NewCod("itm")
+.M->nPro := NewProg("itm")
+.oo_itm->(dBnet("app",0))
+.oo_itm->OBJ         := oo_obj->OBJ
+.oo_itm->ITM         := M->cItm
+.oo_itm->BAND        := IF(nPag>1,"000","001")
+.oo_itm->ITMINCN     := M->nPro
+.oo_itm->TYP         := "but"
+.oo_itm->ITMSAY      := "^Ins."
+.oo_itm->ITMMSG      := "Inserimento nuovo record"
+.oo_itm->ROW         := 0
+.oo_itm->COL         := 16
+.oo_itm->ROW1        := 02
+.oo_itm->COL1        := 21
+.oo_itm->(dBnet("url"))
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butmacrotype"  ,"1" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butfunction"   ,ALLTRIM(oo_obj->PRG)+"Get(DE_STATE_ADD)" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activeink"     ,"1" )
+.__dbFrameDis( PADR("Aggiunto PULSANTE Ins." ,70) )

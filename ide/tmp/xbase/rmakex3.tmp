@@ -1,0 +1,199 @@
+.M->cInBindll := ""
+.M->cTini := tInitProc()
+//
+// Project - Definition
+//
+.M->cLOADER := toExeEnv("loader")
+.M->cTOut   := toExeEnv("outputexe")
+.cLOADER    := cLOADER+"_"+cTini
+[PROJECT]                                
+    COMPILE       = xppvdb                                                                                        
+    COMPILE_FLAGS = €toExeEnv("compileroption")+" /ES/L/Q/PRE/O:noncb /COFF/DLL:DYNAMIC /VDB:Loader,"+cLOADER+",BINDLL  /UdfLoader.ch" €  
+    DEBUG         = €IF("/B"$UPPER(toExeEnv("compileroption")) .or. alltrim(toExeEnv("debug"))=="1","yes","no")€
+    GUI           = yes
+.if !empty(toExeEnv("execompress")) .AND. alltrim(toExeEnv("execompress")) =="1" 
+    LINKER        = upxalink
+.else
+    LINKER        = alink
+.endif
+    RC_COMPILE    = arc
+    RC_FLAGS      = /v
+    OBJ_FORMAT    = COFF
+    OBJ_DIR       = €tOBJPath()€
+    PROJECT.XPJ
+.M->cLinkerF := ""
+.M->nTObjR1 := oo_obj->(recno())
+.foreach special
+   .if tObjtype() == "scriptlink"
+      .* .M->cLinker     := ALLTRIM(SUBS(toExeEnv("linker",.T.),1,8))
+      .M->cLinkerF := "@" +alltrim(oo_obj->PRG) +"." +oo_obj->EXT
+   .endif
+.next
+.oo_obj->(dbGoto(nTObjR1))
+.dfMD("..\source\"+cLOADER)
+.dfMD("..\Exe\BINDLL")
+
+[PROJECT.XPJ]
+    €cTini€.EXE
+.M->aPrgObj := ARRAY(0)
+.foreach make oo_bld->EXT=="prg"
+   .cInBindll := ALLTRIM(tOption( "bld", oo_bld->EXE+oo_bld->OBJ, "prginbindll")) 
+   .if EMPTY(cInBindll)  .OR. cInBindll== "1"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   .aadd(aPrgObj,cTPrg)
+    €cTprg€.DLL
+   .endif
+.next
+    €cLOADER€.DLL
+.*
+.M->aExtObj := ARRAY(0)
+.foreach link oo_bld->typ=="ext" .and. oo_bld->Wdo == "obj" .and. oo_bld->SECTION $ "0123456789"
+   .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)$"MSGITA.OBJ,CMX52.OBJ,CMXDBT52.OBJ")
+      .M->cPath := ""
+      .if ! empty(toObject("objectpath"))
+         .M->cPath := toObject("objectpath")
+         .if !EMPTY(cPath) .AND. ! right(cPath, 1) == "\"
+            .M->cPath := cPath+"\"
+         .endif
+      .endif
+      .aadd(aExtObj,cPath+alltrim(oo_obj->PRG))
+   .endif
+.next
+.if ! empty(aExtObj)
+   _EXTERN.DLL
+.endif
+.*
+.M->aLib      := ARRAY(0)
+.foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION $ "0123456789"
+.M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+   .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)=="CLD.LIB")
+      .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)$"CMX52.LIB")
+        .aadd(aLib, cPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXT)
+      .endif
+   .endif
+.next
+.foreach make oo_bld->EXT=="prg"
+   .cInBindll := ALLTRIM(tOption( "bld", oo_bld->EXE+oo_bld->OBJ, "prginbindll")) 
+   .if EMPTY(cInBindll)  .OR. cInBindll== "1"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+[€cTprg€.DLL]       
+    LINK_FLAGS    = /out:€if( empty(cTout),"..\EXE\BINDLL\",cTout+"\")+cTPrg€.DLL /FORCE:UNRESOLVED
+   .M->cPath := ""
+   .if ! empty(toObject("objectpath"))
+      .M->cPath := "   "+toObject("objectpath")
+      .if !EMPTY(cPath) .AND. ! right(cPath, 1) == "\"
+         .M->cPath := cPath+"\"
+      .endif
+   .else
+     .if TGenerationDividedfortype()
+     .M->cPath := "   ...\source\"+ tsourceGenPath()
+     .else
+     .M->cPath := "   ...\source\"
+     .endif
+   .endif
+€M->cPath+cTprg€.prg
+   .if ! empty(aExtObj)
+    _EXTERN.LIB
+   .endif
+.M->nTCnt := 1
+.M->nTlen := Len(aLib)
+.do while nTCnt <= nTlen
+   €aLib[nTCnt]€
+   .M->nTCnt := nTCnt+1
+.enddo
+    €cLoader€.lib
+    dblang.lib
+    vdbsee1o.lib
+    vdbsee1s.lib
+
+   .endif
+.next
+
+.if ! empty(aExtObj)
+[_EXTERN.DLL]
+   LINK_FLAGS    = /out:..\EXE\BINDLL\_EXTERN.DLL /FORCE:UNRESOLVED
+.M->nTCnt := 1
+.M->nTlen := Len(aExtObj)
+.do while nTCnt <= nTlen
+    €aExtObj[nTCnt]€.obj
+   .M->nTCnt := nTCnt+1
+.enddo
+.M->nTCnt := 1
+.M->nTlen := Len(aLib)
+.do while nTCnt <= nTlen
+    €aLib[nTCnt]€
+   .M->nTCnt := nTCnt+1
+.enddo
+    €cLoader€.lib
+    // Visual dBsee Lib
+    dblang.lib
+    vdbsee1o.lib
+    vdbsee1s.lib
+.endif
+
+[€cLoader€.DLL]
+    OBJ_DIR       = €cLoader€\OBJ
+    COMPILE_FLAGS = €toExeEnv("compileroption")€ /ES/Q/PRE/O:noncb /COFF/DLL:DYNAMIC 
+    LINK_FLAGS    = /out:..\ExE\€cLoader€.DLL /FORCE:UNRESOLVED
+.M->nTCnt := 1
+.M->nTlen := Len(aPrgObj)
+.M->cPath := ""
+.do while nTCnt <= nTlen
+     .if TGenerationDividedfortype()
+     .M->cPath := "   ...\source\"+ tsourceGenPath()
+     .else
+     .M->cPath := "   ...\source\"
+     .endif
+€M->cPath+cLOADER+"\"+aPrgObj[nTCnt]+"_LOADER"€.prg
+   .M->nTCnt := nTCnt+1
+.enddo
+
+.foreach make oo_bld->EXT=="prg"
+   .if ALLTRIM(tOption( "bld", oo_bld->EXE+oo_bld->OBJ, "prginbindll")) == "0"
+    //No in BINDLL
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   .M->cPath := ""
+   .if ! empty(toObject("objectpath"))
+      .M->cPath := "   "+toObject("objectpath")
+      .if !EMPTY(cPath) .AND. ! right(cPath, 1) == "\"
+         .M->cPath := cPath+"\"
+      .endif
+   .else
+     .if TGenerationDividedfortype()
+     .M->cPath := "   ...\source\"+ tsourceGenPath()
+     .else
+     .M->cPath := "   ...\source\"
+     .endif
+   .endif
+€M->cPath+cTprg€.prg
+   .endif
+.next
+
+    // Visual dBsee Lib
+    dblang.lib
+    vdbsee1o.lib
+    vdbsee1s.lib
+
+[€cTini€.EXE]
+    COMPILE_FLAGS = €toExeEnv("compileroption")€ /ES/Q/PRE/O:noncb
+    LINK_FLAGS    = /out:€if( empty(cTout),"..\EXE\",cTout+"\")+ALLTRIM(oo_exe->ExeName)€.exe /FORCE:UNRESOLVED
+// Starting procedure
+.if TGenerationDividedfortype()
+€"   ...\source\Form\_"+cTini€.prg
+.else
+€"   ...\source\_"+cTini€.prg
+.endif
+
+    €MstPrgNam€.ARC
+.foreach make oo_bld->EXT=="arc"
+€"   "+alltrim(oo_obj->PRG)€.ARC
+.next
+    €cLoader€.lib
+    // Visual dBsee Lib
+    dblang.lib
+    vdbsee1o.lib
+    vdbsee1s.lib
+
+   .inj RMK4 Let a Empty Row 
+
+.close

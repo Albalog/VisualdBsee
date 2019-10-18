@@ -1,0 +1,121 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : PR2
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab aggiunge oggetto report tipo fattura
+.* ----------------------------------------------------------------------------
+.*-----------------------------> Dichiarazione variabile per ciclo get
+.M->cObjLab := ""
+.M->cMnuObj  := tObjMnuId()
+.M->nMnuRec  := oo_mnu->(Recno())
+.M->cTmgName := "pr2.tmg "
+.MEti      := if(oo_mnu->MNUTYP=="dom" .and. empty(oo_mnu->OBJ) .and. empty(toMenu("pfkfunction")),;
+                 oo_mnu->mnulab,PadR("Stampa",60))
+.MPrgDrv   := space(07)
+.Mdbf      := space(08)
+.Mndx      := space(08)
+.Mdbf1     := space(08)
+.Mndxrel   := space(08)
+.M->oDlg   := NIL
+.lRepStd   := .F.
+.*
+.do pr2.dlg
+.DlgShow(oDlg)
+.if !DlgInkey(oDlg)
+    .return
+.endif
+.*-----------------------------> Prelevo i codici dei FILE
+.dd_dbf->(DbSetOrder(2))
+.dd_dbf->(DbSeek(upper(m->MDbf)))
+.MdbfFat := m->Mdbf
+.MDbf  := dd_dbf->FILE
+.dd_dbf->(DbSeek(upper(m->MDbf1)))
+.MdbfSon := m->Mdbf1
+.MDbf1 := dd_dbf->FILE
+.dd_dbf->(DbSetOrder(1))
+.*
+.*-----------------------------> Prelevo i codici degli INDICI
+.tlExit := .f.
+.dd_ndx->(DbSetOrder(1))
+.dd_ndx->(DbSeek(m->Mdbf))
+.do while dd_ndx->file == m->Mdbf .and. !tlExit .and. !dd_ndx->(eof())
+    .if upper(dd_ndx->ndx_nam) = upper(m->Mndx)
+        .m->Mndx  := dd_ndx->ndx
+        .tlExit := .t.
+    .endif
+    .dd_ndx->(DbSkip(1))
+.enddo
+.*
+.tlExit := .f.
+.dd_ndx->(DbSeek(m->Mdbf1))
+.do while dd_ndx->file == m->Mdbf1 .and. !tlExit .and. !dd_ndx->(eof())
+    .if upper(dd_ndx->ndx_nam) = upper(m->Mndxrel)
+        .m->Mndxrel  := dd_ndx->ndx
+        .tlExit := .t.
+    .endif
+    .dd_ndx->(DbSkip(1))
+.enddo
+.*
+.*-----------------------------> Determino il codice di relazione
+.dd_rel->(DbSetOrder(2))
+.dd_rel->(DbSeek(m->Mdbf1))
+.tlExit   := .f.
+.tcRel    := ""
+.*
+.do while dd_rel->file1 == m->Mdbf1 .and. !dd_rel->(eof()) .and. !tlExit
+    .if dd_rel->file2 == m->Mdbf
+        .m->tcRel  := dd_rel->rel
+        .tlExit    := .t.
+    .endif
+    .*
+    .dd_rel->(DbSkip())
+.enddo
+.__dbFrameOn( 05 ,02, 15, 77, "Esecuzione GRAB: report2.tmg in corso..." )
+.*---------------------------------- AGGIUNGE OGGETTI
+.M->cTitle := StrTran(M->Meti, "^", "")+" Oggetto : report2"
+.M->CodObj  := ""
+.do report2 with "ins/grp"
+.*
+.M->CodMnu  := ""
+.oo_mnu->(dbGoto(nMnuRec))
+.if oo_mnu->MNUTYP=="dom" .and. empty(oo_mnu->OBJ) .and. empty(toMenu("pfkfunction"))
+   .*------------------->  Aggiorno il MENU
+   .oo_mnu->(dBnet("rec"))
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := M->MEti
+   .oo_mnu->MNU         := oo_mnu->mnu
+   .oo_mnu->OBJ         := M->cObjLab
+   .oo_mnu->(dBnet("url"))
+.else
+   .*------------------->  Aggiunge il MENU
+   .M->CodMnu           := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := M->cMnuObj
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := ""
+   .oo_mnu->MNUTYP      := "dom"
+   .oo_mnu->MNULAB      := M->MEti
+   .oo_mnu->MNUUSR      := "Stampa "+StrTran(M->Meti, "^", "")
+   .oo_mnu->OBJ         := M->cObjLab
+   .oo_mnu->FLGUPD      := "1"
+   .oo_mnu->(dBnet("url"))
+.endif
+.tOWrite("mnu",oo_mnu->MNU,"pfkfunction" ,alltrim(m->MPrgDrv)+[Exe()] )
+.tOWrite("mnu",oo_mnu->MNU,"activeink","1" )
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunta etichetta di menu :"+Trim(oo_mnu->mnulab) ,75) )
+.*
+.*----------------------------> Flag con Nørecord (HO AGGIUNTO!!!)
+.M->nRecMnu    := oo_mnu->(Recno())
+.*
+.__dbFrameDis( Padr(M->cTmgName+"Aggiunta chiamata da menu :"+alltrim(m->MPrgDrv)+[Exe()] ,75) )
+.__dbFrameDis( Padr(M->cTmgName+"OPERAZIONE ULTIMATA CON SUCCESSO !" ,75) )
+.*
+.__dbFrameOff()
+.*
+.tFlgIni()
+.*
+.msg [Operazione ultimata !]
+.*
+.if m->lRepStd                         ./  Impostazione report standard?
+    .do RepStd with "pr2" , m->tcRel   ./  Attivazione report standard
+.endif

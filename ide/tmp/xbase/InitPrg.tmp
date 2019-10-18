@@ -1,0 +1,16 @@
+.if tGenerationDividedfortype()
+.out €tSourcePath()+"\"+ tsourceGenPath()+"_"+cTprg€.prg 
+.do info with trim(cTtitle), tSourcePath()+"\"+tsourceGenPath()+"_"+cTprg+".prg" ,tGenTemplate()
+.else
+.out €tSourcePath()+"\_"+cTprg€.prg
+.do info with trim(cTtitle), tSourcePath()+"\"+cTprg+".prg" ,tGenTemplate()
+.endif
+
+FUNCTION Main(cPar1, cPar2, cPar3, cPar4, cPar5, cPar6, cPar7)
+   €cTprg€Exe(cPar1, cPar2, cPar3, cPar4, cPar5, cPar6, cPar7)
+RETURN NIL
+
+.if (toExeEnv("linker")=="9") .or. (toExeEnv("linker")=="10")
+.do initsys
+.endif
+.close

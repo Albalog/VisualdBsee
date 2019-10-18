@@ -1,0 +1,21 @@
+.oDlg:=DlgNew( 05 ,14 ,"Inserimento oggetto BROWSE" ,.T. ,"@" )
+.DlgRow( oDlg ,"                                                     ")
+.DlgRow( oDlg ," Nome archivio      : @01        Programma : @02     ")
+.DlgRow( oDlg ," Intestazione       : @03                            ")
+.DlgRow( oDlg ," Nome programma     : @04        per edit browse     ")
+.DlgRow( oDlg ," Intestazione       : @05                            ")
+.DlgRow( oDlg ,"                                                     ")
+.DlgRow( oDlg ,"                              @25  @26               ")
+.DlgRow( oDlg ,"                                                     ")
+.DlgGet( oDlg ,"mDbf" ,"@01" ,{||M->mDbf} ,{|cM,nS|FmDbf(cM,nS)}  ,"XXXXXXXX" ,NIL,;
+           "Digitare nome file in uso su oggetto browse. | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mPrgFrm1" ,"@02" ,{||M->mPrgFrm1} ,{|cM,nS|FmPrgFrm1(cM,nS,m->mDbf,"Brw")} ,"XXXXXXX" ,NIL,;
+            "Digitare nome programma per oggetto browse.")
+.DlgGet( oDlg ,"cTitle" ,"@03" ,{||M->cTitle} ,{||.T.} ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S30",;
+            "Digitare l'intestazione dell'oggetto browse." )
+.DlgGet( oDlg ,"mPrgEdb" ,"@04" ,{||M->mPrgEdb} ,{|cM,nS|FmPrgEdb(cM,nS)} ,"XXXXXXX" ,NIL,;
+            "Digitare nome programma per oggetto edit browse.")
+.DlgGet( oDlg ,"cTitle1" ,"@05" ,{||M->cTitle1} ,{||.T.} ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S30",;
+            "Digitare l'intestazione dell'oggetto edit browse." )
+.DlgBut( oDlg ,"But1"  ,"@25" ,{||.T.} ,{||DlgWri(oDlg)}    ,"^OK")
+.DlgBut( oDlg ,"But2"  ,"@26" ,{||.F.} ,{||DlgEsc(oDlg)}    ,"^Rinuncia")

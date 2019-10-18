@@ -1,0 +1,108 @@
+.parameter cTMode
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDVRFILE.TMP
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Assegna all'array del Record virtuale il file corrente
+.* ----------------------------------------------------------------------------
+.*
+.cTMode := if(cTMode=="rel", cTMode, "")  ./ "rel" per file in relazione
+.*
+VRLoc := dfVRCreate( )
+VRLoc[VR_NAME  ]    := "ÛtRepAliasName()Û"               ð  // Nome del file
+
+.if cTMode == "rel"
+VRLoc[VR_KEY   ]    := {||ÛtoRelation("relkey")Û}      ð  // chiave
+VRLoc[VR_FILTER]    := {||ÛtoRelation("relfilter")Û}   ð  // filtro
+VRLoc[VR_BREAK ]    := {||ÛtoRelation("relbreak")Û}    ð  // break di relazione
+.else
+VRLoc[VR_ORDER ]    := ÛtoReportNtx()Û ð  // Numero indice file principale ( SET ORDER )
+.endif
+.*
+.nTEof := toReport("eofmode")
+.*
+.do case
+    .case m->nTEof == "1"   ./   modalit… di abort
+VRLoc[VR_EOF_MODE]  := VR_ABORT             ð  // modalit… di scansione: abort
+    .case m->nTEof == "2"   ./   modalit… di ignore
+VRLoc[VR_EOF_MODE]  := VR_IGNORE            ð  // modalit… di scansione: ignore
+    .case m->nTEof == "3"   ./   modalit… di recover
+VRLoc[VR_EOF_MODE]  := VR_RECOVER           ð  // modalit… di scansione: recover
+   .otherwise
+        .dbMsgErr("modalit… (Report Eofmode) sconosciuta: "+alltrim(m->nTEof) )
+.endcase
+.*
+.nTEject := toReport("breakafterfoot")
+.cTEject := if(m->nTEject == "1", ".T.", ".F.")
+VRLoc[VR_EJECT ]    := Ûm->cTEjectÛ                    ð  // Salto pagina dopo raggruppamento
+
+.if toReportHea("bandactive") == "1"
+VRLoc[VR_HEADER]    := {||ÛtRepAliasName()ÛHeader()}   ð  // Code Block di attivazione banda
+VRLoc[VR_POSHEADER] := ÛtoReportHea("bandpos")Û ð  // Posizionamento banda ( 0=relativo )
+VRLoc[VR_ROWHEADER] := ÛtoReportHea("bandheight")Û     ð  // Numero di righe banda
+.*
+.nTBrk := toReportHea("breakinband")
+.cTBrk := if(m->nTBrk == "1", ".T.", ".F.")
+VRLoc[VR_BRKHEADER] := Ûm->cTBrkÛ                      ð  // Salto pagina nella banda
+   .if !EMPTY(toReportHea("printif"))
+VRLoc[VR_CANHEADER] := {||ÛtoReportHea("printif")Û}
+   .endif
+.endif
+
+.if toReportBdy("bandactive") == "1"
+VRLoc[VR_BODY  ]    := {||ÛtRepAliasName()ÛBody()}     ð  // Code Block di attivazione banda
+VRLoc[VR_ROWBODY  ] := ÛtoReportBdy("bandheight")Û     ð  // Numero di righe banda
+.*
+.nTBrk := toReportBdy("breakinband")
+.cTBrk := if(m->nTBrk == "1", ".T.", ".F.")
+VRLoc[VR_BRKBODY  ] := Ûm->cTBrkÛ                      ð  // Salto pagina nella banda
+.*
+.nTEject := toReportBdy("breakafterband")
+.cTEject := if(m->nTEject == "1", ".T.", ".F.")
+VRLoc[VR_EJECTBODY] := Ûm->cTEjectÛ                    ð  // Salto pagina dopo banda
+.*
+.nTHea := toReportBdy("eopheader")
+.nTFoo := toReportBdy("eopfooter")
+.cTHea := if(m->nTHea == "1", ".T.", ".F.")
+.cTFoo := if(m->nTFoo == "1", ".T.", ".F.")
+VRLoc[VR_BODY2HEAD] := Ûm->cTHeaÛ                    ð  // Reintesta con proprio header dopo il salto pagina
+VRLoc[VR_BODY2FOOT] := Ûm->cTFooÛ                    ð  // Chiudi con proprio footer prima del salto pagina
+   .if !EMPTY(toReportBdy("printif"))
+VRLoc[VR_CANBODY]   := {||ÛtoReportBdy("printif")Û}
+   .endif
+.endif
+
+.if toReportFoo("bandactive") == "1"
+VRLoc[VR_FOOTER]    := {||ÛtRepAliasName()ÛFooter()}   ð  // Code Block di attivazione banda
+VRLoc[VR_POSFOOTER] := ÛtoReportFoo("bandpos")Û ð  // Posizionamento banda ( 0=relativo )
+VRLoc[VR_ROWFOOTER] := ÛtoReportFoo("bandheight")Û     ð  // Numero di righe banda
+.*
+.nTBrk := toReportFoo("breakinband")
+.cTBrk := if(m->nTBrk == "1", ".T.", ".F.")
+VRLoc[VR_BRKFOOTER] := Ûm->cTBrkÛ                      ð  // Salto pagina nella banda
+   .if !EMPTY(toReportFoo("printif"))
+VRLoc[VR_CANFOOTER] := {||ÛtoReportFoo("printif")Û}
+   .endif
+.endif
+
+.* funzioni per le variabili di calcolo prevalorizzate
+.*
+.nTptr := Ascan( m->aTprc, {|x|x[4]==oo_prn->GRP .AND. x[6]} )
+.if nTptr != 0
+VRLoc[VR_PRECALC_CLEAR] := {||ÛtRepAliasName()ÛClear( PRN_FILE_LEVEL, PRN_PRECALC )} ð // funzione di azzeramento precalcoli
+.endif
+.nTptr := Ascan( m->aTprc, {|x|x[3]==oo_prn->FILE .AND. x[4]==oo_prn->GRP .AND. x[6] .AND. x[7]==oo_prn->TYPCOD} )
+.if nTptr != 0
+VRLoc[VR_PRECALC_ADD]   := {||ÛtRepAliasName()ÛAdd  ( PRN_FILE_LEVEL, PRN_PRECALC )} ð // funzione di totalizzazione precalcoli
+.endif
+.*
+.* funzioni per le variabili di calcolo non prevalorizzate
+.*
+.nTptr := Ascan( m->aTprc, {|x|x[4]==oo_prn->GRP .AND. !x[6]} )
+.if nTptr != 0
+VRLoc[VR_CALC_CLEAR]    := {||ÛtRepAliasName()ÛClear( PRN_FILE_LEVEL, PRN_CALC )} ð // funzione di azzeramento calcoli
+.endif
+.nTptr := Ascan( m->aTprc, {|x|x[3]==oo_prn->FILE .AND. !x[6] .AND. x[7]==oo_prn->TYPCOD} )
+.if nTptr != 0
+VRLoc[VR_CALC_ADD]      := {||ÛtRepAliasName()ÛAdd  ( PRN_FILE_LEVEL, PRN_CALC )} ð // funzione di totalizzazione calcoli
+.endif

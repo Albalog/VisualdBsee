@@ -1,0 +1,22 @@
+.parameter cTmod
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : DECCTRL
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Dichiarazione delle variabili sui control
+.* ----------------------------------------------------------------------------
+.M->nTCnt := 1
+.M->nTlen := Len(aTcontrol)
+.M->cTfil := space(2)
+.do while nTCnt <= nTlen
+   .do case
+      .case nTCnt == nTlen
+ÛcTmod + cTfil + aTcontrol[nTcnt,1]+" ð   // "+aTcontrol[nTcnt,5]Û
+      .case nTCnt == 1
+ÛcTmod + cTfil + aTcontrol[nTcnt,1]+" ð,; // "+aTcontrol[nTcnt,5]Û
+      .otherwise
+ÛcTmod + cTfil + aTcontrol[nTcnt,1]+" ð,; // "+aTcontrol[nTcnt,5]Û
+   .endcase
+   .cTmod    := space(Len(cTmod))
+   .M->nTCnt := nTcnt +1
+.enddo

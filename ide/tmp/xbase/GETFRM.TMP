@@ -1,0 +1,193 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GETFRM
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Genera il codice per il metodo di get dell'oggetto
+.* ----------------------------------------------------------------------------
+
+cState := nGetState               ð   //  Riassegna statica stato data entry
+
+.if nTr11Rec > 0 .and. !empty(M->cTdbf)
+   .dd_rel->(dbGoto( nTr11Rec))
+   .dd_ndx->(dbSetOrder(2))
+   .dd_ndx->(dbSeek(dd_rel->RELNDX))
+IF ÛcTdbf+[->(dfS(]+str(dd_ndx->NDXINCN,3)+[,]+toRelation("relkey")Û)) ð   //  Se non e' in eof() 1:1
+   IF cState!=DE_STATE_INK ;cState:=DE_STATE_MOD ;END ð   //  Passa in modifica
+ELSE
+   IF cState!=DE_STATE_INK ;cState:=DE_STATE_ADD ;END ð   //  Passa in inserimento
+END
+.endif
+
+.if !Empty( cTdbf )
+nRec := ÛcTdbfÛ->(Recno())        ð   //  Memorizza il record corrente
+.endif
+
+.if nTr11Rec==0 .AND. !Empty( cTdbf )
+IF     cState==DE_STATE_ADD
+   ÛcTdbfÛ->(dbGoBottom()) ;ÛcTdbfÛ->(dbSkip(1))
+ELSEIF cState==DE_STATE_MOD
+   IF ÛcTdbfÛ->(EOF()) ;cState:=DE_STATE_INK ;END
+ENDIF
+.endif
+.if tNetWork()
+.do NRlock
+.endif
+
+.inj getA Prima della valorizzazione delle variabili
+
+/*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³ VALORIZZAZIONE VARIABILI DI DATA ENTRY  ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+
+.do PutCtrl with "def" ,"getvar-rdbvar-ckbvar-spbvar-cmbvar"
+.do PutCtrl with "def" ,"keyfie-getfie-n21fie-rdbfie-ckbfie-spbfie-cmbfie-getpre"
+.inj get2 Dopo la valorizzazione delle variabili
+
+IF cState==DE_STATE_ADD
+              /*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+                ³ VALORIZZA I CAMPI EREDITATI DA RELAZIONI 1:N        ³
+                ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+.if nTr11Rec > 0
+   .do inh with "def"
+.endif
+   tbInh( oWin ,aInh ,INH_DEF )
+
+ENDIF
+.if !Empty( aTrel11 )
+.do Put121 with "def"
+.endif
+.inj get3 Dopo la valorizzazione dei campi ereditati per 1:1 ed 1:N
+
+ÛcTprgÛUpw( "#" )                 ð   //  Visualizza i dati da MEMORIA
+
+.inj ge10 
+
+IF cState==DE_STATE_INK ;RETU .T. ;END ð   //  Uscita in stato consultazione dati
+.M->cTaddId := toObject("startupaddctrl")
+.if !Empty( cTaddId )
+IF cState==DE_STATE_ADD ;tbGetGoto(oWin ,"ÛcTaddIdÛ" ) ;END
+.else
+IF cState==DE_STATE_ADD ;tbGetTop(oWin) ;END
+.endif
+.M->cTmodId := toObject("startupmodctrl")
+.if !Empty( cTmodId )
+IF cState==DE_STATE_MOD ;tbGetGoto(oWin ,"ÛcTmodIdÛ" ) ;END
+.else
+IF cState==DE_STATE_MOD ;tbGetTop(oWin,.T.) ;END
+.endif
+.inj get4 Prima della chiamata al modulo gestore delle get " tBget() "
+
+WHILE( .T. )
+
+   IF ! tbGet( oWin ,{||ÛcTprgÛDcc() } ,cState ) ð   //  Modulo gestore delle get
+      .inj get5 Rinuncia registrazione dati prima di uscire da DO WHILE get
+      EXIT
+   END
+
+   .inj get6 Prima della scrittura campi su disco alla conferma dati
+
+   IF cState==DE_STATE_ADD
+
+.if !Empty( cTdbf )
+      .inj getB Prima calcolo chiavi primarie / univoche
+   .if tNetWork()
+      .do NAppend
+   .else
+      .do pkeynew
+      ÛcTdbfÛ->(dbAppend())
+   .endif
+      .inj getC Dopo calcolo chiavi primarie / univoche
+
+      nRec := ÛcTdbfÛ->(Recno())  ð   //  Memorizza il nuovo record
+.endif
+.if nTr11Rec > 0
+
+     /*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+       ³          SCRITTURA CAMPI EREDITATI         ³
+       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+      .do inh with "wri"
+.endif
+
+      tbInh( oWin ,aInh ,INH_WRI )             ð   //  Scrive su disco i campi ereditati ( vedere Norton Guide )
+
+   END
+
+   .inj getD Dopo la scrittura campi ereditati
+
+.if (lTtrnRep .OR. lTtrnApp) .AND. !Empty( cTdbf )
+   ÛcTdbfÛ->(dbGoto(nRec))        ð   //  Riposiziona il record
+   IF cState==DE_STATE_MOD
+    .if tNetWork()
+      IF ! ÛcTdbfÛTrn("ltr",cState) ;EXIT ;END ð   //  Tenta blocco record transazioni
+    .endif
+    .if lTtrnRep
+     /*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+       ³          RIMUOVE  LE TRANSAZIONI           ³
+       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+      ÛcTdbf+[->(]+cTprgÛRtt())
+    .endif
+    .if tNetWork()
+      ÛcTdbfÛTrn("utr",cState)       ð   //  Sblocca record transazioni
+    .endif
+   END
+.endif
+
+     /*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+       ³             REPLACE DEI CAMPI              ³
+       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+.if !Empty( cTdbf )
+   ÛcTdbfÛ->(dbGoto(nRec))        ð   //  Riposiziona prima di scrivere
+
+   .do PutCtrl with "wri" ,"keyfie-getfie-getvar-rdbfie-ckbfie-spbfie-cmbfie-n21fie-getpre"
+
+.endif
+   .inj get7 Dopo la scrittura campi su disco alla conferma dati
+.if !Empty( cTdbf )
+
+   ÛcTdbfÛ->(dbCommit())          ð   //  Aggiorna il record su disco
+
+.endif
+.if !Empty( aTrel11 )
+   .do Put121 with "wri"
+.endif
+   .inj get8 Dopo la scrittura campi da relazioni 1:1
+
+.if (lTtrnRep .OR. lTtrnApp) .AND. !Empty( cTdbf )
+     /*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+       ³          METTE    LE TRANSAZIONI           ³
+       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+   .if tNetWork()
+   ÛcTdbfÛTrn("ltr",cState,.F.)ð   //  Blocca il record della transazione
+   .endif
+   .if lTtrnRep
+   ÛcTdbf+[->(]+cTprgÛPtt())
+   .endif
+   .if lTtrnApp
+   ÛcTdbf+[->(]+cTprgÛLtt(cState))
+   .endif
+   .if tNetWork()
+
+   ÛcTdbfÛTrn("utr",cState)       ð   //  Sblocca record transazioni
+   .endif
+.endif
+.if tNetWork() .AND. !Empty( cTdbf )
+
+   IF cState==DE_STATE_ADD
+      ddFileLock( DD_UNLOCK ,"ÛcTdbfÛ" ) ð   //  Sblocco dbdd (file semaforo)
+   END
+
+.endif
+   .inj get9 Dopo la scrittura transazioni e sblocco semaforo di rete
+   lRet := .T.
+   EXIT                           ð   //  Uscita dopo aggiornamento dati
+
+ENDDO
+.if !Empty( cTdbf )
+ÛcTdbfÛ->(dbGoto(nRec))           ð   //  Riposiziona il record
+
+.endif
+.if tNetWork()
+.do NUnlock
+.endif
+
+cState := DE_STATE_INK            ð   //  Imposta stato di consultazione

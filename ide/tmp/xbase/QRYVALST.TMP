@@ -1,0 +1,118 @@
+.parameter nTSpace
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : QRYVALSTD
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Codice standard nella validazione get per QUERY
+.* ----------------------------------------------------------------------------
+.M->cTstr    := ""
+.*------------------------------------- LOOK-UP
+.if tItmLkUpGet( oo_itm->ITMGET, oo_itm->ALS, "qry" )
+   .*
+   .dd_dbf->(dbSetorder(1))
+   .dd_dbf->(dbSeek(dd_rel->FILE1))
+   .M->cTdbfRel := tDbfAliasName()
+   .*
+   .if dd_dbf->FILE_TYP == "0"
+      .dd_ndx->(dbSetorder(2))
+      .dd_ndx->(dbSeek( dd_rel->relndx))
+      .dd_ndx->(dbSetorder(1))
+      .M->cTe := alltrim( str( dd_ndx->NdxIncN,3 ) )
+aDbl           := ARRAY(LK_ARRAYLEN)
+aDbl[LK_ORDER] := ÛcTeÛ ð //  Order (numerico)
+      .*
+.* aDbl[LK_SEEK]  := ÛcTSym1Û ð //  Chiave di ricerca
+.* aDbl[LK_SEEK]  := ÛcTSeekÛ ð //  Chiave di ricerca
+.do case
+    .case dd_sym->SYM_TYP == "N"
+aDbl[LK_SEEK]  := str(ÛcTSeekÛ,Ûdd_sym->SYM_LENÛ,Ûdd_sym->SYM_DECÛ) ð   // Chiave di ricerca
+    .case dd_sym->SYM_TYP == "C"
+aDbl[LK_SEEK]  := ÛcTSeekÛ ð   // Chiave di ricerca
+    .case dd_sym->SYM_TYP == "D"
+aDbl[LK_SEEK]  := Dtos(ÛcTSeekÛ) ð  // Chiave di ricerca
+    .otherwise
+aDbl[LK_SEEK]  := ÛcTSeekÛ ð   // Chiave di ricerca
+.endcase
+aDbl[LK_VAL]   := {}    ð //  Dati da ereditare nel file figlio
+      .foreach vallookup
+        .M->cTs := alltrim(dd_sym->SYM_NAM)
+        .m->nTCnt := Ascan( aTQuery, {|x|x[2] == alltrim(dd_sym->SYM_NAM) })
+        .if m->nTCnt != 0
+            .M->cTsym2   := ""
+            .if dfGetSym(oo_itm->ITMGET, {||alltrim(dd_sym->SYM_NAM)} ) == aTQuery[m->nTCnt,2]
+                .M->cTsym2   := M->cTsym1
+            .else
+                .M->cTsym2   := "aQuery["+alltrim(str(nTCnt))+",3]"
+            .endif
+aAdd( aDbl[LK_VAL] , { "ÛcTs+[" ,{||]+cTSym2Û } })
+        .endif
+      .next
+      .*
+aDbl[LK_FIELD] := "ÛtItmLkUpLnk()Û" ð //  Nome campo relazionato
+      .*
+      .M->cTe := "NIL"
+      .oo_obj->(dbSetorder(1))
+      .if oo_obj->(dbSeek( dd_rel->ALWIN ))
+         .M->cTe := [{|a,b,c,d|]+alltrim( oo_obj->PRG )+[Exe(a,b,c,d)}]
+      .endif
+aDbl[LK_WIN]   := ÛcTeÛ ð //  Nome finestra
+      .*
+      .M->cTe := "NIL"
+aDbl[LK_KEY]   := ÛcTeÛ ð //  Chiave finestra
+      .M->cTe := [{|| .T.}]
+aDbl[LK_FILTER]:= ÛcTeÛ ð //  Filtro finestra
+      .M->cTe := [{|| .F.}]
+aDbl[LK_BREAK] := ÛcTeÛ ð //  Break finestra
+      .*
+aDbl[LK_TYPE]  := LT_FREE ð // Modalita'
+      .*
+      .M->cTe := "NIL"
+      .if oo_obj->(dbSeek(dd_dbf->FILE_OBJ))
+         .M->cTe := "{||"+alltrim(oo_obj->PRG)+"Exe(DE_STATE_ADD,aDbl[LK_ORDER],,,,,aDbl[LK_VAL])}"
+      .endif
+      .oo_obj->(dbGoto( nTobjRec))
+aDbl[LK_EDIT]  := ÛcTeÛ ð //  Nome quadro edit
+      .*
+      .M->cTe := iif(empty(toItem("lookupif")), "NIL", [{||]+ toItem("lookupif") +[}])
+aDbl[LK_INS]   := ÛcTeÛ ð //  Abilita edit se...
+aDbl[LK_KBD]   := .T.   ð //  If true and key found skip to the next control
+.tPutInj( nTSpace ,[.inj GSF4] )
+
+IF ! ÛcTdbfRelÛ->(dbLooK( aDbl ))
+   lRet := .F.
+ELSE
+   IF ! ÛcTdbfRelÛ->(eof())
+      .*foreach inhlookup
+      .foreach inhlookup  dd_inh->INHSYM==oo_itm->ITMGET
+          .*
+          .m->nTCnt := Ascan( aTQuery, {|x|x[2] == alltrim(dd_sym->SYM_NAM) })
+          .if m->nTCnt != 0
+              .if dfGetSym(oo_itm->ITMGET, {||alltrim(dd_sym->SYM_NAM)} ) == aTQuery[m->nTCnt,2]
+                  .M->cTsymRef := M->cTsym
+                  .M->cTsym2   := M->cTsym1
+      ÛcTsym2+[ := ]+toInherit("inheritexpr")Û
+      tbDisRef( oWin ,"ÛcTsymRefÛ" )
+              .else
+                  .M->cTsymRef  := "cGet"+alltrim(str(m->nTCnt))
+                  .M->cTsym2    := "aQuery["+alltrim(str(nTCnt))+",3]"
+      ÛcTsym2+[ := ]+toInherit("inheritexpr")Û
+      tbDisItm( oWin ,"ÛcTsymRefÛ" )
+              .endif
+          .endif
+          .*
+      .next
+   ENDIF
+ENDIF
+
+   .else
+IF !dBtabChk("ÛcTdbfRel+[" ,{|x|if(x==NIL,]+cTsym1+[,]+cTsym1+[:=x)}]Û, LT_FREE )
+   lRet := .F.
+ELSE
+   tbDisRef( oWin ,"ÛcTsymÛ" )
+ENDIF
+
+   .endif
+.endif
+.*
+.dd_dbf->(dbGoto(nTdbfRec))
+.oo_obj->(dbGoto(nTobjRec))

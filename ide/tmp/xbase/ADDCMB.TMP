@@ -1,0 +1,69 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDCMB
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge ITEM COMBINATION BOX ad array control per la
+.*                  : dichiarazione delle variabili
+.* ----------------------------------------------------------------------------
+.M->cTdef1   := ""
+.M->cTsym    := tControlId()
+.if ! Empty( cTsym )
+    .if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+       .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,"lsbobj" ,"" ,"", "identificatore control combination box" } )
+    .endif
+.endif
+.if toItem("lsbdatatype") == "1"
+   .M->cTsym := toItem("lsbroworigin")
+   .if ! Empty( cTsym )
+       .M->cTdef := PADR(cTsym,10)+[ := ]+toItem("lsbarraydef")
+       .if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+          .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,"lsbarr"+M->cTsym ,cTdef ,"", "" } )
+       .endif
+   .endif
+.endif
+.M->cTsym    := toItem("cmbdataorigin")
+.M->cTsymD   := dfGetSym(upper(PadR(cTsym, 8)), {||alltrim(dd_sym->SYM_DES)}, 2)
+.M->cTsymTYP := dfGetSym(upper(PadR(cTsym, 8)), {||alltrim(dd_sym->SYM_TYP)}, 2) 
+.if ! Empty( cTsym )
+    .M->cTcmb := ""
+    .M->cTpre := toItem("datadefault")
+    .if empty(cTpre)
+        .dd_sym->(dfPushArea())
+        .if dd_sym->(dfS(2, PAD(UPPER(cTSym), LEN(dd_sym->sym_nam))))
+           .M->cTpre := toSymbol("default")
+        .endif
+        .dd_sym->(dfPopArea())
+    .endif
+    .M->cTdef := ""
+    .M->cTwri := ""
+    .M->nEle  := 0
+    .if toItem("origintype") == "0"
+       .M->cTcmb := "cmbfie"
+       .M->cTali := if( !Empty(cTdbf) ,cTdbf+"->" ,"" )
+       .M->cTwri := cTali+LTRIM(cTsym)+[ := ]+cTsym
+       .M->cTdef := PADR(cTsym,10)+[ := ]+cTali+Alltrim(cTsym)
+       .if ! Empty(cTpre)
+          .M->cTdef := PADR(cTsym,10)+[ := IF(cState==DE_STATE_ADD,]+cTpre+[,]+cTali+Alltrim(cTsym)+[)]
+       .endif
+    .else
+       .M->cTcmb := "cmbvar"
+       .if M->cTsymTYP=="N" 
+          .M->cTdef1 := [ 0 ]
+       .else
+          .M->cTdef1 := [ SPACE(]+str(Len(tShowPicture(SymPic())),2)+[)]
+       .endif
+
+       .if ! Empty(cTpre)
+          .M->cTdef := PADR(cTsym,10)+[ := IF(Empty(]+cTsym+[),]+cTpre+[,]+cTsym+[)]
+       .else
+          .M->cTdef := PADR(cTsym,10)+[ := IF(Empty(]+cTsym+[),]+M->cTdef1+[,]+cTsym+[)]
+       .endif
+    .endif
+    .if (nEle:=Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } )) == 0
+       .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,cTcmb ,cTdef ,cTwri, cTsymD } )
+    .else
+       .if ! Empty( cTpre )
+          .aTcontrol[nEle][3] := cTdef
+       .endif
+    .endif
+.endif

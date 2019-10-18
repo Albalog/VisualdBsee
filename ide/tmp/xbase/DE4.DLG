@@ -1,0 +1,18 @@
+.oDlg:=DlgNew( 05 ,12 ,"Data entry su browse" ,.T. ,"@" )
+.DlgRow( oDlg ,"                                                        ")
+.DlgRow( oDlg ,"  Etichetta di menu  : @01                            ÿ ")
+.DlgRow( oDlg ,"  Nome archivio      : @02        Programma : @03       ")
+.DlgRow( oDlg ,"  Nome programma     : @04        per edit browse    ÿÿ ")
+.DlgRow( oDlg ,"                                                        ")
+.DlgRow( oDlg ,"                                 @25  @26               ")
+.DlgRow( oDlg ,"                                                        ")
+.DlgGet( oDlg ,"mEti" ,"@01" ,{||M->mEti} ,{||.T.} ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",NIL,;
+            "Digitare titolo etichetta di menu" )
+.DlgGet( oDlg ,"mDbf" ,"@02" ,{||M->mDbf} ,{|cM,nS|FmDbf(cM,nS)}  ,"XXXXXXXX" ,NIL,;
+           "Digitare nome file in uso su oggetto browse.| F7=finestra" ,1 )
+.DlgGet( oDlg ,"mPrgBrw1" ,"@03" ,{||M->mPrgBrw1} ,{|cM,nS|FmPrgBrw1(cM,nS,m->mDbf)} ,"XXXXXXX" ,NIL,;
+            "Digitare nome programma per oggetto browse.")
+.DlgGet( oDlg ,"mPrgEdb" ,"@04" ,{||M->mPrgEdb} ,{|cM,nS|FmPrgEdb(cM,nS,m->mDbf)}  ,"XXXXXXX" ,NIL,;
+           "Digitare nome programma per oggetto edit browse.| F7=finestra" )
+.DlgBut( oDlg ,"But1"  ,"@25" ,{||.T.} ,{||DlgWri(oDlg)}    ,"^OK")
+.DlgBut( oDlg ,"But2"  ,"@26" ,{||.F.} ,{||DlgEsc(oDlg)}    ,"^Rinuncia")

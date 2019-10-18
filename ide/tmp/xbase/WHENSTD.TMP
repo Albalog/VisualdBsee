@@ -1,0 +1,33 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : WHENSTD
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Codice STANDARD prima della get.
+.* ----------------------------------------------------------------------------
+.*------------------------------------- PRE-EDIT
+.if ! empty(toSymbol("preedit"))
+//  PRE-EDIT
+€cTsym+[ := ]+toSymbol("preedit")€
+
+.endif
+.*------------------------------------- SALTA L'EDIT SE
+.if ! empty(toItem("jumpif"))
+//  EDIT CONDIZIONALE
+IF €toItem("jumpif")€
+   lRet := .F.
+ENDIF
+
+.endif
+.if nTpkMode != -1
+IF cState==DE_STATE_MOD
+   RETURN .F.
+ENDIF
+.endif
+.if nTpkMode == 1
+   .M->cTStp := if( Val(ToKeyField("keystep")) > 0 ,ToKeyField("keystep") ,"1" )
+/*  CHIAVE AUTOMATICA PROGRESSIVA */
+€cTdbf+[->(dfPkNew( {|x|if(x==NIL,]+cTsym+[,]+cTsym+[:=x)}, ]+str(nTpOrde,2)+[ ,"]+cTsym+[" ,oWin:W_PRIMARYKEY ,]+cTStp€) )
+€cTprg+[Upw( "-]+lower(cTsym)€-" )
+
+RETURN .F.
+.endif

@@ -1,0 +1,23 @@
+.parameter jjTdir, jjTflt, jjText
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : SELTMP
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab seleziona il template
+.* ----------------------------------------------------------------------------
+.jjAInt := alltrim(jjTflt)+[.]+jjText
+.jjAdir := jjTDir+m->jjAInt
+.jjNtmp := adir( jjAdir )
+.if jjNtmp > 0
+   .Private ArrTmp[jjNtmp]
+   .adir( jjAdir, ArrTmp )
+   .asort( ArrTmp )
+   .dbscrSav("SelTmp")
+   .INKEY(0)
+   .jjT := dBwar("dbTmp",1,1,21,14,jjAInt,[],ArrTmp,[],1,1,[],0,[dbwar],[ret-esc],[dbTmpSys(jjText)],[],1,[n],1,1,0,0)
+   .if Act = [ret]
+       .jjTmpSel := ArrTmp[jjT]
+       .msg [Selezionato : ] + jjTmpSel
+   .endif
+   .dbscrRes("SelTmp")
+.endif

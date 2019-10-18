@@ -1,0 +1,161 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GO
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Genera Go.bat
+.* ----------------------------------------------------------------------------
+.M->nTRec := oo_obj->(Recno())
+.M->nTExe := oo_exe->(Recno())
+.out ÛtSourcePath()+"\"+alltrim(oo_obj->PRG)Û.bat
+.msg [GENERA :]+trim(oo_obj->ObjDes)+[ : ]+tSourcePath()+"\"+alltrim(oo_obj->prg)+[.bat]
+.cTmake := toExeEnv("make",.T.)
+.foreach special
+  .if tObjType() == "scriptmake"
+.if (toExeEnv("compiler")=="3")
+.if !empty(toExeEnv("execompress")) .AND. alltrim(toExeEnv("execompress")) =="1"
+Del Upx.log
+.endif
+.if (toExeEnv("linker")=="10")
+.M->cLOADER := toExeEnv("loadername")
+.endif
+Û"pbuild "+Alltrim(oo_obj->PRG)+".xpj"Û
+.else
+ÛcTmake+" "+Alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ /XS1000 /XW4000
+.endif
+  .endif
+.next
+.if (toExeEnv("linker")=="10")
+Move *.def ÛtOBJPath()Û\
+Move *.exp ÛtOBJPath()Û\
+.endif
+.oo_obj->(dbGoto(nTRec))
+
+.M->cTOut := "..\EXE"
+.M->cTSou := "..\SOURCE"
+.if !empty(toExeEnv("outputexe"))
+   .M->cTOut := toExeEnv("outputexe")
+   .M->cTSou := SUBS(tRootPath(),AT(":",tRootPath())+1)+"\SOURCE"
+.endif
+
+@echo off
+if errorlevel =1 goto err
+CD ÛcTOutÛ
+%1 Ûalltrim(oo_exe->EXENAME)Û
+CD ÛcTSouÛ
+goto exit
+@echo on
+:err
+@echo on
+echo Compilation Error!
+:exit
+
+.close
+
+.out ÛtSourcePath()+"\"+alltrim(oo_exe->EXENAME)Û.bat
+.msg [GENERA :]+alltrim(oo_exe->EXENAME)+[.bat]
+
+CD ÛcTOutÛ
+
+%1 Ûalltrim(oo_exe->EXENAME)Û
+
+CD ÛcTSouÛ
+
+.close
+
+.oo_exe->(dbGotop())
+.M->cTit := Alltrim(oo_exe->EXEDES)
+.M->cExe := Alltrim(oo_exe->EXENAME)
+.oo_exe->(dbGoto(nTexe))
+.out ÛtRootPath()Û\Zip.bat
+.msg [GENERA : Zip.bat ,archiviazione ridotta del progetto]
+
+DEL       ZIP.zip
+PKZIP -pr ZIP.zip  *.db? *.prg *.bat *.xpj
+
+.close
+
+.out ÛtRootPath()Û\ZipAll.bat
+.msg [GENERA : Zipall.bat ,archiviazione completa del progetto]
+
+DEL       ÛcExeÛ.zip
+DEL       ÛcExeÛ.exe
+Pkzip -pr ÛcExeÛ.zip  *.*
+Zip2Exe   ÛcExeÛ.zip
+
+.close
+
+.out ÛtRootPath()Û\Install.bat
+.msg [GENERA : Install.bat ,installazione programma]
+@echo off
+Cls
+Echo ÿ
+Echo  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+Echo  ³ INSTALLAZIONE PROGETTO ³
+Echo  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+Echo  Programma........: ÛcExeÛ
+Echo  Descrizione......: ÛcTitÛ
+Echo  Nella directory..: %2
+Echo ÿ
+@echo off
+
+If %1. == . GoTo :help
+If %2. == . GoTo :help
+
+If not exist %1ÛcExeÛ.exe GoTo :error1
+If exist %2\nul GoTo :next
+Md %2
+If not exist %2\nul GoTo :error2
+
+:next
+Echo Installazione programma da  %1 a  %2 ...
+
+If exist %1ÛcExeÛ.exe  %1ÛcExeÛ %2 -d -o
+
+If errorlevel==0 GoTo :done
+
+Echo ÿ
+Echo  Errore installando il programma !
+GoTo :outinstall
+
+:error1
+Echo  Drive inesistente !
+GoTo :help
+
+:error2
+Echo  Directory inesistente !
+
+:help
+Echo ÿ
+Echo  Help :
+Echo         {source drive}:INSTALL {source drive}:{target directory}
+Echo  ÿ
+Echo  dove :
+Echo         {source drive}     = Drive che contiene il dischetto con il
+Echo                              programma da installare.
+Echo         {target directory} = Directory di destinazione, dove saranno
+Echo                              installati i programmi del dischetto.
+Echo                              Se la directory non esiste viene creata.
+Echo  ÿ
+Echo  EXAMPLE:   A:INSTALL A: C:\PROG1
+Echo  ÿ
+Echo         Nell'esempio il programma su dischetto nel drive A: verra'
+Echo         installato nella directory PROG1 sul disco C:.
+GoTo :outinstall
+
+:done
+
+Echo  OK !
+Cls
+Echo  Installazione completata !
+Echo ÿ
+
+:outinstall
+.close
+.if !type("OS()")=="C"
+.* dBsee
+ .if !file("ÛcTOutÛ\init.cld")
+   .out ÛcTOutÛ\init.cld
+Options Colors {"BG/G","BG/G","G+/G","W/g","W+/G*","GR/G*","W/BG","W+/B*","Gr+/B*","W+/G","GR+/G"}
+   .close
+ .endif
+.endif

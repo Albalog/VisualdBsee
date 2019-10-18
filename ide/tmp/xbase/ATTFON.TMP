@@ -1,0 +1,25 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTFON.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control FONT ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->nTfntRow := 0
+.M->nTfntCol := 0
+.M->nTCnt    := 1
+.M->aFont    := tItmFont(trim(oo_itm->ItmSay),oo_itm->font," ",@nTfntRow,@nTfntCol)
+.M->cTc      := ["]+tItmCol("textcolor")+["]
+.M->cXTc := ["]+toItem("xbtextcolor")+["]
+.if ! cXTc == [""]
+   .M->cTc := 'DFXPPCLRSELECT('+cXTc+','+cTc+')'
+.endif
+.M->cFont    := toItem("fontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.do while nTcnt <= nTfntRow
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL SAY "'+strtran(aFont[nTcnt],chr(219),"²")+'" AT '+nTr1+','+nTc1+ ;
+               ' PAGE '+cTpag+IF( cTdis=="{||.T.}", "", " DISPLAYIF "+cTdis )+' COLOR {'+cTc+'}'+IF( Empty(cFont), '', ' FONT '+cFont )Û
+    .M->nTr1  := str( oo_itm->ROW+nTcnt, 3 )
+    .M->nTcnt := nTcnt + 1
+.enddo

@@ -1,0 +1,132 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : BLINKER3
+.* RELEASE      : 5.0
+.* VERSION      :
+.* DESCRIZIONE  : Script per l'operazione di Link con Blinkerø 3.0 Protect mode
+.* ----------------------------------------------------------------------------
+.tExeBuild()
+.do GenUsrM
+.M->MstObjRec := oo_obj->(recno())
+.out ÛtSourcePath()+"\"+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+.msg [GENERA :]+trim(oo_obj->ObjDes)+[ : ]+tSourcePath()+"\"+alltrim(oo_obj->prg)+[.]+oo_obj->EXT
+
+#  ZONA COMANDI BLINKER
+BLINKER LINK        VERSION  4.1
+BLINKER INCREMENTAL OFF
+BLINKER EXECUTABLE  NODELETE
+BLINKER CLIPPER     SYMBOL OFF
+.if toExeEnv("linkercom")!="0"
+BLINKER EXECUTABLE  COMPRESS ÛtoExeEnv("linkercom")Û
+.endif
+NOBELL
+
+.inj LNK2 Dopo la zona comandi standard file script per BLINKER
+
+.M->cTOut := toExeEnv("outputexe")
+OUTPUT Ûif( empty(cTout),"..\EXE\",cTout+"\")+ALLTRIM(oo_exe->ExeName)Û
+
+.M->cTini := tInitProc()
+ÛTgetCom("fi")+" "+cTiniÛ
+
+PACKCODE
+PACKDATA
+
+DEFBEGIN
+   name        dBsee
+   description 'dBsee 4 for Windows'
+   exetype     Windows 3.1
+   code        moveable discardable preload
+   data        preload moveable
+   stacksize   10000
+   heapsize    1024
+   segment     'PLANKTON_TEXT' nondiscardable
+   segment     'EXTEND_TEXT'   nondiscardable
+   segment     'OM_TEXT'       nondiscardable
+   segment     'OSMEM_TEXT'    nondiscardable
+   segment     'SORTOF_TEXT'   nondiscardable
+   segment     'STACK_TEXT'    nondiscardable
+DEFEND
+
+LIB Five, FiveC, Objects
+LIB WinApi, Clipper, Extend, Terminal
+
+#  FILE SPECIALI
+.foreach link oo_bld->typ=="spc" .and. oo_bld->wdo=="prg" .and. oo_bld->SECTION=="0"
+ÛTgetCom("fi")+" "+alltrim(oo_obj->PRG)Û
+.next
+
+#  FILE EXTERNAL
+.foreach link oo_bld->typ=="ext" .and. oo_bld->SECTION=="0"
+.M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+ÛTgetCom("fi")+" "+cPath+alltrim(oo_obj->PRG)Û
+.next
+
+#  OGGETTI VISUAL DBSEE
+.foreach link oo_bld->typ $ "drv-frm-brw-prn-qry" .and. oo_bld->SECTION=="0"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   .if Lower(cTini) != Lower(cTprg)
+ÛTgetCom("fi")+" "+cTprgÛ
+   .endif
+.next
+
+.inj LNK3 Prima delle librerie e del Beginarea in ROOT
+
+#  LIBRERIE IN ROOT
+
+Sea dbsee45w
+.if toExeEnv("compiler")=="2"
+Lib dBsee453
+.endif
+Lib dBsee4r
+
+.foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION=="0"
+.M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+ÛTgetCom("Lib")+" "+cPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+.next
+
+BEGINAREA
+
+   .inj LNK4 All'interno BEGINAREA file script per BLINKER
+
+   #  FILE SPECIALI
+.foreach link oo_bld->typ=="spc" .and. oo_bld->wdo$"fun-udf-prg-rid" .and. oo_bld->SECTION $ "12345678"
+   ÛTgetCom("fi")+" "+alltrim(oo_obj->PRG)Û
+.next
+
+   #  FILE EXTERNAL
+.foreach link oo_bld->typ=="ext" .and. oo_bld->SECTION $ "12345678"
+   .M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+   ÛTgetCom("fi")+" "+cPath+alltrim(oo_obj->PRG)Û
+.next
+
+   #  OGGETTI VISUAL DBSEE
+.foreach link oo_bld->typ $ "drv-frm-brw-prn-qry" .and. oo_bld->SECTION $ "12345678"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   .if Lower(cTini) != Lower(cTprg)
+   ÛTgetCom("fi")+" "+cTprgÛ
+   .endif
+.next
+
+   #  LIBRERIE ALLOCATE
+   .inj LNK5 Posizione per librerie ALLOCATE prima della libreria Visual dBSEE
+.foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION $ "12345678"
+   .M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+   ÛTgetCom("Allocate")+" "+cPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+.next
+   Allocate dBsee4o
+   .inj LNK6 Posizione per librerie ALLOCATE
+
+ENDAREA
+
+.inj LNK8 Dopo ENDAREA ma prima del comando Lib Clipper
+
+#  LIBRERIE
+.do rddlib
+.inj LNK9 Dopo il comando Lib Clipper
+.foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION=="9"
+.M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+ÛTgetCom("Lib")+" "+cPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+.next
+
+.close
+.dbusrOld()

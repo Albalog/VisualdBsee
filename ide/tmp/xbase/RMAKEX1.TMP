@@ -1,0 +1,115 @@
+.M->cTini := tInitProc()
+//
+// Project - Definition
+//
+[PROJECT]
+    COMPILE       = xppvdb
+    COMPILE_FLAGS = ÛtoExeEnv("compileroption")Û /ES/Q/PRE/O:noncb
+    DEBUG         = ÛIF("/B"$UPPER(toExeEnv("compileroption")) .or. alltrim(toExeEnv("debug"))=="1","yes","no")Û
+    GUI           = yes
+.if !empty(toExeEnv("execompress")) .AND. alltrim(toExeEnv("execompress")) =="1" 
+    LINKER        = upxalink
+.else
+    LINKER        = alink
+.endif
+.M->cTOut := toExeEnv("outputexe")
+    LINK_FLAGS    = /out:Ûif( empty(cTout),"..\EXE\",cTout+"\")+ALLTRIM(oo_exe->ExeName)Û.exe /FORCE:UNRESOLVED
+    RC_COMPILE    = arc
+    RC_FLAGS      = /v
+    PROJECT.XPJ
+.if toExeEnv("linker")=="7" .OR. toExeEnv("linker")=="8"
+    OBJ_FORMAT    = COFF
+.else
+    OBJ_FORMAT    = OMF
+.endif
+    OBJ_DIR       = ÛtOBJPath()Û
+.M->cLinkerF := ""
+.M->nTObjR1 := oo_obj->(recno())
+.foreach special
+   .if tObjtype() == "scriptlink"
+      .* .M->cLinker     := ALLTRIM(SUBS(toExeEnv("linker",.T.),1,8))
+      .M->cLinkerF := "@" +alltrim(oo_obj->PRG) +"." +oo_obj->EXT
+   .endif
+.next
+.oo_obj->(dbGoto(nTObjR1))
+    OMF_LINKER    = _BLINKER.BAT ÛcLinkerFÛ
+
+[PROJECT.XPJ]
+    ÛcTiniÛ.EXE
+
+[ÛcTiniÛ.EXE]
+.if TGenerationDividedfortype()
+// Main
+Û"   ...\source\Form\"+cTiniÛ.prg
+// Starting procedure
+Û"   ...\source\Form\_"+cTiniÛ.prg
+.else
+// Main
+Û"   ...\source\"+cTiniÛ.prg
+// Starting procedure
+Û"   ...\source\_"+cTiniÛ.prg
+.endif
+
+// Source
+.foreach make oo_bld->EXT=="prg"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   .if !(Lower(cTini) == Lower(cTprg))
+       .M->cPath := toObject("objectpath")
+       .if !EMPTY(cPath) .AND. ! right(cPath, 1) == "\"
+          .M->cPath := cPath+"\"
+       .endif
+       .if !Empty(M->cPath)
+Û"   "+cPath+alltrim(oo_obj->PRG)Û.prg
+       .else
+         .if TGenerationDividedfortype()
+         .M->cPath := "   ...\source\"+ tsourceGenPath()
+         .else
+         .M->cPath := "   ...\source\"
+         .endif
+ÛcPath+cTprgÛ.prg
+       .endif
+   .endif
+.next
+.foreach link oo_bld->typ=="ext" .and. oo_bld->Wdo == "obj" .and. oo_bld->SECTION $ "0123456789"
+   .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)$"MSGITA.OBJ,CMX52.OBJ,CMXDBT52.OBJ")
+      .M->cPath := ""
+      .if ! empty(toObject("objectpath"))
+         .M->cPath := toObject("objectpath")
+         .if !EMPTY(cPath) .AND. ! right(cPath, 1) == "\"
+            .M->cPath := cPath+"\"
+         .endif
+      .endif
+Û"   "+cPath+alltrim(oo_obj->PRG)Û.obj
+   .endif
+.next
+   dblang.lib
+.if toExeEnv("linker")=="8"
+   vdbsee1o.lib
+   vdbsee1s.lib
+.else
+   kernel32.LIB
+   user32.lib
+   msvcrt.lib
+   winspool.lib
+   comdlg32.lib
+   vdbsee1x.lib
+.endif
+.foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION $ "0123456789"
+.M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+   .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)=="CLD.LIB")
+      .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)$"CMX52.LIB")
+   ÛcPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+      .endif
+   .endif
+.next
+   ÛMstPrgNamÛ.ARC
+.foreach make oo_bld->EXT=="arc"
+Û"   "+alltrim(oo_obj->PRG)Û.ARC
+.next
+
+   .inj RMK4 In coda ai programmi in compilazione. (Lasciare una riga vuota!!)
+
+.close
+.out ÛtSourcePath()+"\"Û_blinker.bat
+blinker.com %1
+.close

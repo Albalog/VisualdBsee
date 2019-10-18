@@ -1,0 +1,792 @@
+.parameter cTtmp
+.M->Start   := SECOND()
+.M->cTtmp   := lower( cTtmp )
+.M->cNotPfk := ""
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : FORM
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Metodi per oggetto form in monoutenza
+.* ----------------------------------------------------------------------------
+.do GenUsrM
+.M->lTnet   := .F.
+.M->nTcnt   := 0
+.M->nTvlc   := 0
+.M->cTstr   := ""
+.M->cTclf   := chr(13) + chr(10)
+.*
+.M->nTobjRec:= oo_obj->(recno())
+.M->cTobjTyp:= oo_obj->WDO
+.M->cTprg   := alltrim(oo_obj->PRG)
+.M->cTtitle := Trim(oo_obj->ObjDes)
+.oo_trn->(dbSetOrder(1))
+.M->lTtrnRep:= oo_trn->(dbSeek(oo_obj->DBF+"1"))
+.M->lTtrnApp:= oo_trn->(dbSeek(oo_obj->DBF+"2"))
+.*
+.dd_rel->(dbSetOrder(1))
+.dd_rel->(dbSeek(oo_obj->OBJREL))
+.M->nTr11Rec:= 0
+.if !dd_rel->(EOF()) .and. !empty(toRelation("relkey"))
+.M->nTr11Rec:= dd_rel->(recno())
+.endif
+.M->nTbrwNdx:= 0
+.dd_ndx->(dbSetOrder(2))
+.if dd_ndx->(dbSeek(dd_rel->RELNDX)) .and. !empty(dd_ndx->NDXINCN)
+.M->nTbrwNdx:= dd_ndx->NDXINCN
+.endif
+.*
+.M->nTdbfRec:= 0
+.M->cTdbf   := ""
+.dd_dbf->(dbSetOrder(1))
+.IF dd_dbf->(dbSeek(oo_obj->DBF))
+   .M->nTdbfRec:= dd_dbf->(recno())
+   .M->cTdbf   := tDbfAliasName()
+.endif
+.*
+.M->cTnSeek := ""
+.M->nTpkLast:= ""
+.M->cTpSeek := ""
+.M->nTpOrde := 0
+.M->aTukLast:= {}
+.if !Empty( cTdbf )
+   .foreach index dd_ndx->NDX_UNQ=="P"
+     .M->cTnSeek := dd_ndx->NDX
+     .M->nTpkLast:= tItmLastpKey( cTnSeek )
+     .M->cTpSeek := dd_ndx->(FILE+NDX)
+     .M->nTpOrde := dd_ndx->NDXINCN
+   .next
+   .M->aTukLast:= tItmLastUkey(oo_obj->DBF)
+.endif
+.*
+.M->lTLsbMtd := .F.
+.M->lTtxb    := .F.
+.M->lTget    := .F.
+.M->nTget    := 0
+.M->nTpkg    := 0
+.M->nTvar    := 0
+.M->cTLsbDbf := {}
+.M->aTrel11  := {}
+.M->aTcontrol:= {}
+.if nTpOrde > 0
+   .do AddPkey
+.endif
+.foreach control EMPTY(oo_itm->IDGRP).AND.!(oo_itm->TYP$"pag-say-box-fon-ico-but-exp-img")
+  .if toItem( "editcondition" ) == "1"
+     .M->nTget := nTget  +1
+     .M->lTget := .T.
+  .endif
+  .if oo_itm->TYP=="txb"
+     .M->lTtxb := .T.
+  .endif
+  .do case
+     .case oo_itm->TYP=="get" .OR. oo_itm->TYP+oo_itm->WDO=="txbget"
+          .if tItmPrimaryKey( cTnSeek ,dd_sym->sym ) != -1
+             .M->nTpkg := nTpkg +1
+          .endif
+          .do AddGet
+          .do AddN21
+     .case oo_itm->TYP=="var" .OR. oo_itm->TYP+oo_itm->WDO=="txbvar"
+          .M->nTvar := nTvar +1
+          .do AddVar
+          .do AddN21
+     .case oo_itm->TYP=="rel" .OR. oo_itm->TYP+oo_itm->WDO=="txbrel"
+          .if !EMPTY(oo_itm->REL) .AND. dfGetRel( oo_itm->REL, {||dd_rel->RELTYP}) == "3"
+             .if toItem( "editcondition" ) == "1"
+                 .do Add121
+             .endif
+          .endif
+     .case oo_itm->TYP=="lsb"
+          .if toItem("lsbdatatype")=="0"
+             .M->lTLsbMtd:= .T.
+             .aadd( cTLsbDbf ,dfGetDbf(toItem("lsbroworigin") ,{||Lower(tDbfAliasName())}) )
+          .endif
+          .do AddLsb
+     .case oo_itm->TYP $ "cmb-ckb-rdb-spb"
+          .do AddÛoo_itm->TYPÛ
+          .M->lTget := .T.
+  .endcase
+.next
+.if !Empty( cTdbf )
+   .dd_dbf->(dbGoto(nTdbfRec))
+   .foreach field
+     .M->cTPreExp := toSymbol("computedexpr")
+     .if !Empty(M->cTPreExp)
+        .do AddFld
+     .endif
+   .next
+.endif
+.if (!lTget) .AND. tMnuActChk("add",oo_obj->OBJ)
+   .M->lTget := .T.
+.endif
+.if (!lTget) .AND. tMnuActChk("mod",oo_obj->OBJ)
+   .M->lTget := .T.
+.endif
+.*
+.M->aItmDbf := tDbfLoadArray( oo_obj->OBJ )
+.*
+.M->lUdfObj := .F.
+.foreach symudfobj
+    .M->lUdfObj := .T.
+.next
+.*
+.M->cTAccChk := toProject("accesscheckfunc")
+.if "(" $ cTAccChk
+    .m->cTAccChk := left(cTAccChk, at("(", cTAccChk)-1)
+.endif
+.m->cTAccChk := alltrim(cTAccChk)
+.*
+.dd_dbf->(dbGoto( nTdbfRec ))
+.*
+.if TisInitProc()
+   .if (toExeEnv("compiler")=="3")
+.do InitPrg
+   .endif
+.endif
+.*
+.if tGenerationDividedfortype()
+.out ÛtSourcePath()+"\"+ tsourceGenPath()+cTprgÛ.prg
+.do info with trim(cTtitle), tSourcePath()+"\"+tsourceGenPath()+cTprg+".prg" ,tGenTemplate()
+.else
+.out ÛtSourcePath()+"\"+cTprgÛ.prg
+.do info with trim(cTtitle), tSourcePath()+"\"+cTprg+".prg" ,tGenTemplate()
+.endif
+
+                                  ð   // File include del programma
+#INCLUDE "Common.ch"              ð   // Include define comunemente utilizzate
+#INCLUDE "dfCtrl.ch"              ð   //   "       "    per control
+#INCLUDE "dfGenMsg.ch"            ð   //   "       "     "  messaggi
+#INCLUDE "dfIndex.ch"             ð   //   "       "     "  ddIndex()
+#INCLUDE "dfLook.ch"              ð   //   "       "     "  dbLook()
+#INCLUDE "dfMenu.ch"              ð   //   "       "     "  menu di oggetto
+#INCLUDE "dfNet.ch"               ð   //   "       "     "  network
+#INCLUDE "dfSet.ch"               ð   //   "       "     "  settaggi di ambiente
+#INCLUDE "dfWin.ch"               ð   //   "       "     "  oggetti Visual dBsee
+.inj top0 Punto di dichiarazione file INCLUDE *.ch per file sorgente
+
+.if lTtxb
+
+REQUEST dfMemo
+.endif
+
+.do varglo
+
+.do DecCtrl with "STATIC"
+
+STATIC lBreak := .F.              ð,; // Uscita  form
+       oWin   := NIL              ð,; // Oggetto form
+       aInh   := {}               ð,; // Array con campi ereditati da oggetto
+       aInhSon:= NIL              ð,; // Array con campi ereditati da ListBox
+       aFile  := {}               ð,; // Array dei file aperti dall' oggetto
+       nRec   := 0                ð,; // Record corrente
+       cState := DE_STATE_INK     ð,; // Stato della gestione
+       cDmmVar:= ""               ð,; // Variabile di utilit… per Radio/Check
+       nWin   := 0                ð   // Flag per evitare la ricorsione dell'oggetto
+
+.inj top1 Punto di dichiarazione STATICHE a livello di file sorgente
+
+         /* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+            ³           TABELLA METODI DELL'OGGETTO FORM             ³
+            ÃÄÄÄÄÂÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+            ³ nø ³ mtd.³ Descrizione                                 ³
+            ÃÄÄÄÄÅÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+            ³  1 ³ exe ³ Esecutore                                   ³
+            ³  2 ³ dbf ³ Apre la base dati                           ³
+            ³  3 ³ act ³ Attivazione oggetto                         ³
+            ³  4 ³ upw ³ Update window ( aggiornamento oggetto )     ³
+            ³  5 ³ ink ³ Inkey su tasti e pulsanti                   ³
+            ³  6 ³ brk ³ Break  ( forza l'uscita da inkey )          ³
+            ³  7 ³ end ³ Fine operazioni                             ³
+            ÃÄÄÄÄÁÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+            ³          METODI PRESENTI SOLO SE UTILIZZATI            ³
+            ÃÄÄÄÄÂÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+            ³  8 ³ get ³ Immissione dati                             ³
+            ³  9 ³ dcc ³ Validazione generale sui dati immessi       ³
+            ³ 10 ³ del ³ Eliminazione record                         ³
+            ³ 11 ³ ltt ³ Log the transaction  (transazione append)   ³
+            ³ 12 ³ ptt ³ Put the transaction  (transazione replace)  ³
+            ³ 13 ³ rtt ³ Remove the transaction ( eliminazione t.)   ³
+            ÃÄÄÄÄÁÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+            ³           METODI GENERATI SOLO IN CASO DI              ³
+            ³    PRESENZA DI CONTROL LISTBOX  OPERANTI SU FILE       ³
+            ÃÄÄÄÄÂÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+            ³ 14 ³ anr ³ Add New Row        INS   = inserimento riga ³
+            ³ 15 ³ mcr ³ Modify Current Row BARRA = modifica    riga ³
+            ³ 16 ³ ecr ³ Erase Current row  CANC  = elimina     riga ³
+            ÀÄÄÄÄÁÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+
+*******************************************************************************
+FUNCTION ÛcTprgÛExe(              ð ; // [ 01 ]  ESECUTORE OPERAZIONI
+                     cMode        ð,; // Modalita' operativa oggetto
+                     nTbOrd       ð,; // Indice
+                     bTbKey       ð,; // Chiave
+                     bTbFlt       ð,; // Filtro
+                     bTbBrk       ð,; // Break
+                     cClose       ð,; // Modalita' chiusura  oggetto
+                     arrInh       ð,; // Array dei campi ereditati
+                     xParameter   ð)  // Parametro Opzionale passato all'Entit…
+*******************************************************************************
+LOCAL  lRet    := .F.             ð   // Valore ritornato
+
+.block exe0 Esegue le operazioni di base per attivazione oggetto FORM
+
+DEFAULT cMode  TO DE_STATE_INK    ð   // Modalit… operativa completa
+DEFAULT cClose TO W_OC_RESTORE    ð   // Modalit… chiusura  restore
+DEFAULT arrInh TO {}              ð   // Array dei campi ereditati
+
+PRIVATE  EnvId:="ÛcTprgÛ" ,SubId:="" ð   // Identificativi per help
+.if ! empty(cTAccChk)
+
+IF ! ÛcTAccChkÛ(EnvId, cMode)
+   RETURN .F.
+ENDIF
+.endif
+.if TisInitProc()
+.do InitProc
+.endif
+
+nWin++
+IF nWin==1
+
+   aInh   := arrInh                  ð   // Riassegna array campi ereditati
+   cState := cMode                   ð   // Riassegna lo stato sulla modalit… operativa
+
+   .inj exe5 Dopo i settaggi dell'oggetto
+
+
+   IF ÛcTprgÛDbf()                ð   // Apre la base dati
+
+      ÛcTprgÛAct()                ð   // Attivazione oggetto
+
+.if !Empty( cTdbf )
+      IF cMode==DE_STATE_INK
+         tbSetKey(         ;      ð   // Attiva le condizioni di filtro su oggetto ( vedere Norton Guide )
+                   oWin   ,;      ð   // Oggetto
+                   nTbOrd ,;      ð   // Ordine
+                   bTbKey ,;      ð   // Key
+                   bTbFlt ,;      ð   // Filtro
+                   bTbBrk  )      ð   // Break
+      ENDIF
+.endif
+
+      tbConfig( oWin )            ð   // Riconfigura i parametri interni dell'oggetto ( vedere Norton Guide )
+      .inj exe7 Dopo caricamento e setup oggetto, prima del display oggetto
+      ÛcTprg+"Ink() ;"+cTprgÛEnd(cClose) ;lRet := .T.
+
+   END
+
+  .inj exe8  // Prima della dfClose() Tabelle
+.if !empty(aItmDbf)
+   dfClose( aFile, .T., .F. )     ð   // Chiusura base dati ( vedere Norton Guide )
+.endif
+
+.inj exe9 // Dopo della dfClose() Tabelle
+
+.if ! empty( toProject("winnotavailmsg") )
+ELSE
+   dfAlert( ÛtExpCast( toProject("winnotavailmsg") )Û )
+   ACT := "esc"
+.endif
+ENDIF
+nWin--
+
+.endblock
+
+RETURN lRet
+
+*******************************************************************************
+FUNCTION ÛcTprgÛDbf()             ð   // [ 02 ] APERTURA DATABASE
+*******************************************************************************
+.block dbf0 Apertura della base dati
+
+.if !empty(aItmDbf)
+.do dbfuse
+.endif
+
+.endblock
+
+RETURN .T.
+
+*******************************************************************************
+FUNCTION ÛcTprgÛAct()             ð   // [ 03 ] INIZIALIZZA OGGETTO
+*******************************************************************************
+LOCAL aPfkItm
+LOCAL nHigh  := Ûstr(val(tObjBottom()),4)  Û ð // Ultima Riga
+LOCAL nLen   := Ûstr(val(tObjRightCol()),4)Û ð // Ultima Colonna
+
+.block act0 Inizializzazione oggetto oWin
+
+/////////////////////////////////////////////////////////////////////////////
+// Per compensare bordo finestre in windows Vista o 7 rispetto a layout designer
+IF dfisWindowsVistaOrAfter()
+   nHigh  += 10 //pixel
+   nLen   += 10 //pixel
+ENDIF
+/////////////////////////////////////////////////////////////////////////////
+
+
+lBreak := .F.                     ð   // Condizione di break su oggetto posta a FALSE
+
+IF oWin!=NIL ;RETURN oWin ;END    ð   // Si ritorna l'oggetto se gi… inizializzato
+
+M_Cless()                         ð   // Stato di attesa con mouse a clessidra
+
+.do ActFrm
+.if TisInitProc()
+   .if toExeEnv("xbmainmenumdi")=="1"
+
+dfSetMainWinMDI(oWin, .F., .F.)   ð   // Activate main menu MDI
+   .endif
+   .if toExeEnv("xbmainmenumdi")=="3"
+
+dfSetMainWinMDI(oWin, .T., .F.)   ð   // Activate main menu MDI
+   .endif
+   .if toExeEnv("xbmainmenumdi")=="5"
+
+dfSetMainWinMDI(oWin, .F., .T.)   ð   // Activate main menu MDI
+   .endif
+   .if toExeEnv("xbmainmenumdi")=="7"
+
+dfSetMainWinMDI(oWin, .T., .T.)   ð   // Activate main menu MDI
+   .endif
+   .M->tMainSt := toExeEnv("xbmainmenustyle")
+   .M->tSubSt  := toExeEnv("xbsubmenustyle")
+   .do case
+       .case tMainSt=="0" .AND. tSubSt != "0"
+oWin:MenuStyle := W_MENU_STYLE_ONLYSUBTOOLBAR   ð   // Activate main menu style
+       .case tMainSt=="1"
+oWin:MenuStyle := W_MENU_STYLE_ONLYTOOLBAR      ð   // Activate main menu style
+   .endcase
+   .if ! empty(toExeEnv("xbsubmenuwidth"))
+oWin:SubMenuWidth := ÛtoExeEnv("xbsubmenuwidth")Û
+   .endif
+.endif
+.do icons
+.inj act1 Dopo inizializzazioni oggetto oWin Browse
+
+/*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³ Inizializza menu e azioni   ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+.do ActMnu
+ATTACH "Z1" TO MENU oWin:W_MENUARRAY AS MN_LABEL  ð ; //
+        BLOCK    {||if((cState$"iam"),MN_SECRET,MN_OFF)} ð ; // Condizione di stato di attivazione
+        PROMPT   dfStdMsg( MSG_FORMESC ) ð ; // Label
+        SHORTCUT "esc"           ð ; // Azione (shortcut)
+        EXECUTE  {||lBreak:=.T.} ð ; // Funzione
+        MESSAGE  dfStdMsg( MSG_FORMESC ) ð   // Message
+ATTACH "Z2" TO MENU oWin:W_MENUARRAY AS MN_LABEL  ð ; //
+        BLOCK    {||if((cState$"am"),MN_SECRET,MN_OFF)} ð ; // Condizione di stato di attivazione
+        PROMPT   dfStdMsg( MSG_FORMWRI ) ð ; // Label
+        SHORTCUT "wri"           ð ; // Azione (shortcut)
+        EXECUTE  {||Act:="wri"}  ð ; // Funzione
+        MESSAGE  dfStdMsg( MSG_FORMWRI ) ð   // Message
+.if TisInitProc()
+   .if toExeEnv("menuopened")=="1"
+oWin:W_MENUPOS := "1"
+   .endif
+.endif
+.do ActTbr
+.inj act2 Dopo dichiarazione ATTACH del menu per oggetto oWin
+
+.if nTpOrde > 0
+/*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³INIZIALIZZA ARRAY CON STRUTTURA CAMPI CHIAVE PRIMARIA³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+.do attpks with cTnSeek
+.endif
+.inj act3 Dopo inizializzazione array  con campi chiave primaria
+
+.do control
+.m->cTFunc := toProject("titlesetupfunc")
+.if ! empty(cTFunc)
+   .if "(" $ cTFunc
+       .m->cTFunc := left(cTFunc, at("(", cTFunc)-1)
+   .endif
+   .m->cTFunc := alltrim(cTFunc)
+
+oWin:W_TITLE := ÛcTFunc+"("+tExpCast(trim(oo_obj->OBJDES))+", oWin, EnvID)"Û
+.endif
+
+M_Normal()                        ð   // Stato mouse normale
+
+.endblock
+
+RETURN oWin
+
+*******************************************************************************
+FUNCTION ÛcTprgÛUpw(        ;     ð   // [ 04 ]  UPDATE WINDOW  Aggiornamento oggetto
+                    cDisGrp )     ð   //  Id. gruppo di visualizzazione
+                                  ð   //  "#" = aggiorna tutti i control
+*******************************************************************************
+.block upw0 Update window oggetto oWin
+
+tbDisItm( oWin ,cDisGrp )         ð   //  funzione di aggiornamento control (vedere Norton Guide)
+
+.endblock
+
+RETURN NIL
+
+*******************************************************************************
+FUNCTION ÛcTprgÛInk()             ð   // [ 05 ] INTERAZIONE CON L'UTENTE
+*******************************************************************************
+LOCAL cCho
+.if TisInitProc() .AND. lTget
+LOCAL cOldState := cState
+.endif
+
+.block ink0 Interazione con l'utente o inkey di tastiera
+.if ! empty(cTAccChk)
+
+IF ! ÛcTAccChkÛ(EnvId, cState, oWin)
+   cState := DE_STATE_INK
+ENDIF
+.endif
+
+.if lTget
+IF cState!=DE_STATE_INK
+   .if TisInitProc()
+   IF dfSetMain() == "ÛcTprgÛ"
+      WHILE .T.
+         ÛcTprgÛGet(cOldState)
+         .if !Empty(TEndProc())
+         ÛTEndProc()ÛExe()
+         .else
+         df2Quit()
+         .endif
+      ENDDO
+   ELSE
+      RETURN ÛcTprgÛGet(cState)
+   ENDIF
+   .else
+   RETURN ÛcTprgÛGet(cState)
+   .endif
+ENDIF
+.endif
+
+WHILE( !lBreak )
+
+.if lTget
+   ÛcTprgÛGet(cState)             ð   //  Visualizza i dati
+.else
+   ÛcTprgÛUpw()                   ð   //  Visualizza i dati
+.endif
+
+   cCho := tbink( oWin )          ð   //  Inkey di tastiera ( vedere Norton Guide )
+   .inj ink1 Dopo inkey di tastiera " cCho:=tbInk( oWin ) "
+
+.if TisInitProc()
+   IF dfSetMain() == "ÛcTprgÛ"
+      .if !Empty(TEndProc())
+      IF M->Act=="esc" ;ÛTEndProc()ÛExe() ;LOOP ;END  ð   //  Form chiusura programma
+      .else
+      IF M->Act=="esc" ;df2Quit() ;LOOP ;END  ð   //  Form chiusura programma
+      .endif
+   ENDIF
+.endif
+
+   IF !Empty(cCho)                ð   //  Esegue azione sul menu
+      EVAL( dfMenuBlock(oWin:W_MENUARRAY,cCho) )  ð   //  dfMenuBlock() ritorna il code block associato
+   END                                            ð   //  alla voce di menu (vedere Norton Guide )
+   .inj ink2 Dopo esecuzione scelta di menu
+
+ENDDO
+
+.endblock
+
+RETURN NIL
+
+*******************************************************************************
+FUNCTION ÛcTprgÛBrk()             ð   // [ 06 ] COMANDA UN BREAK SULL'OGGETTO
+*******************************************************************************
+.block brk0 Comanda un break sull'oggetto
+lBreak := .T.
+.endblock
+RETURN NIL
+
+*******************************************************************************
+FUNCTION ÛcTprgÛEnd(         ;    ð   // [ 07 ] OPERAZIONI DI CHIUSURA
+                     cClose  ;    ð   // Modalita' chiusura oggetto:
+                             ;    ð   // W_OC_RESTORE =  Restore dello screen
+                             )    ð   // W_OC_DESTROY =  Rilascio dell'oggetto
+*******************************************************************************
+.block end0 Chiusura e rilascio oggetto oWin
+
+oWin:=tbEnd( oWin , cClose )  ð   // ( vedere Norton Guide )
+
+.endblock
+
+RETURN NIL
+
+.if lTget
+*******************************************************************************
+FUNCTION ÛcTprgÛGet(           ;  ð   // [ 08 ]  METODO PER L'INPUT DEI DATI
+                    nGetState  ;  ð   //  Operazione richiesta:
+                               ;  ð   //  DE_STATE_INK =  Consultazione
+                               ;  ð   //  DE_STATE_ADD =  Inserimento
+                               )  ð   //  DE_STATE_MOD =  Modifica
+*******************************************************************************
+LOCAL  lRet    := .F.             ð   //  Flag di registrazione dati se .T.
+LOCAL  a121Fld := {}              ð   //  Array per controllo somma contenuto campi 1:1
+
+.block get0 Data-entry o ciclo di get
+.if ! empty(cTAccChk)
+
+IF ! ÛcTAccChkÛ(EnvId, nGetState, oWin)
+   nGetState := DE_STATE_INK
+ENDIF
+.endif
+
+.do GetFrm
+
+.endblock
+
+RETURN lRet
+
+*******************************************************************************
+FUNCTION ÛcTprgÛDcc()             ð   // [ 09 ]  CONTROLLI CONGRUENZA DATI
+*******************************************************************************
+LOCAL  lRet := .T.
+
+.block dcc0 Controlli di congruenza dati
+
+.endblock
+
+RETURN lRet
+.endif
+
+.if !empty(M->cTdbf)
+*******************************************************************************
+FUNCTION ÛcTprgÛDel(       ;      ð   // [ 10 ] CANCELLAZIONE RECORD
+                    lAsk   )      ð   //  .T. chiede conferma prima della cancellazione
+*******************************************************************************
+.block del0 Cancellazione record corrente
+
+DEFAULT lAsk    TO .F.
+.if cTobjTyp == "frm"
+DEFAULT oWin    TO ÛcTprgÛAct()
+.endif
+.if ! empty(cTAccChk)
+
+IF ! ÛcTAccChkÛ(EnvId, DE_STATE_DEL, oWin)
+   RETURN .F.
+ENDIF
+.endif
+
+IF lAsk
+   IF !dfYesNo( dfStdMsg(MSG_DE_DEL) ,.F.) ;RETURN .F. ;END
+ENDIF
+
+.inj del1 Prima della cancellazione record corrente
+
+IF ÛcTdbfÛDid()                   ð   // Delete integrity Data (dbRid.prg)
+                                  ð   // Funzione di cancellazione su file
+.if cTobjTyp == "frm"
+   TbEtr( oWin )                  ð   // Stabilizza la TBrowse corrente
+.endif
+ENDIF
+
+.endblock
+RETURN .T.
+
+.endif
+.if lTtrnApp .and. !empty(M->cTdbf)
+*******************************************************************************
+FUNCTION ÛcTprgÛLtt()             ð   // [ 11 ] LOG TRANSAZIONE
+*******************************************************************************
+.block ltt0 Log transazione
+
+ÛcTdbfÛTrn( "ltt" ,cState )
+
+.endblock
+
+RETURN .T.
+
+.endif
+.if lTtrnRep .and. !empty(M->cTdbf)
+*******************************************************************************
+FUNCTION ÛcTprgÛPtt()             ð   // [ 12 ] METTE LA TRANSAZIONE
+*******************************************************************************
+.block ptt0 Mette la transazione
+
+ÛcTdbfÛTrn( "ptt" )
+
+.endblock
+
+RETURN .T.
+
+.endif
+.if lTtrnRep .and. !empty(M->cTdbf)
+*******************************************************************************
+FUNCTION ÛcTprgÛRtt()             ð   // [ 13 ] RIMUOVE LA TRANSAZIONE
+*******************************************************************************
+.block rtt0 Rimuove la transazione
+
+ÛcTdbfÛTrn( "rtt" )
+
+.endblock
+
+RETURN .T.
+
+.endif
+.if lTLsbMtd
+*******************************************************************************
+FUNCTION ÛcTprgÛAnr( oLsb ,bBlk ) ð   // [ 14 ] INSERIMENTO RIGA LIST BOX
+*******************************************************************************
+LOCAL lRet:=.F.                   ð   // Flag avvenuto inserimento
+.if tNetWork()
+LOCAL lIs2Lock
+.endif
+
+.block anr0 Chiamata ad oggetto edit riga per inserimento riga List Box
+DEFAULT bBlk TO {||.F.}
+
+IF !EMPTY(oWin:W_ALIAS) .AND. SELECT(oWin:W_ALIAS) > 0 .AND.;
+   (! oWin:W_ALIAS == oLsb:W_ALIAS)                    .AND.;
+   (( oWin:W_ALIAS)->(BOF())  .OR.   (oWin:W_ALIAS)->(EOF()))
+   dbMsgErr( dfStdMsg(MSG_DE_NOTADD) + oWin:W_ALIAS )
+   RETURN lRet
+ENDIF
+
+.if tNetWork()
+lIs2Lock := !tbIsLock( oWin )
+IF IF( lIs2Lock, (oWin:W_ALIAS)->(dfNet(NET_RECORDLOCK)), .T. )
+.endif
+
+   aInhSon := oLsb:W_INHARRAY        ð   // Referenzia array campi ereditati
+                                     ð   // della List box in edit
+   EVAL( bBlk )                      ð   // Valuta code block inserimento riga
+   IF M->Act $ "wri-new"             ð   // Se il record e' stato aggiunto
+      TbAtr( oLsb )                  ð   // Aggiunge la riga nella browse
+      tbIcv( oLsb )                  ð   // Incrementa e visualizza totali
+      IF M->Act == "new"             ð   // Se la riga e' stata registrata
+         dbact2kbd("anr")            ð   // F9 comanda un nuovo inserimento
+      ENDIF
+      lRet := .T.
+   ELSE
+      TbRtr( oLsb, oWin )
+   ENDIF
+   M->Act := "rep"
+   aInhSon:= NIL
+
+.if tNetWork()
+   IF lIs2Lock
+      (oWin:W_ALIAS)->(dfNet(NET_RECORDUNLOCK))
+   ENDIF
+ENDIF
+.endif
+
+.endblock
+
+RETURN lRet
+.endif
+.if lTLsbMtd
+*******************************************************************************
+FUNCTION ÛcTprgÛMcr( oLsb ,bBlk ) ð   // [ 15 ] MODIFICA    RIGA LIST BOX
+*******************************************************************************
+LOCAL lRet := .F.
+.if tNetWork()
+LOCAL lIs2Lock
+.endif
+
+.block mcr0 Chiamata ad oggetto edit riga per modifica riga List box
+DEFAULT bBlk TO {||.F.}
+
+.if tNetWork()
+lIs2Lock := !tbIsLock( oWin )
+IF IF( lIs2Lock, (oWin:W_ALIAS)->(dfNet(NET_RECORDLOCK)), .T. )
+.endif
+
+   IF (oLsb:W_ALIAS)->(BOF()) .OR. (oLsb:W_ALIAS)->(EOF())
+      dbMsgErr( dfStdMsg(MSG_DE_NOTMOD) )
+   ELSE
+      tbDcv( oLsb )                  ð   // Decrementa totali di riga
+      EVAL( bBlk )                   ð   // Valuta code block per modifica riga
+      tbIcv( oLsb )                  ð   // Incrementa e visualizza totali di colonna
+      TbRtr( oLsb, oWin )            ð   // Aggiorna la riga a video
+      IF M->Act $ "wri-new"          ð   // Se il record e' stato aggiunto
+         lRet:=.T.
+      ENDIF
+      M->Act := "rep"
+   ENDIF
+.if tNetWork()
+   IF lIs2Lock
+      (oWin:W_ALIAS)->(dfNet(NET_RECORDUNLOCK))
+   ENDIF
+ENDIF
+.endif
+
+.endblock
+
+RETURN lRet
+.endif
+.if lTLsbMtd
+*******************************************************************************
+FUNCTION ÛcTprgÛEcr( oLsb ,bBlk ) ð   // [ 16 ] ELIMINA LA RIGA LIST BOX
+*******************************************************************************
+LOCAL lRet:=.F., nPos             ð   // Flag avvenuta modifica
+.if tNetWork()
+LOCAL lIs2Lock
+.endif
+
+.block ecr0 Domanda di conferma per la cancellazione riga List box
+DEFAULT bBlk TO {||.F.}
+
+.if tNetWork()
+lIs2Lock := !tbIsLock( oWin )
+IF IF( lIs2Lock, (oWin:W_ALIAS)->(dfNet(NET_RECORDLOCK)), .T. )
+.endif
+
+   IF (oLsb:W_ALIAS)->(BOF()) .OR. (oLsb:W_ALIAS)->(EOF())
+      dbMsgErr( dfStdMsg(MSG_DE_NOTDEL) )
+   ELSE
+      IF dfYesNo( dfStdMsg(MSG_DE_DEL) ,.F.)
+         tbDcv( oLsb )               ð   // Decrementa totali di colonna
+         nPos := (oLsb:W_ALIAS)->(RECNO())
+         EVAL( bBlk )                ð   // Valuta code block di cancellazione riga
+         (oLsb:W_ALIAS)->(DBGOTO(nPos))
+         TbEtr( oLsb )               ð   // Stabilizza la TBrowse corrente
+         lRet   := .T.
+      ELSE
+         TbRtr( oLsb, oWin )
+      ENDIF
+   ENDIF
+
+.if tNetWork()
+   IF lIs2Lock
+      (oWin:W_ALIAS)->(dfNet(NET_RECORDUNLOCK))
+   ENDIF
+ENDIF
+.endif
+
+.endblock
+
+RETURN lRet
+.endif
+.if nTget > 0
+   .M->aTUniQF := {}
+   .M->aTUniQS := {}
+   .foreach get EMPTY(oo_itm->IDGRP)
+     .if tUdfGet( cTnSeek ,aTukLast )
+        .if Ascan( aTUniQF ,oo_itm->ITM+oo_itm->IGC ) == 0
+           .aadd(  aTUniQF ,oo_itm->ITM+oo_itm->IGC )
+           .if Ascan( aTUniQS ,oo_itm->ITMGET ) == 0
+              .aadd(  aTUniQS ,oo_itm->ITMGET )
+.do UdfGet
+           .endif
+        .endif
+     .endif
+   .next
+.endif
+
+.if lUdfObj
+.do udfobj
+
+.endif
+.if TisInitProc()
+   .if toExeEnv("dfuseini") == "0"
+   .endif
+.endif
+
+.inj bot1 Fine file sorgente per oggetto form
+
+.close
+.dbUsrOld()

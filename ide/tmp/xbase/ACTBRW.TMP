@@ -1,0 +1,121 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ACTBRW
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Metodo per inizializzare oggetto browse
+.* ----------------------------------------------------------------------------
+.M->cTkey := ""
+.M->cTset := ".T."
+.M->cTbrk := ".F."
+.M->cTKey := TRIM(tRelKey( oo_obj->OBJREL))
+.M->cTset := TRIM(tRelFilter( oo_obj->OBJREL))
+.M->cTbrk := TRIM(tRelBreak( oo_obj->OBJREL))
+.M->cTord := TRIM(tRelOrder( oo_obj->OBJREL))
+/* ⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+   ≥ DEFINIZIONE OGGETTO BROWSE ≥
+   ¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒŸ */
+.if type("OS()")=="C"
+  .* Visual dBsee
+oWin := €cTdbf+[->(TbBrwNew(]+str(val(tObjTopRow()),4)€ ,; // Prima  Riga
+                           €str(val(tObjLeftCol()),4)€  ,; // Prima  Colonna
+                           €str(val(tObjBottom()),4)€   ,; // Ultima Riga
+                           €str(val(tObjRightCol()),4)€ ,; // Ultima Colonna
+                           W_OBJ_BRW                        ,; // Tipologia dell'oggetto
+                           NIL                          ,; // Label
+                           W_COORDINATE_PIXEL               )) // Gestione in Pixel 
+.else
+
+oWin := €cTdbf+[->(TbBrwNew(]+str(val(tObjTopRow()),4)€ ,; // Prima  Riga
+                           €str(val(tObjLeftCol()),4)€  ,; // Prima  Colonna
+                           €str(val(tObjBottom()),4)€   ,; // Ultima Riga
+                           €str(val(tObjRightCol()),4)€ ,; // Ultima Colonna
+                           W_OBJ_BRW                     )) // Tipologia dell'oggetto
+.endif
+
+.if toObject("titlebar") == "0"
+oWin:titlebar    := .F.              // Senza barra del titolo
+.else
+oWin:W_TITLE     := €tExpCast(trim(oo_obj->OBJDES))€    // Titolo oggetto
+.endif
+.if cTord != "0"
+oWin:W_ORDER     := €cTord€
+.endif
+.if empty(cTkey)
+oWin:W_KEY       := NIL              // Non esegue la seek
+.else
+oWin:W_KEY       := {||€cTkey€}      // CodeBlock per la seek
+.endif
+oWin:W_FILTER    := {||€cTset€}      // CodeBlock per il filtro
+.if LEN(M->cTbrk) >= 132
+   .M->cTexp1 := Token(cTbrk ,"!" ,1)
+   .M->cTexp2 := Token(cTbrk ,"=" ,2)
+oWin:W_BREAK     := {||€cTexp1€ != ;    // Espressione
+                       €cTexp2€}        // di break
+.else
+oWin:W_BREAK     := {||€cTbrk€}         // CodeBlock per il break
+.endif
+oWin:W_MENUHIDDEN:= €if(toObject("actionbar")=="0",.T.,.F.)€    // Stato attivazione barra azioni
+
+oWin:W_COLORARRAY[AC_FRM_BACK  ] := "€toObject("xbclientareacol")€"    // Colore di FONDO
+oWin:W_COLORARRAY[AC_FRM_BOX   ] := "€tObjCol("bordercolor")€"        // Colore di BOX
+oWin:W_COLORARRAY[AC_FRM_HEADER] := "€tObjCol("titlebaroncolor")€"    // Colore di HEADER ON
+oWin:W_COLORARRAY[AC_FRM_OPTION] := "€tObjCol("iconscolor")€"         // Colore di ICONE
+oWin:COLORSPEC   := "€tObjCol("clientareacolor")€"
+.if lTcolTag
+oWin:W_TAGARRAY  := {}                       // Array dei tag
+   .if !Empty(cTagFun)
+oWin:W_TAGFUNCTION:= {|lTag|€cTagFun€}       // Funzione sul tag
+   .endif
+.endif
+.if toObject("shadow") != "1"
+oWin:W_SHADOW    := .F.                      // Ombra
+.endif
+.if toObject("linecursor") == "1"
+oWin:W_LINECURSOR    := .T.
+.endif
+.if toObject("linerow") == "1"
+oWin:W_ROWLINESEPARATOR := .T.
+.endif
+.if toObject("actionbar") == "1"
+
+oWin:W_BG_TOP ++
+oWin:W_RP_TOP ++ ;oWin:nTop++
+.endif
+
+.if toObject("resizable") == "0"
+  .if toObject("windowborder") == "0"
+oWin:border      := XBPDLG_NO_BORDER        // Tipo bordo invisibile
+  .else
+oWin:border      := XBPDLG_DLGBORDER
+  .endif
+.else
+oWin:border      := XBPDLG_RAISEDBORDERTHICK 
+.endif
+.if toObject("maximized") == "1"
+oWin:lFullScreen := .T.
+.else
+  .if toObject("maximized") == "2"
+oWin:lCenter := .T.
+  .endif
+.endif
+.if toObject("mdi") == "1"
+oWin:mdi := .T.
+.endif
+.if toObject("msgarea") == "0"
+oWin:ShowMessageArea := .F.
+.endif
+.if toObject("toolbar") == "0"
+oWin:ShowToolBar := .F.
+.endif
+oWin:icon := APPLICATION_ICON
+.M->cFont := toObject("fontname")
+.if !Empty(cFont)
+   .if at("(", cFont) == 0
+       .M->cFont := ["]+cFont+["]
+   .endif
+oWin:setFontCompoundName(€cFont€)
+.endif
+oWin:W_HEADERROWS := €VAL(toObject("rowsinheader"))€
+
+
+

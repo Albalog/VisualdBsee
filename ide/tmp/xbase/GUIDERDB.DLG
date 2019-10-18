@@ -1,0 +1,124 @@
+.oDlg :=DlgNew( 05 ,10 ,"Guida Radio Bottom" ,.T. ,"@" )
+.DlgRow( oDlg ,"ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿")
+.DlgRow( oDlg ,"³ Il Radio Buttom e' stato inserito !            ³")
+.DlgRow( oDlg ,"³ Ora dovete definirne le caratteristiche per un ³")
+.DlgRow( oDlg ,"³ corretto funzionamento.                        ³")
+.DlgRow( oDlg ,"³ Se preferite usufruire di una sequenza guidata ³")
+.DlgRow( oDlg ,"³ dal sistema premete il tasto GUIDA.            ³")
+.DlgRow( oDlg ,"ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ")
+.DlgRow( oDlg ,"                                                  ")
+.DlgRow( oDlg ,"  @01          @02                                ")
+.DlgRow( oDlg ,"                                                  ")
+.DlgBut( oDlg ,"B1"  ,"@01" ,{||.T.} ,{||DlgEsc(oDlg)} ,"^Abbandona")
+.DlgBut( oDlg ,"B2"  ,"@02" ,{||.F.} ,{||DlgWri(oDlg)} ,"^Guida")
+.DlgShow(oDlg)
+.IF ! DlgInkey(oDlg)
+   .return
+.endif
+.M->nRecObj := oo_obj->(Recno())
+.M->nRecItm := oo_itm->(Recno())
+.M->lNotDbf := empty(oo_obj->DBF)
+.*
+.M->cOpe    := "1"
+.M->cOtyp   := "0"
+.if lNotDbf
+   .M->cOpe := "2"
+   .M->cOtyp:= "1"
+.endif
+.M->cOnam   := SPACE(10)
+.M->cOval   := SPACE(20)
+.*
+.M->oDlg1   := NIL
+.M->oDlg2f  := NIL
+.if !lNotDbf
+   .oDlg1 :=DlgNew( 05 ,10 ,"Definire TIPO ORIGINE Radio buttom" ,.T. ,"@" )
+   .DlgRow( oDlg1 ,"                                                  ")
+   .DlgRow( oDlg1 ,"  @01                                             ")
+   .DlgRow( oDlg1 ,"  @02                                             ")
+   .DlgRow( oDlg1 ,"                                                  ")
+   .DlgRow( oDlg1 ,"  @10          @15                   @20          ")
+   .DlgRow( oDlg1 ,"                                                  ")
+   .DlgRdb( oDlg1 ,"cOtyp" ,"@01" ,{||M->cOtyp:="0"} ,.T. ,"Campo del file associato ad oggetto" )
+   .DlgRdb( oDlg1 ,"cOtyp" ,"@02" ,{||M->cOtyp:="1"} ,.F. ,"Variabile presente nei simboli" )
+   .DlgBut( oDlg1 ,"B3"  ,"@10" ,{||M->cOtyp$"01"} ,{||DlgEsc(oDlg1),M->cOpe:="2"} ,"^Successivo")
+   .DlgBut( oDlg1 ,"B4"  ,"@15" ,{||.F.} ,{||DlgEsc(oDlg1),M->cOpe:="0"} ,"^Abbandona")
+   .DlgBut( oDlg1 ,"B5"  ,"@20" ,{||.F.} ,{||dfOptHlp("origintype")} ,"^Help")
+   .*
+   .oDlg2f:=DlgNew( 05 ,10 ,"Definire NOME CAMPO per ORIGINE DATI" ,.T. ,"@" )
+   .DlgRow( oDlg2f,"                                                               ")
+   .DlgRow( oDlg2f," @01                                                           ")
+   .DlgRow( oDlg2f,"                                                               ")
+   .DlgRow( oDlg2f,"                                              @02              ")
+   .DlgRow( oDlg2f,"                                                               ")
+   .DlgRow( oDlg2f,"                                                               ")
+   .DlgRow( oDlg2f,"                                                               ")
+   .DlgRow( oDlg2f,"                                                               ")
+   .DlgRow( oDlg2f,"                                                               ")
+   .DlgRow( oDlg2f,"                                                               ")
+   .DlgRow( oDlg2f,"  @10          @15          @20         @25                    ")
+   .DlgRow( oDlg2f,"                                                               ")
+   .DlgCmf( oDlg2f,"cOnam","@01" ,{||cOnam} ,"smoptfie" ,"XXXXXXXXXX" ,{||M->cOnam:=dd_sym->SYM_NAM,CmfDis(oDlg2f)} ,43 ,7 )
+   .DlgBut( oDlg2f,"BA"  ,"@02" ,{||.T.} ,{||SmFieAdd()} ,"^Inserimento")
+   .DlgBut( oDlg2f,"B6"  ,"@10" ,{||.T.} ,{||DlgEsc(oDlg2f),M->cOpe:="1"} ,"^Precedente")
+   .DlgBut( oDlg2f,"B7"  ,"@15" ,{||.F.} ,{||DlgEsc(oDlg2f),M->cOpe:="3"} ,"^Successivo")
+   .DlgBut( oDlg2f,"B8"  ,"@20" ,{||.F.} ,{||DlgEsc(oDlg2f),M->cOpe:="0"} ,"^Abbandona")
+   .DlgBut( oDlg2f,"B9"  ,"@25" ,{||.F.} ,{||dfOptHlp("rdbdataorigin")} ,"^Help")
+.endif
+.*
+.oDlg2v :=DlgNew( 05 ,10 ,"Definire NOME VARIABILE per ORIGINE DATI" ,.T. ,"@" )
+.DlgRow( oDlg2v ,"                                                           ")
+.DlgRow( oDlg2v ," @01                                                       ")
+.DlgRow( oDlg2v ,"                                                           ")
+.DlgRow( oDlg2v ,"                                              @02          ")
+.DlgRow( oDlg2v ,"                                                           ")
+.DlgRow( oDlg2v ,"                                                           ")
+.DlgRow( oDlg2v ,"                                                           ")
+.DlgRow( oDlg2v ,"                                                           ")
+.DlgRow( oDlg2v ,"                                                           ")
+.DlgRow( oDlg2v ,"                                                           ")
+.DlgRow( oDlg2v ,"  @10          @15          @20         @25                ")
+.DlgRow( oDlg2v ,"                                                           ")
+.DlgCmf( oDlg2v ,"cOnam","@01" ,{||cOnam} ,"smoptvar" ,"XXXXXXXXXX" ,{||M->cOnam:=dd_sym->SYM_NAM,CmfDis(oDlg2v)} ,43 ,7 )
+.DlgBut( oDlg2v ,"BA"  ,"@02" ,{||.T.} ,{||SmVarAdd()} ,"^Inserimento")
+.if !lNotDbf
+.DlgBut( oDlg2v ,"B6"  ,"@10" ,{||.T.} ,{||DlgEsc(oDlg2v),M->cOpe:="1"} ,"^Precedente")
+.endif
+.DlgBut( oDlg2v ,"B7"  ,"@15" ,{||.F.} ,{||DlgEsc(oDlg2v),M->cOpe:="3"} ,"^Successivo")
+.DlgBut( oDlg2v ,"B8"  ,"@20" ,{||.F.} ,{||DlgEsc(oDlg2v),M->cOpe:="0"} ,"^Abbandona")
+.DlgBut( oDlg2v ,"B9"  ,"@25" ,{||.F.} ,{||dfOptHlp("rdbdataorigin")} ,"^Help")
+.*
+.oDlg3 :=DlgNew( 05 ,10 ,"Definire valore Radio Buttom" ,.T. ,"@" )
+.DlgRow( oDlg3 ,"                                                  ")
+.DlgRow( oDlg3 ,"  Valore del radio : @01                          ")
+.DlgRow( oDlg3 ,"                                                  ")
+.DlgRow( oDlg3 ,"  @10          @15          @20         @25       ")
+.DlgRow( oDlg3 ,"                                                  ")
+.DlgGet( oDlg3 ,"cOval","@01" ,{||cOval} ,{||.T.} ,"XXXXXXXXXXXXXXXXXXXX" )
+.DlgBut( oDlg3 ,"B10"  ,"@10" ,{||.T.} ,{||DlgEsc(oDlg3),M->cOpe:="2"} ,"^Precedente")
+.DlgBut( oDlg3 ,"B11"  ,"@15" ,{||.F.} ,{||DlgEsc(oDlg3),M->cOpe:="4"} ,"^Successivo")
+.DlgBut( oDlg3 ,"B12"  ,"@20" ,{||.F.} ,{||DlgEsc(oDlg3),M->cOpe:="0"} ,"^Abbandona")
+.DlgBut( oDlg3 ,"B13"  ,"@25" ,{||.F.} ,{||dfOptHlp("rdbdatavalue")} ,"^Help")
+.*
+.do while ! (M->cOpe $ "0-4")
+   .do case
+      .case M->cOpe=="1" .AND. ! lNotDbf
+           .DlgShow(oDlg1)
+           .DlgInkey(oDlg1)
+      .case M->cOpe=="2"
+           .if M->cOtyp=="0"
+              .DlgShow(oDlg2f)
+              .DlgInkey(oDlg2f)
+           .else
+              .dd_sym->(dbSetOrder(3))
+              .DlgShow(oDlg2v)
+              .DlgInkey(oDlg2v)
+              .dd_sym->(dbSetOrder(1))
+           .endif
+      .case M->cOpe=="3"
+           .DlgShow(oDlg3)
+           .DlgInkey(oDlg3)
+   .endcase
+.enddo
+.if cOpe=="4"
+   .dbmsgerr("REGISTRAZIONE!")
+.endif

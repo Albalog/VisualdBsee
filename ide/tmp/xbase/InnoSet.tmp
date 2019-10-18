@@ -1,0 +1,440 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : InnoSet.tmp
+.* RELEASE      : 5.0
+.* VERSION      :
+.* DESCRIZIONE  : Innosetup installer
+.* ----------------------------------------------------------------------------
+.M->cTprg   := alltrim(oo_obj->PRG)+"."+alltrim(oo_obj->EXT)
+.M->cTtitle := Trim(oo_obj->ObjDes)
+.out ÛtSourcePath()+"\"+cTprgÛ
+#ifdef _NO_
+.do info with trim(cTtitle), tSourcePath()+"\"+cTprg ,tGenTemplate()
+#endif
+.cADSlib                    := tIss_ADSLib()
+.cIcon_Desktop              := tIss_Icon_Desktop()
+.cIcon_quick                := tIss_Icon_quick()
+.cIcon_uninstal             := tIss_icon_uninstal()
+.cIcon_web                  := tIss_icon_web()
+.cProgram                   := tIss_Program()
+.cVersion                   := tIss_Version()
+.cCompany                   := tIss_Company()
+.cWeb                       := tIss_Web()
+.cDirectory                 := tIss_Directory()
+.cLicenseFile               := tIss_LicenseFile()
+.cDocInfoBefore             := tIss_DocInfoBefore()
+.cDocInfoAfter              := tIss_DocInfoAfter()
+.cOutputdir                 := tIss_Outputdir()
+.cSourcedir                 := tIss_Sourcedir()
+.cApplication_setupfilename := cProgram+"_Setup"                 
+.cPassword                  := tIss_Password()
+.cCopyright                 := tIss_Copyright()
+.cExeName                   := tIss_ExeName()
+.cVisualdBseelib            := tIss_VisualdBseelib()
+.cXbaseLib                  := tIss_XbaseLib()
+.cCrystalReportver          := tIss_CrystalReportVer()      
+.cCrystalLib                := tIss_CrystalLib()      
+.cCrystal_crviewer          := tIss_GetPath("crviewer.dll")
+.cCrystalU2f                := tIss_GetPath("u2ftext.dll")
+.cLanguage                  := tIss_DefaultLanguage() 
+.aExtDll                    := tIss_GetExternal_Array()
+.cDestDirCrystal            := ""
+.cCRWSETUP                  := tIss_GetCrwSetupFilePath()
+
+#DEFINE CRWLIB       "ÛcCrystalLibÛ"
+#DEFINE CRWLIBU2f    "ÛcCrystalU2fÛ"
+#DEFINE CRWLIBViewer "ÛcCrystal_crviewerÛ"
+#DEFINE XBASELIB     "ÛcXbaselibÛ"
+#DEFINE ADSLIB       "ÛcADSlibÛ"
+.if (cCrystalReportver == "4")
+#DEFINE CRWSETUP     "ÛcCRWSETUPÛ"
+.endif                    
+
+.INJ iss0                   
+
+.if File(cSourcedir+"\*.rep")
+#define _ENABLE_REPORTMANAGER_
+.endif
+.if File(cSourcedir+"\*.rpt")
+  .if (cCrystalReportver == "1")
+#define _ENABLE_CRYSTALREPORT_8_5_
+.cDestDirCrystal := "{sys}\crystal"
+  .else
+     .if (cCrystalReportver == "2")
+#define _ENABLE_CRYSTALREPORT_9_0_
+.cDestDirCrystal := "{commonappdata}\crystal decisions\2.0\bin"
+     .else 
+        .if (cCrystalReportver == "3")
+#define _ENABLE_CRYSTALREPORT_10_0_
+.cDestDirCrystal := "{commonappdata}\crystal decisions\2.5\bin"        
+        .else
+           .if (cCrystalReportver == "4")
+#define _ENABLE_CRYSTALREPORT_11_0_
+           .endif
+        .endif
+     .endif
+  .endif
+.endif
+.if !Empty(cPassword)
+#define _ENABLE_PASSWORD_
+.endif
+.if !Empty(cWeb)
+#define _ENABLE_WEB_
+.endif
+.if tIss_compression()
+#define _ENABLE_COMPRESSION_
+.cCompressionLevel := tIss_compression_Level()
+.endif
+.if tIss_EnableStaticlink()
+#define _ENABLE_STATICLINK_
+.endif
+.if tIss_EnableDebug()
+#define _ENABLE_DEBUG_
+.endif
+.if tIss_EnableCDXDBE()
+#define _ENABLE_CDXDBE_
+.endif
+.if tIss_EnableFOXDBE()
+#define _ENABLE_FOXDBE_
+.endif
+.if tIss_EnableADSDBE()
+#define _ENABLE_ADSDBE_
+.endif
+
+.INJ iss1
+              
+[Setup]
+AppName=ÛcProgramÛ 
+AppVerName=ÛcVersionÛ
+AppPublisher=ÛcCompanyÛ
+#ifdef _ENABLE_WEB_
+AppPublisherURL=ÛcWebÛ
+AppSupportURL=ÛcWebÛ
+AppUpdatesURL=ÛcWebÛ
+#endif
+DefaultDirName={pf}\ÛcDirectoryÛ
+DefaultGroupName=ÛcProgramÛ 
+AllowNoIcons=true
+LicenseFile=ÛcLicenseFileÛ
+InfoBeforeFile=ÛcDocInfoBeforeÛ
+InfoAfterFile=ÛcDocInfoAfterÛ
+#ifdef _ENABLE_COMPRESSION_
+Compression=lzma
+SolidCompression=true
+InternalCompressLevel=ultra
+#else
+Compression=none
+#endif
+OutputDir=ÛcOutputdirÛ
+SourceDir=ÛcSourcedirÛ
+OutputBaseFilename=ÛcApplication_setupfilenameÛ
+VersionInfoVersion=1.0
+VersionInfoCompany=ÛcCompanyÛ
+AppCopyright=ÛcCopyrightÛ
+#ifdef _ENABLE_PASSWORD_
+Password=ÛcPasswordÛ
+#endif
+ShowLanguageDialog=yes
+LanguageDetectionMethod=locale
+.if File(cSourcedir+"\*.rpt")
+  .if (cCrystalReportver $ "1,2,3,4")
+AlwaysRestart=true
+  .endif
+.endif
+
+.INJ iss2
+
+[Tasks]
+.if cIcon_Desktop
+Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: checkedonce
+.endif 
+.if cIcon_quick   
+Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: checkedonce
+.endif 
+.if (cCrystalReportver == "4")
+#ifdef _ENABLE_CRYSTALREPORT_11_0_
+Name: CRW11; Description: Install Runtime Crystal XI; GroupDescription: Crystal Report
+#endif
+.endif 
+
+.INJ iss3
+[Files]
+Source: ÛcExeNameÛ.exe; DestDir: {app}; Flags: ignoreversion
+Source: *.dll; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: BINDLL\*.dll; DestDir: {app}\BINDLL; Flags: ignoreversion skipifsourcedoesntexist
+Source: *.rpt; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: *.rep; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: *.ini; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: *.bmp; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: *.gif; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: *.png; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: *.jpg; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: *.jpeg; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: *.ico; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: dbdd.dbf; DestDir: {app}; Flags: ignoreversion
+Source: dbHlp.dbf; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: dbLogin.dbf; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: dbTabD.DBF; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+
+;Runtime Visual dBsee
+Source: ÛcVisualdBseelibÛ\reportman.ocx; DestDir: {app}; Flags: ignoreversion
+Source: ÛcVisualdBseelibÛ\dbImage.dll  ; DestDir: {app}; Flags: ignoreversion
+Source: ÛcVisualdBseelibÛ\DBLANG.DLL   ; DestDir: {app}; Flags: ignoreversion
+Source: ÛcVisualdBseelibÛ\dbmail.dll   ; DestDir: {app}; Flags: ignoreversion
+Source: ÛcVisualdBseelibÛ\dbunzip.dll  ; DestDir: {app}; Flags: ignoreversion
+Source: ÛcVisualdBseelibÛ\dbzip.dll    ; DestDir: {app}; Flags: ignoreversion
+
+
+#ifdef _ENABLE_REPORTMANAGER_
+Source: ÛdfEnvPath()Û..\Util\bde_setup.exe; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+#endif
+
+#ifdef _ENABLE_STATICLINK_
+#else
+Source: ÛcVisualdBseelibÛ\VDBSEE1O.DLL ; DestDir: {app}; Flags: ignoreversion
+Source: ÛcVisualdBseelibÛ\VDBSEE1S.DLL ; DestDir: {app}; Flags: ignoreversion
+#endif
+
+.if !EMPTY(aExtDll) .AND. Len(aExtDll)>0
+;External Application Dll
+.nCount := 1
+.do while nCount <= len(aExtDll)
+Source: ÛaExtDll[nCount]Û; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+.nCount := nCount+1
+.enddo
+.endif
+
+;Runtime Xbase
+Source: {#XBASELIB}\ADAC20B.DLL;   DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\ADAC20C.DLL;   DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\XPPUI1.DLL;    DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\XPPUI2.DLL;    DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\XPPUI3.DLL;    DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\XPPRT1.DLL ;   DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\XPPRT2.DLL ;   DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\SOM.DLL;       DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\XPPSYS.DLL  ;  DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: {#XBASELIB}\ASCOM10.DLL ;  DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: {#XBASELIB}\ASINET10.DLL ; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: {#XBASELIB}\ASINET1C.DLL ; DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+ 
+#ifdef _ENABLE_DEBUG_
+Source: {#XBASELIB}\XPPDBGC.DLL;   DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+#endif
+Source: {#XBASELIB}\ASRDBC10.DLL;  DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\XPPNAT.DLL;    DestDir: {app}; Flags: ignoreversion
+
+Source: {#XBASELIB}\DBFDBE.DLL;    DestDir: {app}; Flags: ignoreversion
+Source: {#XBASELIB}\NTXDBE.DLL;    DestDir: {app}; Flags: ignoreversion 
+#ifdef _ENABLE_CDXDBE_
+Source: {#XBASELIB}\CDXDBE.DLL;    DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+#endif
+#ifdef _ENABLE_FOXDBE_
+Source: {#XBASELIB}\FOXDBE.DLL;    DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+#endif
+
+Source: {#XBASELIB}\SDFDBE.DLL;    DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+Source: {#XBASELIB}\DELDBE.DLL;    DestDir: {app}; Flags: ignoreversion skipifsourcedoesntexist
+
+
+#ifdef _ENABLE_ADSDBE_
+Source: {#ADSLIB}\ACE32.DLL;      DestDir: {app}; Flags: ignoreversion
+Source: {#ADSLIB}\AXCWS32.DLL;    DestDir: {app}; Flags: ignoreversion
+Source: {#ADSLIB}\ADSDBE.DLL;     DestDir: {app}; Flags: ignoreversion
+#endif
+
+.if cCrystalReportver == "1"
+#ifdef _ENABLE_CRYSTALREPORT_8_5_
+Source: {#CRWLib}\MFC42.DLL    ;      DestDir: {sys}; Flags: ignoreversion
+Source: {#CRWLib}\MSVCIRT.DLL  ;      DestDir: {sys}; Flags: ignoreversion
+Source: {#CRWLib}\MSVCP60.DLL  ;      DestDir: {sys}; Flags: ignoreversion
+Source: {#CRWLib}\CRPE32.DLL   ;      DestDir: {sys}; Flags: ignoreversion
+Source: {#CRWLib}\IMPLODE.DLL  ;      DestDir: {sys}; Flags: ignoreversion
+Source: {#CRWLib}\P2BXBSE.DLL  ;      DestDir: {sys}; Flags: ignoreversion
+Source: {#CRWLib}\CRPAIG80.DLL ;      DestDir: {sys}; Flags: ignoreversion
+#endif
+.endif
+.if cCrystalReportver == "2"
+#ifdef _ENABLE_CRYSTALREPORT_9_0_
+Source: {#CRWLib}\querybuilder.dll ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\crpe32.dll       ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall                                               
+Source: {#CRWLib}\crdb_p2bxbse.dll ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\crqe.dll         ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\craxdrt9.dll     ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\crviewer9.dll    ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\ufmanager.dll    ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\keycode.dll      ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\craxddrt.dll     ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\Implode.dll      ;      DestDir: {commonappdata}\crystal decisions\2.0\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+#endif                                                                            
+.endif
+.if cCrystalReportver == "3"
+#ifdef _ENABLE_CRYSTALREPORT_10_0_
+Source: {#CRWLib}\craxdrt.dll      ;      DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\craxddrt.dll     ;      DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall                                               
+Source: {#CRWLib}\crqe.dll         ;      DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\ufmanager.dll    ;      DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLibViewer}\crviewer.dll;     DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\keycode.dll      ;      DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\crpe32.dll       ;      DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\crdb_p2bxbse.dll ;      DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\querybuilder.dll ;      DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+Source: {#CRWLib}\Implode.dll      ;      DestDir: {commonappdata}\crystal decisions\2.5\bin; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall
+#endif
+.endif
+
+.if cCrystalReportver $"1,2,3"
+Source: {#CRWLibU2f}\u2ftext.dll  ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\u2ftext.dll  ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist                                              
+Source: {#CRWLibU2f}\u2fdif.dll   ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\uxfsepv.dll  ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\u2frec.dll   ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\u2ftext.dll  ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\u2frtf.dll   ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\u2fwordw.dll ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\u2fxls.dll   ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\crxf_pdf.dll ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\u2fxml.dll   ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+Source: {#CRWLibU2f}\u2fcr.dll    ;      DestDir: ÛcDestDirCrystalÛ; Flags: ignoreversion confirmoverwrite sharedfile uninsneveruninstall skipifsourcedoesntexist
+.endif                                             
+.if cCrystalReportver == "4"
+#ifdef _ENABLE_CRYSTALREPORT_11_0_
+Source: {#CRWSetup}\*.*; DestDir: {app}\CrystalReport11
+#endif
+.endif                                             
+.INJ iss4
+
+//Not included for default
+;ASINET10.DLL
+;ASINET1C.DLL
+;ASIUTL10.DLL
+;ASLOGRES.DLL
+;ASXML10.DLL
+;HRFCLASS.DLL
+;MEMWATCH.DLL
+;XPPHRFP.DLL
+;XPPOCX.DLL
+;XPPPROF.DLL
+;XPPSQBRW.DLL
+;XOCMAIN.DLL
+
+[Registry]
+.if cCrystalReportver == "2"
+#ifdef _ENABLE_CRYSTALREPORT_9_0_
+Root: HKLM; Subkey: SOFTWARE\Crystal Decisions\9.0\Crystal Reports; ValueType: string; ValueName: CommonFiles; ValueData: {commonappdata}\crystal decisions\2.0\bin
+#endif
+.endif
+.if cCrystalReportver == "3"
+#ifdef _ENABLE_CRYSTALREPORT_10_0_
+Root: HKLM; Subkey: SOFTWARE\Crystal Decisions\10.0\Crystal Reports; ValueType: string; ValueName: CommonFiles; ValueData: {commonappdata}\crystal decisions\2.5\bin
+#endif
+.endif
+
+.if cCrystalReportver $"1"
+Root: HKCU; Subkey: Environment; ValueType: string; ValueName: PATH; ValueData: "{olddata};{sys}"; Flags: uninsdeletekeyifempty 
+Root: HKCU; Subkey: Environment; ValueType: string; ValueName: PATH; ValueData: "{olddata};{sys}\Crystal"; Flags: uninsdeletekeyifempty 
+.endif                                                                                   
+.if cCrystalReportver $"2"
+Root: HKCU; Subkey: Environment; ValueType: string; ValueName: PATH; ValueData: "{olddata};{commonappdata}\crystal decisions\2.0\bin"; Flags: uninsdeletekeyifempty 
+.endif                                                                                   
+.if cCrystalReportver $"3"
+Root: HKCU; Subkey: Environment; ValueType: string; ValueName: PATH; ValueData: "{olddata};{commonappdata}\crystal decisions\2.5\bin"; Flags: uninsdeletekeyifempty 
+.endif                                                                                   
+
+.INJ iss5
+
+[_ISToolPostCompile]
+
+.INJ iss6
+
+[INI]
+#ifdef _ENABLE_WEB_
+Filename: {app}\ÛcProgramÛ.url; Section: InternetShortcut; Key: URL; String: ÛcWebÛ
+#endif
+
+.INJ iss7
+
+[Icons]
+Name: {group}\ÛcProgramÛ; Filename: {app}\ÛcExeNameÛ.exe ; WorkingDir: {app}
+#ifdef _ENABLE_WEB_
+.if cIcon_web
+Name: {group}\{cm:ProgramOnTheWeb,ÛcVersionÛ }; Filename: {app}\ÛcWebÛ
+.endif
+#endif
+.if cIcon_uninstal
+Name: {group}\{cm:UninstallProgram,ÛcProgramÛ }; Filename: {uninstallexe}
+.endif
+.if cIcon_Desktop
+Name: {userdesktop}\ÛcProgramÛ; Filename: {app}\ÛcExeNameÛ.exe; Tasks: desktopicon ; WorkingDir: {app}
+.endif
+.if cIcon_quick   
+Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\ÛcProgramÛ; Filename: {app}\ÛcExeNameÛ.exe; Tasks: quicklaunchicon ; WorkingDir: {app}
+.endif
+
+.INJ iss8
+
+[Run]
+
+.if cCrystalReportver == "2"
+#ifdef _ENABLE_CRYSTALREPORT_9_0_
+Filename: {sys}\regsvr32.exe; Parameters: craxdrt.dll  ; WorkingDir: {commonappdata}\crystal decisions\2.5\bin ; Flags: runhidden 
+Filename: {sys}\regsvr32.exe; Parameters: crqe.dll     ; WorkingDir: {commonappdata}\crystal decisions\2.5\bin ; Flags: runhidden 
+Filename: {sys}\regsvr32.exe; Parameters: keycode.dll  ; WorkingDir: {commonappdata}\crystal decisions\2.5\bin ; Flags: runhidden 
+Filename: {sys}\regsvr32.exe; Parameters: crviewer.dll ; WorkingDir: {commonappdata}\crystal decisions\2.5\bin ; Flags: runhidden 
+#endif
+.endif
+.if cCrystalReportver == "3"
+#ifdef _ENABLE_CRYSTALREPORT_10_0_
+Filename: {sys}\regsvr32.exe; Parameters: craxdrt.dll  ; WorkingDir: {commonappdata}\crystal decisions\2.5\bin ; Flags: runhidden 
+Filename: {sys}\regsvr32.exe; Parameters: crqe.dll     ; WorkingDir: {commonappdata}\crystal decisions\2.5\bin ; Flags: runhidden 
+Filename: {sys}\regsvr32.exe; Parameters: keycode.dll  ; WorkingDir: {commonappdata}\crystal decisions\2.5\bin ; Flags: runhidden 
+Filename: {sys}\regsvr32.exe; Parameters: crviewer.dll ; WorkingDir: {commonappdata}\crystal decisions\2.5\bin ; Flags: runhidden 
+#endif
+.endif
+.if cCrystalReportver == "4"
+#ifdef _ENABLE_CRYSTALREPORT_11_0_
+FileName: {app}\CrystalReport11\setup.exe; Description: {cm:LaunchProgram,Crw11}; Tasks: CRW11; WorkingDir: {app}\CrystalReport11; Flags: nowait
+#endif
+.endif
+Filename: {app}\ÛcExeNameÛ.exe; Description: {cm:LaunchProgram,ÛcProgramÛ}; WorkingDir: {app} ; Flags: nowait postinstall skipifsilent 
+
+.INJ iss9
+
+[UninstallDelete]
+Type: files; Name: {app}\ÛcWebÛ
+
+.INJ is10
+
+[LangOptions]
+
+.INJ is11
+
+[Languages]
+.if cLanguage == "no"
+  .if tIss_CurrentLanguage()  == "ita"
+Name: Italiano;   MessagesFile: compiler:Languages\Italian-13-4.2.7.isl
+  .else
+Name: English ;   MessagesFile: compiler:Default.isl
+  .endif
+.endif
+.if cLanguage == "ita"
+Name: Italiano;   MessagesFile: compiler:Languages\Italian-13-4.2.7.isl
+Name: English ;   MessagesFile: compiler:Default.isl
+.endif
+.if cLanguage == "eng"
+Name: English ;   MessagesFile: compiler:Default.isl
+Name: Italiano;   MessagesFile: compiler:Languages\Italian-13-4.2.7.isl
+;Name: Deutsch ;   MessagesFile: compiler:Languages\German.isl
+;Name: Portuguese; MessagesFile: compiler:Languages\PortugueseStd.isl
+;Name: Slovenian;  MessagesFile: compiler:Languages\Slovenian.isl
+;Name: Catalan;    MessagesFile: compiler:Languages\Catalan.isl
+;Name: Dutch;      MessagesFile: compiler:Languages\Dutch.isl
+;Name: Polish;     MessagesFile: compiler:Languages\Polish.isl
+;Name: Russian;    MessagesFile: compiler:Languages\Russian.isl
+;Name: Czech;      MessagesFile: compiler:Languages\Czech.isl
+;Name: Francais;   MessagesFile: compiler:Languages\French.isl
+;Name: Norwegian;  MessagesFile: compiler:Languages\Norwegian.isl
+.endif
+
+.INJ is12
+.close
+

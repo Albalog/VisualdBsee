@@ -1,0 +1,78 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : UPDEXE
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiorna il sottoprogetto
+.* ----------------------------------------------------------------------------
+.*---------------------- Flag per aggiornare MAKE / LINK / MENU
+.M->FlgUpdMML := .f.
+.*---------------------- attivato qualora venga generato almeno un .prg
+.tExeBuild()
+.foreach source
+   .M-> CurObjRec := oo_obj->(recno())
+   .if oo_obj->(dbNet("rec")) .AND. !empty(oo_obj->FLGUPD)
+.do ÛtObjTemplate("tmp")Û
+       .M->FlgUpdMML := .t.
+       .oo_obj->(DbGoto(CurObjRec))
+       .oo_obj->PRGDATE := date()
+       .oo_obj->PRGTIME := dfTimeStd()
+       .oo_obj->FLGUPD  := ""
+       .oo_obj->(dbNet("url"))
+
+       .if oo_obj->WDO=="mke"
+           .oo_obj->(DbGotop())
+           .do while !oo_obj->(EOF())
+               .if (oo_obj->TYP $ "lib-ext-spc")
+                   .if oo_obj->(dbNet("rec"))
+                       .oo_obj->PRGDATE := date()
+                       .oo_obj->PRGTIME := dfTimeStd()
+                       .oo_obj->FLGUPD  := ""
+                       .oo_obj->(dbNet("url"))
+                   .endif
+               .endif
+               .oo_obj->(dbSkip())
+           .enddo
+           .oo_obj->(DbGoto( CurObjRec ))
+       .endif
+       .tUpgradeEnv()
+   .else
+       .msg [Programma : ]+ALLTRIM(OO_OBJ->PRG)+[.prg - NESSUNA MODIFICA !!]
+   .endif
+.next
+.if FlgUpdMML
+   .foreach special oo_obj->wdo $ [mke/lnk/mnu]
+      .M->jjGrpRec:=oo_grp->(recno())
+      .M->jjObjRec:=oo_obj->(recno())
+.do ÛtObjTemplate("tmp")Û
+      .oo_grp->(DbGoto(jjGrpRec))
+      .oo_obj->(DbGoto( jjObjRec))
+   .next
+.endif
+.*---------------------- Flag per aggiornare DBFUN/DBUDF/ file Dbdd.dbf
+.M->FlgUpdDBF := .f.
+.*---------------------- attivato qualora venga aggiornato amenu un .dbf
+
+.*----------------------------- Generazione FILE TABELLE
+.M->ExePath := tExePath()+"\"
+.if ! file( ProgPath+alltrim(toTabel("tabname"))+[.dbf] )
+   .do genDbt with .f.
+.endif
+.*----------------------------- Generazione ARCHIVI BASE DATI
+.M->ExePath := tExePath()+"\"
+.M->jjDbfRec:=dd_dbf->(recno())
+.foreach file dd_dbf->FILE_TYP==[0] .and. !empty(dd_dbf->FLGUPD)
+   .do UpdDbf
+.next
+.dd_dbf->(DbGoto( jjDbfRec))
+.*
+.if FlgUpdDBF
+   .foreach special oo_obj->wdo $ [udf/fun]
+      .M->jjGrpRec:=oo_grp->(recno())
+      .M->jjObjRec:=oo_obj->(recno())
+.do ÛtObjTemplate("tmp")Û
+      .oo_oid->(DbGoto( jjOidRec))
+      .oo_obj->(DbGoto( jjObjRec))
+   .next
+.endif
+.*----------------------------- Generazione FILE DIZIONARIO
+.FdBdd()

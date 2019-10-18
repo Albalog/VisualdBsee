@@ -1,0 +1,110 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : QRYCONTROL.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Inizializza CONTROL per oggetto query
+.* ----------------------------------------------------------------------------
+.*  In ordine di : OGGETTO + PAGINA + PROGRESSIVO ORDINAMENTO
+.*
+/*ÚÄÄÄÄÄÄÄÄÄÄ¿
+  ³ Control  ³
+  ÀÄÄÄÄÄÄÄÄÄÄÙ*/
+.oo_itm->(dbSetOrder(4))
+.foreach item oo_itm->TYP $ "box-img"
+  .M->nRecItm:= oo_itm->(Recno())
+  .M->cIdC   := tControlId()
+  .M->nTr1   := str(oo_itm->ROW ,4)
+  .M->nTc1   := str(oo_itm->COL ,4)
+  .M->nTr2   := str(oo_itm->ROW1,4)
+  .M->nTc2   := str(oo_itm->COL1,4)
+  .M->cTpro  := Trim(oo_itm->ITMSAY)
+  .M->cTmsg  := tItmUsrMessage()
+  .M->cTdis  := "{||"+iif(empty(toItem('displayif')),'.T.',toItem('displayif'))+"}"
+  .M->cTrefId:= tLeadItm()+iif( Empty(toItem("refreshid")) ,"" ,"-"+toItem("refreshid"))
+  .M->cTpag  := tItemPage()
+  .do case
+     .case oo_itm->TYP=="box"
+.do ATTBOX
+     .case oo_itm->TYP=="img"
+.do ATTIMG
+  .endcase
+  .oo_itm->(dbSetOrder(4))
+  .oo_itm->(dbGoto(nRecItm))
+.next
+.*
+.oo_itm->(dbSetOrder(4))
+.foreach item oo_itm->TYP $ "say-fon-ico"
+  .M->nRecItm:= oo_itm->(Recno())
+  .M->cIdC   := tControlId()
+  .M->nTr1   := str(oo_itm->ROW ,4)
+  .M->nTc1   := str(oo_itm->COL ,4)
+  .M->nTr2   := str(oo_itm->ROW1,4)
+  .M->nTc2   := str(oo_itm->COL1,4)
+  .M->cTpro  := Trim(oo_itm->ITMSAY)
+  .M->cTmsg  := tItmUsrMessage()
+  .M->cTdis  := "{||"+iif(empty(toItem('displayif')),'.T.',toItem('displayif'))+"}"
+  .M->cTpag  := tItemPage()
+  .do case
+     .case oo_itm->TYP=="say"
+.do ATTSAY
+     .case oo_itm->TYP=="fon"
+.do ATTFON
+     .case oo_itm->TYP=="ico"
+.do ATTICO
+  .endcase
+  .oo_itm->(dbSetOrder(4))
+  .oo_itm->(dbGoto(nRecItm))
+.next
+.foreach control !empty(oo_itm->ITMGET) .OR. !(oo_itm->TYP$"pag-say-box-fon-ico-exp-img")
+  .*
+  .* Tutti i control tranne le espressioni prive di variabili in get
+  .*
+  .m->nTCnt := Ascan( aTQuery, {|x|x[1] == oo_itm->(recno()) })
+  .M->nRecItm:= oo_itm->(Recno())
+  .M->nTr1   := str(oo_itm->ROW ,4)
+  .M->nTc1   := str(oo_itm->COL ,4)
+  .M->nTr2   := str(oo_itm->ROW1,4)
+  .M->nTc2   := str(oo_itm->COL1,4)
+  .M->cTpro  := Trim(oo_itm->ITMSAY)
+  .M->cTmsg  := tItmUsrMessage()
+  .*
+  .M->cTsym  := alltrim(dd_sym->SYM_NAM)
+  .M->cIdC   := tControlId()
+  .if m->nTCnt != 0       ./  control in get
+      .M->cTsym  := "aQuery["+alltrim(str(nTCnt))+",3]"
+      .M->cIdC   := "cGet"+alltrim(str(nTCnt))
+  .endif
+  .*
+  .M->cTpicG := tGetPicture()
+  .M->cTpicS := tSayPicture()
+  .M->cTsys  := "{|oGet|"+iif(empty(toItem('getfunction')),'.T.',toItem('getfunction'))+"}"
+  .M->cTdis  := "{||"+iif(empty(toItem('displayif')),'.T.',toItem('displayif'))+"}"
+  .M->cTpag  := tItemPage()
+  .*
+  .M->cTrefId := ""
+  .M->cTSym1  := ""
+  .M->cTrefGr := ""
+  .M->cTwvc   := ""
+  .M->cTSym1  := tLeadItm()
+  .*
+  .M->cTSym1  := subStr(M->cTSym1, at("-", M->cTSym1)+1)
+  .Aeval(aTQuery , {|x,y|if(lower(x[2])==lower(M->cTSym1), M->cTrefId := M->cTrefId+"-cGet"+alltrim(str(y)),) })
+  .M->cTrefId := M->cTrefId+iif( Empty(toItem("refreshid")) ,"" ,"-"+toItem("refreshid"))
+  .M->cTrefGr:= toItem("refreshgrp")
+  .M->cTwvc  := if( toItem("editcondition")=="1" ,cTsym+"(ab)" ,".F." )
+  .*
+  .do case
+          .*
+     .case oo_itm->TYP == "rel" .and. ToItem("editcondition") == "0" ./ item di relazione in say
+.do ATTQRYRE
+          .*
+     .case oo_itm->TYP $ "get-rel-exp-img"
+.do ATTQRYGE
+          .*
+     .case oo_itm->TYP == "but"
+.do ATTBUT
+  .endcase
+  .oo_itm->(dbGoto(nRecItm))
+.next
+
+.oo_obj->(dbGoto(nTobjRec))

@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="ImageType" value="Folder">
+</OBJECT>
+    <UL>
+    <LI> <OBJECT type="text/sitemap">
+         <param name="Name" value="Gestione">
+         </OBJECT>
+      <UL>
+      <LI> <OBJECT type="text/sitemap">
+           <param name="Name" value="Clienti">
+           <param name="Local" value="CliFrm.htm">
+           </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Articoli">
+             <param name="Local" value="ArtFrm.htm">
+             </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Gestione Bolle">
+             <param name="Local" value="BolFrm.htm">
+             </OBJECT>
+        </UL>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Stampe">
+             </OBJECT>
+      <UL>
+      <LI> <OBJECT type="text/sitemap">
+           <param name="Name" value="Stampa tabelle">
+           </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Scheda Clienti">
+             <param name="Local" value="CliRpt.htm">
+             </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Report Clienti">
+             <param name="Local" value="CliRpt1.htm">
+             </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Stampa Testata Dettaglio Bolle (Report Manager)">
+             <param name="Local" value="BolRpt.htm">
+             </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Stampa Testata / Dettaglio bolle (Crystal)">
+             <param name="Local" value="T_BRpt.htm">
+             </OBJECT>
+        </UL>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Servizio">
+             </OBJECT>
+      <UL>
+      <LI> <OBJECT type="text/sitemap">
+           <param name="Name" value="Ricostruzione indici">
+           </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Gestione tabelle">
+             </OBJECT>
+        </UL>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="?">
+             </OBJECT>
+      <UL>
+      <LI> <OBJECT type="text/sitemap">
+           <param name="Name" value="Help">
+           </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+             <param name="Name" value="Informazioni">
+             <param name="Local" value="About.htm">
+             </OBJECT>
+</BODY></HTML>

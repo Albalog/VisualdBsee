@@ -1,0 +1,102 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : RTLINK
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Script file per operazione di link con RTLINK
+.* ----------------------------------------------------------------------------
+.tExeBuild()
+.do GenUsrM
+.M->MstObjRec := oo_obj->(recno())
+.out ÛtSourcePath()+"\"+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+.msg [GENERA :]+trim(oo_obj->ObjDes)+[ : ]+tSourcePath()+"\"+alltrim(oo_obj->prg)+[.prg]
+/SILENT
+
+.M->cTOut := toExeEnv("outputexe")
+OUTPUT Ûif( empty(cTout),"..\EXE\",cTout+"\")+ALLTRIM(oo_exe->ExeName)Û
+
+#  ZONA COMANDI RTLINK
+.inj LNK2 Dopo la zona comandi standard file script per RTLINK
+
+
+.M->cTini := tInitProc()
+ÛTgetCom("fi")+" "+cTiniÛ
+
+#  FILE SPECIALI
+.foreach link oo_bld->typ=="spc" .and. oo_bld->wdo=="prg" .and. oo_bld->SECTION=="0"
+ÛTgetCom("fi")+" "+alltrim(oo_obj->PRG)Û
+.next
+
+#  FILE EXTERNAL
+.foreach link oo_bld->typ=="ext" .and. oo_bld->SECTION=="0"
+.M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+ÛTgetCom("fi")+" "+cPath+alltrim(oo_obj->PRG)Û
+.next
+
+#  OGGETTI Visual dBSEE
+.foreach link oo_bld->typ $ "drv-frm-brw-prn-qry" .and. oo_bld->SECTION=="0"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   .if Lower(cTini) != Lower(cTprg)
+ÛTgetCom("fi")+" "+cTprgÛ
+   .endif
+.next
+
+.inj LNK3 Prima delle librerie e del Beginarea in ROOT
+
+#  LIBRERIE IN ROOT
+.if toExeEnv("compiler")=="2"
+Lib dBsee453
+.endif
+Lib dBsee4r
+.foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION=="0"
+.M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+ÛTgetCom("Lib")+" "+cPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+.next
+
+BEGINAREA
+
+   .inj LNK4 All'interno BEGINAREA file script per RTLINK
+
+   #  FILE SPECIALI
+.foreach link oo_bld->typ=="spc" .and. oo_bld->wdo $ "fun-udf-prg-rid" .and. oo_bld->SECTION $ "12345678"
+   ÛTgetCom("fi")+" "+alltrim(oo_obj->PRG)Û
+.next
+
+   #  FILE EXTERNAL
+.foreach link oo_bld->typ=="ext" .and. oo_bld->SECTION $ "12345678"
+   .M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+   ÛTgetCom("fi")+" "+cPath+alltrim(oo_obj->PRG)Û
+.next
+
+   #  OGGETTI Visual dBSEE
+.foreach link oo_bld->typ $ "drv-frm-brw-prn-qry" .and. oo_bld->SECTION $ "12345678"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+   .if Lower(cTini) != Lower(cTprg)
+   ÛTgetCom("fi")+" "+cTprgÛ
+   .endif
+.next
+
+   #  LIBRERIE ALLOCATE
+   .inj LNK5 Posizione per librerie ALLOCATE prima della libreria Visual dBSEE
+   lib dBsee4o
+.foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION $ "12345678"
+   .M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+   ÛTgetCom("Allocate")+" "+cPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+.next
+   .inj LNK6 Posizione per librerie ALLOCATE
+   lib Extend
+
+ENDAREA
+
+.inj LNK8 Dopo ENDAREA ma prima del comando Lib Clipper
+
+#  LIBRERIE
+Lib Clipper
+.do rddlib
+.inj LNK9 Dopo il comando Lib Clipper
+.foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION=="9"
+.M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
+ÛTgetCom("Lib")+" "+cPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+.next
+
+.close
+.dbusrOld()

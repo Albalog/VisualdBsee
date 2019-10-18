@@ -1,0 +1,15 @@
+-------------------
+FINESTRA EDIT BROWSE
+-------------------
+
+La finestra denominata EDIT BROWSE consente di accedere
+in inserimento, modifica, consultazione o ricerca ai dati
+visualizzati all'interno di un oggetto BROWSE o di un control LIST BOX.
+
+Per accedere all'EDIT BROWSE associato ad un oggetto BROWSE o a un
+control LIST BOX occorre posizionarsi sullo stesso e premere il tasto BARRA
+SPAZIO (per modificare il record corrente) o INS (per aggiungere un nuovo
+record).
+
+La finestra Edit Browse Š del tutto simile come carattristiche e
+funzionalit… ad una getione di Data Entry di tipo Form.

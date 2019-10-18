@@ -1,0 +1,48 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GENFILE
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Genera files di supporto agli eseguibili del progetto
+.* ----------------------------------------------------------------------------
+.*
+.M->ExePath := tExePath()+"\"
+.*
+.*----------------------------- Generazione FILE TABELLE
+.if ! file( M->ExePath+Alltrim(toPrjTab("tabname"))+".dbf" )
+   .do genDbt with .f.
+.endif
+.*
+.*----------------------------- Generazione FILE DI CONFIGURAZIONE
+.do dbstart
+.*
+.if ! file( M->ExePath+"dbLogin.dbf" )
+   .msg [Genera il file dbLogin.dbf]
+   .tCopyFile( dfExeTmp()+"dbLogin.dbf" ,M->ExePath+"dbLogin.dbf" )
+.endif
+.*
+.*----------------------------- Generazione FILE DI HELP
+.if ALLTRIM(toExeEnv( "helpformat" ,.F.))== "1"
+  .msg [Generazione file di HELP del progetto in corso.]
+  .if VdbYesNo("Avviare Generazione File di Help?")
+  .do GenHlp
+  .*GenHlp()
+  .endif
+.else
+  .if ! file( M->ExePath+"dbHlp.dbf" )
+     .msg [Generazione file di HELP del progetto in corso.]
+     .tCopyFile( dfExeTmp()+"dbHlp.dbf" ,M->ExePath+"dbHlp.dbf" )
+     .GenHlp()
+  .endif
+.endif
+.*
+.*----------------------------- Generazione FILE DIZIONARIO
+.do GenDbd
+.*----------------------------- Deseleziona archivi dell'applicazione
+.if dd_dbf->( dbNet("dbf",0) )  ./  tentativo di lock su file DD_DBF
+    .dd_dbf->( dbGoTop() )
+    .do while !dd_dbf->( eof() )
+        .dd_dbf->FLGUPD := ""
+        .dd_dbf->( dbSkip( 1 ) )
+    .enddo
+    .dd_dbf->( dbNet( "unl" ) ) ./ Unlock file DD_DBF
+.endif

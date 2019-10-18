@@ -1,0 +1,18 @@
+.parameter cTobjDes, cTprgGen ,cTtmp
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : INFO
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Stampa intestazione file sorgente
+.* ----------------------------------------------------------------------------
+.msg [GENERA : ]+cTobjDes+[ : ]+cTprgGen
+/******************************************************************************
+ Progetto       : Ûoo_app->PRJÛ
+ Sottoprogetto  : Ûoo_exe->EXEDESÛ
+ Programma      : ÛcTprgGenÛ
+ Template       : ÛcTtmpÛ
+ Descrizione    : ÛcTobjDesÛ
+ Programmatore  : Ûoo_exe->PRJNAMEÛ
+ Data           : Ûdtoc(date())Û
+ Ora            : Ûtime()Û
+******************************************************************************/

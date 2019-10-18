@@ -1,0 +1,79 @@
+<CAP> SETUP PALETTE
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ SETUP PALETTE ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ La definizione dei colori dei diversi ambienti all'interno
+ dell'applicazione, viene effettuata attraverso l'utilizzo di
+ una palette di colori.  Vengono proposti i 16 colori standard di
+ Clipper (dal nero fino al bianco intenso).
+
+ Ogni colore proposto viene suddiviso nei suoi tre componenti
+ fondamentali RGB (Rosso, Verde, Blu).
+
+ Per ogni componente possono essere impostate varianti cromatiche da 0
+ a 63.  In questo modo Š ottenibile un colore dalle 262.144
+ combinazioni cromatiche possibili.
+
+ I colori della palette proposti all'interno di questo ambiente,
+ possono essere modificati, ma la loro variazione non verr… salvata.
+ Quindi in fase di rilancio dell'applicazione i colori proposti non
+ saranno quelli modificati, ma quelli originali.
+
+          TASTI DISPONIBILI
+    ÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+    Freccia-Ds ³ Modificano il colore selezionato
+    Freccia-Sn ³
+               ³
+    Freccia-Su ³ Selezionano un diverso componente di colore
+    Freccia-Gi—³
+               ³
+    Ctrl-Fr.Ds ³ Seleziona un diverso colore standard
+    Ctrl-Fr.Sn ³
+               ³
+    Esc        ³ Ritorna al programma chiamante
+
+
+All'interno del file DBSTART.INI, nella directory ..\EXE
+dell'applicazione, Š possibile definire i colori relativamente alle
+funzioni di libreria.  In pratica i colori impostati all'interno del
+file di configurazione alla sezione [color] vengono utilizzati
+internamente per l'impostazione dei colori delle funzioni di libreria,
+come, per esempio la funzione dBMsgErr (presentazione di un box
+contente un messaggio d'errore) o della funzione dFHlp (Help
+dell'applicazione generata da dBsee).
+
+Colori Form
+    Impostazione dei colori che dovranno apparire all'interno
+    di Form e delle window automatiche.
+
+Colore menu
+    Impostazioni dei colori di default del menu dell'applicazione.
+
+Colore pulsanti
+    Impostazioni dei colori di default dei pulsanti.
+
+Colore sfondi
+    Impostazioni dei colori di default per gli sfondi.
+
+Colore messaggi
+    Impostazioni dei colori di default per i messaggi.
+
+Colore help
+    Impostazioni dei colori di default per l'help.
+
+Colore riga utente
+    Impostazioni dei colori di default per la riga dei
+    messaggi utente (ultima riga del video).
+
+Colore progress indicator
+    Impostazioni dei colori di default per il progress indicator.
+
+Colore chiavi di ricerca
+    Impostazioni dei colori di default che appariranno
+    all'interno del quadro per l'impostazione delle chiavi
+    di ricerca (tasto funzione F7).
+
+Colore calcolatrice
+    Impostazioni dei colori di default per la calcolatrice.
+

@@ -1,0 +1,63 @@
+.* -------------------------------------------------------------------------------
+.* TEMPLATE     : DBUDF
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Funzioni sui simboli e di utilita' in Visual dBsee 1.0
+.* -------------------------------------------------------------------------------
+.do GenUsrM
+.out ÛtSourcePath()+"\"+alltrim(oo_obj->PRG)Û.prg
+.do info with trim(oo_obj->ObjDes), tSourcePath()+"\"+alltrim(oo_obj->prg)+[.prg] ,tGenTemplate()
+
+                                  ð   // File include del programma
+#INCLUDE "Common.ch"              ð   // Include define comunemente utilizzate
+#INCLUDE "dfCtrl.ch"              ð   //   "       "    per control
+#INCLUDE "dfGenMsg.ch"            ð   //   "       "     "  messaggi
+#INCLUDE "dfIndex.ch"             ð   //   "       "     "  ddIndex()
+#INCLUDE "dfLook.ch"              ð   //   "       "     "  dbLook()
+#INCLUDE "dfMenu.ch"              ð   //   "       "     "  menu di oggetto
+#INCLUDE "dfNet.ch"               ð   //   "       "     "  network
+#INCLUDE "dfSet.ch"               ð   //   "       "     "  settaggi di ambiente
+#INCLUDE "dfWin.ch"               ð   //   "       "     "  oggetti Visual dBsee
+#INCLUDE "dfReport.ch"            ð   //   "       "     "  oggetti Report
+.inj udf0  Inizio file dbUdf - Punto per dichiarazione INCLUDE e STATIC GLOBALI
+
+
+.if (toExeEnv("linker")=="9" .or. toExeEnv("linker")=="10")
+ .if toExeEnv("linker")=="9"
+  .foreach make oo_bld->EXT=="prg"
+   .if LOWER(oo_bld->TYP) $ "frm-brw-qry-prn"
+REQUEST ÛAllTrim(oo_obj->PRG)ÛExe
+   .endif
+  .next
+ .endif
+.else
+.do initsys
+.endif
+
+.foreach symudf
+   .M->cPar     := toSymbol("udfparam")
+*******************************************************************************
+   .if ! Empty( cPar )
+FUNCTION ÛAllTrim(dd_sym->SYM_NAM)+[(    ð  ; // ]+dd_sym->SYM_DESÛ
+         ÛtoSymbol("udfparam")Û          ð  ) // Parametri
+   .else
+FUNCTION ÛAllTrim(dd_sym->SYM_NAM)+[( )  ð   // ]+dd_sym->SYM_DESÛ
+   .endif
+*******************************************************************************
+.inj fun     ###
+
+.next
+
+
+*******************************************************************************
+PROCEDURE df2Quit()     ð // Chiusura programma
+*******************************************************************************
+S2RealTimeDelAll()
+QUIT
+RETURN
+
+
+.inj euf1  End User Function - At the end of dbUdf.prg
+
+.close
+.dbusrOld()

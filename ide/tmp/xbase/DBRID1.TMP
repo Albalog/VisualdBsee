@@ -1,0 +1,75 @@
+*******************************************************************************
+FUNCTION ÛcTdbfÛTrn( cTrn ,cState ) ð // TRANSAZIONI ÛTrim(dd_dbf->FILE_DES)Û
+*******************************************************************************
+   .M->aTals   := {}
+   .foreach tranpos
+     .M->cTals := tDbfTrnTgt()
+     .if Ascan( aTals ,{ |x| x == AllTrim(cTals) } ) == 0
+        .aadd(  aTals ,AllTrim(cTals) )
+     .endif
+   .next
+   .M->nTlen := Len(aTals)
+   .if nTlen > 0
+LOCAL  lRet      := .F.  ð //  Valore di ritorno funzione
+LOCAL  aFile     := {}   ð //  Array dei file aperti dalla funzione
+   .endif
+.tPutInj( 0 ,[.inj TFF0] )
+
+IF cTrn==NIL ;RETURN .F. ;END       ð // Tipo transazione non specificato
+
+cTrn := Lower(cTrn)
+
+DEFAULT cState  TO DE_STATE_INK
+
+
+BEGIN SEQUENCE
+
+   .if nTlen > 0
+      .M->nTcnt := 1
+      .do while nTCnt  <= nTlen
+      IF ! dfUse( "ÛaTals[nTcnt]Û" ,NIL ,aFile ) ;BREAK  ;END
+         .M->nTCnt := nTcnt +1
+      .enddo
+   .endif
+      .tPutInj( 7 ,[.inj TFF1] )
+
+      IF     cTrn == "ptt"           ð // PUT    THE TRANSACTION
+
+         .tPutInj( 10 ,[.inj TFF2] )
+         .do ptt
+         .tPutInj( 10 ,[.inj TFF3] )
+
+         lRet := .T.
+         BREAK
+
+      ELSEIF cTrn == "rtt"           ð // REMOVE THE TRANSACTION
+
+         .tPutInj( 10 ,[.inj TFF4] )
+         .do rtt
+         .tPutInj( 10 ,[.inj TFF5] )
+
+         lRet := .T.
+         BREAK
+
+      ELSEIF cTrn == "ltt"           ð // LOG    THE TRANSACTION
+
+         .tPutInj( 10 ,[.inj TFF6] )
+         .do ltt
+         .tPutInj( 10 ,[.inj TFF7] )
+
+         lRet := .T.
+         BREAK
+
+      ENDIF
+      .tPutInj( 7 ,[.inj TFF8] )
+
+RECOVER
+
+   dfClose( aFile, .T., .T. )       ð //  Chiude i file aperti in questa funzione
+
+END
+
+.tPutInj( 0 ,[.inj TFF9] )
+
+RETURN lRet
+

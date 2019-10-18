@@ -1,0 +1,150 @@
+<CAP> TASTI FUNZIONE DI BASE
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ TASTI FUNZIONE DI BASE ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ F1         ³ Tasti disponibili.
+             ³
+ F1          ³ Visualizza la pagina di HELP relativa alla gestione
+             ³ corrente.
+             ³ Se per essa non Š prevista alcuna pagina, visualizza
+             ³ l'INDICE DEGLI ARGOMENTI.
+             ³
+ F3          ³ Avvia la modalit… di INSERIMENTO nuovi DOCUMENTI.
+             ³ Per mantenere attiva questa modalit… si deve
+             ³ registrare ogni documento con il tasto F9.
+             ³
+ F4          ³ Attiva la MODIFICA del DOCUMENTO corrente.
+             ³ La sessione si conclude con una rinuncia (ESC),
+             ³ che ripristina i dati originari, o con la
+             ³ registrazione sul file (F10).
+             ³
+ F6          ³ Consente di ELIMINARE il DOCUMENTO corrente.
+             ³ Prima di effettuare la cancellazione viene richiesta
+             ³ conferma a procedere.
+             ³
+ F7          ³ Avvia la fase di RICERCA che inizia con la presentazione
+             ³ delle chiavi di accesso alla base dati. In questa fase Š
+             ³ possibile aprire una finestra sull'archivio corrente.
+             ³ I dati verranno presentati secondo l'ordine della
+             ³ chiave selezionata.
+             ³
+ Tab - Tab  ³ Consente lo spostamento tra i diversi control
+             ³ (elementi) presenti del documento. Per la selezione di
+             ³ alcuni control Š necessario entrare in modalit…
+             ³ Modifica/Inserimento.
+             ³
+ Alt-F7      ³ Finestra di ricerca
+             ³
+ F9          ³ REGISTRA sul file i dati inseriti o modificati.
+             ³ In fase di inserimento consente di mantenerne attivo
+             ³ il ciclo proponendo un nuovo inserimento subito dopo
+             ³ la registrazione.
+             ³
+ F10         ³ REGISTRA sul file i dati inseriti o modificati.
+             ³ In fase di inserimento consente di interrompere il
+             ³ ciclo e passare alla consultazione.
+             ³
+ +           ³ Visualizza il documento successivo.
+             ³
+ -           ³ Visualizza il documento precedente.
+             ³
+ Ctrl-Home   ³ Visualizza il primo documento.
+             ³
+ Ctrl-End    ³ Visualizza l'ultimo documento.
+             ³
+ <Ù          ³ Consente l'attivazione di un pulsante
+             ³
+             ³
+ Alt-F1      ³ Visualizza la calcolatrice.
+             ³
+ Alt-Tab     ³ In una gestione multipagina consente di passare alle
+ Ctrl-Tab    ³ pagine successive o di tornare alle pagine precedenti.
+             ³
+ Ctrl-F4     ³ Abbandonare la gestione corrente e di tornare alla
+             ³ maschera precedente.
+             ³
+ Alt-F4      ³ Consente di uscire dall'applicativo.
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ TASTI GESTIONALI SULLE BROWSE/LIST BOX ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ Ins         ³ Avvia la modalit… di INSERIMENTO nuove RIGHE.
+             ³ Per mantenere attiva questa modalit… si deve
+             ³ registrare ogni RIGA con il tasto F9.
+             ³
+ Barra       ³ Attiva la MODIFICA della RIGA corrente.
+             ³ La sessione si conclude con una rinuncia (ESC)
+             ³ o con la registrazione sul file ( F9 / F10 )
+             ³
+ Canc        ³ Consente di ELIMINARE la RIGA corrente.
+             ³
+ F9          ³ REGISTRA sul file i dati inseriti o modificati.
+             ³ In fase di inserimento consente di mantenerne
+             ³ attivo il ciclo proponendo un nuovo inserimento
+             ³ subito dopo la registrazione.
+             ³
+ F10         ³ REGISTRA sul file i dati inseriti o modificati.
+             ³ In fase di inserimento consente di interrompere
+             ³ il ciclo e passare alla consultazione.
+             ³
+ Freccia-S—  ³ Posiziona la riga precedente
+             ³
+ Freccia-Gi— ³ Posiziona la riga successiva
+             ³
+ Pg.Up       ³ Posiziona la pagina precedente
+             ³
+ Pg.Down     ³ Posiziona la pagina successiva
+             ³
+ Home        ³ Posiziona la prima pagina
+             ³
+ End         ³ Posiziona l'ultima pagina
+             ³
+ Ctrl-->     ³ Consente di allargare la colonna corrente
+             ³
+ Ctrl-<-     ³ Consente di stringere la colonna corrente
+             ³
+ Ctrl-Ins    ³ Consentono di effettuare rispettivamente il Copia,
+ Shift-Canc  ³ Taglia ed Incolla nel e dal buffer del contenuto della
+ Shift-Ins   ³ voce sulla quale il cursore si trova posizionato.
+             ³
+ Ctrl-Barra  ³ All'interno di una List Box o di una Browse
+ e Ctrl-\    ³ contenente la colonna di Tag, consentono
+             ³ rispettivamente di selezionare/deselezionare un
+             ³ elemento e di deselezionare tutti gli elementi
+             ³ evenualmente selezionati nell'oggetto.
+             ³
+ Ctrl-F      ³ Consente di bloccare/sbloccare lo scorrimento di
+             ³ una o pi— colonne.  La o le colonne bloccate
+             ³ rimarranno quindi sempre visibili nella parte
+             ³ sinistra della Browse/List Box
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ TASTI GESTIONALI SUI MEMO ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ Barra Spazio³ Consente di entrare in edit sul campo memo.
+             ³
+ F10         ³ Conferma gli inserimenti effettuati
+             ³
+ Alt-A       ³ Azzera Totalizzatore
+             ³
+ Alt-S       ³ Somma  Totalizzatore
+             ³
+ Alt-V       ³ Visualizza Totalizzatore
+             ³
+ Alt-F       ³ Riporta Totale nel testo
+             ³
+ Alt-Ins     ³ Risolve espressione postponendo in risultato
+             ³
+ Alt-Canc    ³ Risolve espressione sostituendo in risultato
+             ³
+ F8          ³ Consente di leggere un file di testo da disco
+             ³ importandone il contenuto nel memo
+             ³
+ F9          ³ Consente di scrivere in  un file di testo su disco
+             ³ il contenuto nel memo
+             ³
+ Ctrl-F4     ³ Consentono di tornare alla maschera precedente
+ Esc         ³

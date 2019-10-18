@@ -1,0 +1,42 @@
+<CAP> CALCOLATRICE
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Calcolatrice ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ La calcolatrice Š una componente opzionale di tutte le applicazioni
+ sviluppate con dBsee 4.0.  Pu• essere richiamata, all'interno di ogni
+ ambiente, attraverso la pressione dei tasti ALT-F1, e pu• essere
+ utilizzata tramite il mouse o tramite i tasti cursore.
+
+ Nella parte alta della calcolatrice vi Š il display, all'interno del
+ quale verranno visualizzate le cifre che di volta in volta vengono
+ digitate; la calcolatrice si presenta in stato di "ON".  Al di sotto
+ del display sono presenti una tastierina numerica ed i pulsanti
+ "ON/C", "<-", "KEYBOARD", "OFF".
+
+ - La tastierina numerica viene utilizzata in modo del tutto simile ad
+   una normale calcolatrice da tavolo, utilizzando i numeri da
+   tastiera oppure col puntatore del mouse.
+
+ - Il pulsante "ON/C" viene utilizzato per azzerare il valore del
+   display.
+
+ - Il pulsante "<-" viene utilizzato per cancellare le cifre inserite,
+   a partire dall'ultima.
+
+ - Il pulsante "KEYBOARD" viene utilizzato per ritornare
+   all'applicazione chiamante, riportando il risultato visualizzato
+   nel display all'interno del campo corrente.
+
+ - Il pulsante "OFF" spegne la calcolatrice, togliendola dal video,
+   senza riportare il risultato ottenuto.
+
+ Per attivare i pulsanti e quindi le funzionalit… sopra riportare,
+ sono attivi i tasti caldi (Hot-Key - O, Back-Space, K, F)
+ richiamabili dalla semplice pressione della lettera evidenziata.
+
+ I tasti O ed ESC consentono rispettivamente di azzerare il
+ contenuto del display e di togliere la calcolatrice dal video.
+
+ La pressione dei tasti SHIFT-F1 consentono la presentazione
+ dell'elenco dei tasti disponibili sulla calcolatrice.

@@ -1,0 +1,1 @@
+blinker.com %1

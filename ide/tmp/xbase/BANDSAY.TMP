@@ -1,0 +1,18 @@
+.if !empty( cTPrintIf )
+IF €cTPrintIf€
+.endif
+.if M->lCrystal
+€space(ntMrg)€dfReportOutPut( €nTrow+[, ]+nTcol+[, "]+trim(oo_itm->itmsay)+[", "]+tControlID()+[","]+M->cBandAlias+["] € )
+.else
+   .M->cFont := toItem("fontname")
+   .if ! empty(cFont)
+      .if at("(", cFont) == 0
+         .M->cFont := ["]+cFont+["]
+      .endif
+      .M->cFont := ",,,,,, "+cFont
+   .endif
+€space(ntMrg)€dfPrint( €nTrow+[, ]+nTcol+[, "]+trim(oo_itm->itmsay)+[",, ]+cTattr+cFont€ )
+.endif
+.if !empty( cTPrintIf )
+ENDIF
+.endif

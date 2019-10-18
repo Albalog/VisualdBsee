@@ -1,0 +1,81 @@
+.parameter cTblock
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : S010ITM
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Generazione di codice per blocchi su item (Shift+F10)
+.* ----------------------------------------------------------------------------
+.M->nTobjRec:= oo_obj->(recno())
+.M->nTdbfRec:= 0
+.M->cTdbf   := ""
+.dd_dbf->(dbSetOrder(1))
+.IF dd_dbf->(dbSeek(oo_obj->DBF))
+   .M->nTdbfRec:= dd_dbf->(recno())
+   .M->cTdbf   := tDbfAliasName()
+.endif
+.M->cTnSeek := ""
+.M->nTpkLast:= ""
+.M->cTpSeek := ""
+.M->nTpOrde := 0
+.M->aTukLast:= {}
+.if !Empty( cTdbf )
+   .foreach index dd_ndx->NDX_UNQ=="P"
+     .M->cTnSeek := dd_ndx->NDX
+     .M->nTpkLast:= tItmLastpKey( cTnSeek )
+     .M->cTpSeek := dd_ndx->(FILE+NDX)
+     .M->nTpOrde := dd_ndx->NDXINCN
+   .next
+   .M->aTukLast:= tItmLastUkey(oo_obj->DBF)
+.endif
+.M->nTpkMode := tItmPrimaryKey( cTnSeek ,dd_sym->SYM )
+.do case
+   .case cTblock $ "EDTB-EDTA"
+        .out ÛtSourcePath()Û\DmmBlk.txt
+.if oo_obj->TYP != "qry"
+.do whenstd with 0
+.endif
+        .lTxtApp := .T.
+        .close
+   .case cTblock $ "CHKB-CHKA"
+        .out ÛtSourcePath()Û\DmmBlk.txt
+.if oo_obj->TYP == "qry"      ./ oggetto query
+    .*
+    .*   inizializzazione variabili template
+    .*   per la corretta generazione del codice standard.
+    .*
+    .M->nTItmRec := oo_itm->(recno())
+    .M->aTQuery := {}
+    .*
+    .foreach control EMPTY(oo_itm->IDGRP) .AND. oo_itm->TYP $ "get-rel-exp-img"
+       .*
+       .*   non vengono considerati item di relazione in say
+       .*
+       .if oo_itm->TYP != "rel" .or. ToItem("editcondition") == "1"
+           .aadd(  aTQuery , {oo_itm->(recno()) , dfGetSym(oo_itm->ITMGET,;
+                                             {||alltrim(dd_sym->SYM_NAM)})} )
+       .endif
+    .next
+    .*
+    .oo_itm->(dbGoto(M->nTItmRec))
+    .dd_sym->(dbSetOrder(1))
+    .*
+    .m->nTCnt := Ascan( aTQuery, {|x|x[1] == oo_itm->(recno()) })
+    .if m->nTCnt != 0
+        .dd_sym->(dbSeek(oo_itm->ITMGET))
+        .M->cTsymCod := dd_sym->SYM
+        .M->cTsym     := "cGet"+alltrim(str(m->nTCnt))
+        .M->cTsym1    := "aQuery["+alltrim(str(nTCnt))+",3]"
+        .M->cTsymNam  := alltrim(dd_sym->SYM_NAM)
+        .M->cTinf     := dd_sym->SYM_NAM+[, ]+dd_sym->SYM_TYP+[, ]+str(dd_sym->SYM_LEN,3)+[, ]+str(dd_sym->SYM_DEC,3)
+        .*
+.do qryvalst with 0
+        .*
+    .endif
+.else
+.do validstd with 0
+.endif
+        .lTxtApp := .T.
+        .close
+   .otherwise
+        .dbMsgErr( "Operazione non prevista//per blocco di codice : "+cTblock )
+.endcase

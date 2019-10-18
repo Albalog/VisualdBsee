@@ -1,0 +1,282 @@
+.if (toExeEnv("linker")=="9")
+.do rmakex2
+.else
+  .if (toExeEnv("linker")=="10")
+.do rmakex3
+  .else
+.do rmakex1
+  .endif
+.endif
+.out €tSourcePath()+"\"+MstPrgNam€.ARC
+//
+// Resource file
+//
+#include "dfxres.ch"
+
+POINTER
+      PTR_MAGNIFY_PLUS = "MAGNIFYP.CUR"
+
+BITMAP
+      DFINITSCREEN_BITMAP    = "InitScrn.bmp"
+      BACKGROUND01_BMP       = "back1.bmp"
+      BACKGROUND02_BMP       = "back2.bmp"
+      BACKGROUND03_BMP       = "back3.bmp"
+      BACKGROUND04_BMP       = "back4.bmp"
+      BACKGROUND05_BMP       = "back5.bmp"
+      BACKGROUND06_BMP       = "back6.bmp"
+      BACKGROUND07_BMP       = "back7.bmp"
+      BACKGROUND08_BMP       = "back8.bmp"
+      BACKGROUND09_BMP       = "back9.bmp"
+      BACKGROUND10_BMP       = "back10.bmp"
+      BACKGROUND11_BMP       = "back11.bmp"
+      BACKGROUND12_BMP       = "back12.bmp"
+      BACKGROUND13_BMP       = "back13.bmp"
+      BACKGROUND14_BMP       = "back14.bmp"
+      BACKGROUND15_BMP       = "back15.bmp"
+      BACKGROUND16_BMP       = "back16.bmp"
+      BACKGROUND17_BMP       = "back17.bmp"
+      BACKGROUND18_BMP       = "back18.bmp"
+      BACKGROUND19_BMP       = "back19.bmp"
+      BACKGROUND20_BMP       = "back20.bmp"
+      BACKGROUND21_BMP       = "back21.bmp"
+      BACKGROUND22_BMP       = "back22.bmp"
+      BACKGROUND23_BMP       = "back23.bmp"
+      BACKGROUND24_BMP       = "back24.bmp"
+      BACKGROUND25_BMP       = "back25.bmp"
+      BACKGROUND26_BMP       = "back26.bmp"
+      BACKGROUND27_BMP       = "back27.bmp"
+      BACKGROUND28_BMP       = "back28.bmp"
+      BACKGROUND29_BMP       = "back29.bmp"
+      BACKGROUND30_BMP       = "back30.bmp"
+      BACKGROUND31_BMP       = "back31.bmp"
+
+      CARTA_VERT_BMP         = "cartvert.bmp"
+      CARTA_ORIZ_BMP         = "cartoriz.bmp"
+
+      PRINTER_WIN_BMP        = "printwin.bmp"
+      PRINTER_DOS_BMP        = "printdos.bmp"
+
+      ICON_INFO_BMP          = "icon_info.bmp"
+      ICON_WARNING_BMP       = "icon_warning.bmp"
+      ICON_QUESTION_BMP      = "icon_question.bmp"
+      ICON_ERROR_BMP         = "icon_error.bmp"
+
+      BUTT_OK                = "butt_ok.bmp"
+      BUTT_CANCEL            = "butt_cancel.bmp"
+
+      GET_BTN_DOWNARROWBMP   = "DnArrow.bmp"
+      BTN_GOTOP              = "btn_top.bmp"
+      BTN_GOBOTTOM           = "btn_bott.bmp"
+      BTN_PREV               = "btn_prev.bmp"
+      BTN_NEXT               = "btn_next.bmp"
+      BTN_PREV2              = "btn_pre2.bmp"
+      BTN_NEXT2              = "btn_nex2.bmp"
+      BTN_PRINT              = "btn_prin.bmp"
+      BTN_RULER              = "btn_rule.bmp"
+
+      TOOLBAR_WRITE_H        = "tbr_writ.bmp"
+      TOOLBAR_ESC_H          = "tbr_undo.bmp"
+      TOOLBAR_HELP_H         = "tbr_help.bmp"
+      TOOLBAR_KEYHELP_H      = "tbr_kh.bmp"
+      TOOLBAR_BOOKHELP       = "tbr_book.bmp"
+
+      TOOLBAR_ADD            = "tbr_new.bmp"
+      TOOLBAR_MOD            = "tbr_mod.bmp"
+      TOOLBAR_DEL            = "tbr_del.bmp"
+      TOOLBAR_FIND           = "tbr_fin.bmp"
+      TOOLBAR_FIND_WIN       = "tbr_finW.bmp"
+      TOOLBAR_FIND_ALPHA     = "tbr_fina.bmp"
+      TOOLBAR_PG_PREV        = "tbr_pgp.bmp"
+      TOOLBAR_PG_NEXT        = "tbr_pgn.bmp"
+      TOOLBAR_FIND_CONTEXT   = "tbr_fia2.bmp"
+
+      TOOLBAR_GOTOP          = "tbr_top.bmp"
+      TOOLBAR_GOBOTTOM       = "tbr_bott.bmp"
+      TOOLBAR_PREV           = "tbr_prev.bmp"
+      TOOLBAR_NEXT           = "tbr_next.bmp"
+
+      TOOLBAR_PRINT          = "tbr_prin.bmp"
+      TOOLBAR_DATE           = "tbr_date.bmp"
+      TOOLBAR_USER           = "tbr_user.bmp"
+      TOOLBAR_MENU           = "tbr_menu.bmp"
+
+      FORMMENU_UP            = "fmnu_up.bmp"
+      FORMMENU_DOWN          = "fmnu_dow.bmp"
+      FORMMENU_EXIT          = "fmnu_exi.bmp"
+
+      COLUMN_TAG_SELECTED     = "tag_on.bmp"
+      COLUMN_TAG_NOT_SELECTED = "tag_off.bmp"
+
+      DFAPPLICATION_LOGO      = "logo.bmp"
+
+  .if ! empty(toExeEnv("userresbmp01")) .AND. UPPER(RIGHT(toExeEnv("userresbmp01"),3))=="BMP"
+      DBUSER_RES01_BMP     = "€toExeEnv("userresbmp01")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp02")) .AND. UPPER(RIGHT(toExeEnv("userresbmp02"),3))=="BMP"
+      DBUSER_RES02_BMP     = "€toExeEnv("userresbmp02")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp03")) .AND. UPPER(RIGHT(toExeEnv("userresbmp03"),3))=="BMP"
+      DBUSER_RES03_BMP     = "€toExeEnv("userresbmp03")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp04")) .AND. UPPER(RIGHT(toExeEnv("userresbmp04"),3))=="BMP"
+      DBUSER_RES04_BMP     = "€toExeEnv("userresbmp04")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp05")) .AND. UPPER(RIGHT(toExeEnv("userresbmp05"),3))=="BMP"
+      DBUSER_RES05_BMP     = "€toExeEnv("userresbmp05")€"
+  .endif                           
+  .if ! empty(toExeEnv("userresbmp06")) .AND. UPPER(RIGHT(toExeEnv("userresbmp06"),3))=="BMP"
+      DBUSER_RES06_BMP     = "€toExeEnv("userresbmp06")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp07")) .AND. UPPER(RIGHT(toExeEnv("userresbmp07"),3))=="BMP"
+      DBUSER_RES07_BMP     = "€toExeEnv("userresbmp07")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp08")) .AND. UPPER(RIGHT(toExeEnv("userresbmp08"),3))=="BMP"
+      DBUSER_RES08_BMP     = "€toExeEnv("userresbmp08")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp09")) .AND. UPPER(RIGHT(toExeEnv("userresbmp09"),3))=="BMP"
+      DBUSER_RES09_BMP     = "€toExeEnv("userresbmp09")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp10")) .AND. UPPER(RIGHT(toExeEnv("userresbmp10"),3))=="BMP"
+      DBUSER_RES10_BMP     = "€toExeEnv("userresbmp10")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp11")) .AND. UPPER(RIGHT(toExeEnv("userresbmp11"),3))=="BMP"
+      DBUSER_RES11_BMP     = "€toExeEnv("userresbmp11")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp12")) .AND. UPPER(RIGHT(toExeEnv("userresbmp12"),3))=="BMP"
+      DBUSER_RES12_BMP     = "€toExeEnv("userresbmp12")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp13")) .AND. UPPER(RIGHT(toExeEnv("userresbmp13"),3))=="BMP"
+      DBUSER_RES13_BMP     = "€toExeEnv("userresbmp13")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp14")) .AND. UPPER(RIGHT(toExeEnv("userresbmp14"),3))=="BMP"
+      DBUSER_RES14_BMP     = "€toExeEnv("userresbmp14")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp15")) .AND. UPPER(RIGHT(toExeEnv("userresbmp15"),3))=="BMP"
+      DBUSER_RES15_BMP     = "€toExeEnv("userresbmp15")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp16")) .AND. UPPER(RIGHT(toExeEnv("userresbmp16"),3))=="BMP"
+      DBUSER_RES16_BMP     = "€toExeEnv("userresbmp16")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp17")) .AND. UPPER(RIGHT(toExeEnv("userresbmp17"),3))=="BMP"
+      DBUSER_RES17_BMP     = "€toExeEnv("userresbmp17")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp18")) .AND. UPPER(RIGHT(toExeEnv("userresbmp18"),3))=="BMP"
+      DBUSER_RES18_BMP     = "€toExeEnv("userresbmp18")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp19")) .AND. UPPER(RIGHT(toExeEnv("userresbmp19"),3))=="BMP"
+      DBUSER_RES19_BMP     = "€toExeEnv("userresbmp19")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp20")) .AND. UPPER(RIGHT(toExeEnv("userresbmp20"),3))=="BMP"
+      DBUSER_RES20_BMP     = "€toExeEnv("userresbmp20")€"
+  .endif
+
+ICON
+  .if ! empty(toExeEnv("appicon")) .AND. UPPER(RIGHT(toExeEnv("appicon"),3))=="ICO"
+      APPLICATION_ICON       = "€toExeEnv("appicon")€"
+  .else
+      APPLICATION_ICON       = "dBsee.ico"
+  .endif
+
+USERDEF IMAGES
+      WAITBACKSTD    = FILE "win-empty.png"
+      WAITBACKINFO   = FILE "win-info.png"
+      WAITBACKTIME   = FILE "win-wait.png"
+      MENUOPEN       = FILE "menuopen.gif"
+      MENUCLOSE      = FILE "menuclose.gif"
+      MENUEXE        = FILE "menuexe.gif"
+      MENUSEL        = FILE "menusel.gif"
+
+  .if ! empty(toExeEnv("userresbmp01")) .AND. UPPER(RIGHT(toExeEnv("userresbmp01"),3))!="BMP"
+      DBUSER_RES01_BMP     = FILE "€toExeEnv("userresbmp01")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp02")) .AND. UPPER(RIGHT(toExeEnv("userresbmp02"),3))!="BMP"
+      DBUSER_RES02_BMP     = FILE "€toExeEnv("userresbmp02")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp03")) .AND. UPPER(RIGHT(toExeEnv("userresbmp03"),3))!="BMP"
+      DBUSER_RES03_BMP     = FILE "€toExeEnv("userresbmp03")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp04")) .AND. UPPER(RIGHT(toExeEnv("userresbmp04"),3))!="BMP"
+      DBUSER_RES04_BMP     = FILE "€toExeEnv("userresbmp04")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp05")) .AND. UPPER(RIGHT(toExeEnv("userresbmp05"),3))!="BMP"
+      DBUSER_RES05_BMP     = FILE "€toExeEnv("userresbmp05")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp06")) .AND. UPPER(RIGHT(toExeEnv("userresbmp06"),3))!="BMP"
+      DBUSER_RES06_BMP     = FILE "€toExeEnv("userresbmp06")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp07")) .AND. UPPER(RIGHT(toExeEnv("userresbmp07"),3))!="BMP"
+      DBUSER_RES07_BMP     = FILE "€toExeEnv("userresbmp07")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp08")) .AND. UPPER(RIGHT(toExeEnv("userresbmp08"),3))!="BMP"
+      DBUSER_RES08_BMP     = FILE "€toExeEnv("userresbmp08")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp09")) .AND. UPPER(RIGHT(toExeEnv("userresbmp09"),3))!="BMP"
+      DBUSER_RES09_BMP     = FILE "€toExeEnv("userresbmp09")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp10")) .AND. UPPER(RIGHT(toExeEnv("userresbmp10"),3))!="BMP"
+      DBUSER_RES10_BMP     = FILE "€toExeEnv("userresbmp10")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp11")) .AND. UPPER(RIGHT(toExeEnv("userresbmp11"),3))!="BMP"
+      DBUSER_RES11_BMP     = FILE "€toExeEnv("userresbmp11")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp12")) .AND. UPPER(RIGHT(toExeEnv("userresbmp12"),3))!="BMP"
+      DBUSER_RES12_BMP     = FILE "€toExeEnv("userresbmp12")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp13")) .AND. UPPER(RIGHT(toExeEnv("userresbmp13"),3))!="BMP"
+      DBUSER_RES13_BMP     = FILE "€toExeEnv("userresbmp13")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp14")) .AND. UPPER(RIGHT(toExeEnv("userresbmp14"),3))!="BMP"
+      DBUSER_RES14_BMP     = FILE "€toExeEnv("userresbmp14")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp15")) .AND. UPPER(RIGHT(toExeEnv("userresbmp15"),3))!="BMP"
+      DBUSER_RES15_BMP     = FILE "€toExeEnv("userresbmp15")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp16")) .AND. UPPER(RIGHT(toExeEnv("userresbmp16"),3))!="BMP"
+      DBUSER_RES16_BMP     = FILE "€toExeEnv("userresbmp16")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp17")) .AND. UPPER(RIGHT(toExeEnv("userresbmp17"),3))!="BMP"
+      DBUSER_RES17_BMP     = FILE "€toExeEnv("userresbmp17")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp18")) .AND. UPPER(RIGHT(toExeEnv("userresbmp18"),3))!="BMP"
+      DBUSER_RES18_BMP     = FILE "€toExeEnv("userresbmp18")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp19")) .AND. UPPER(RIGHT(toExeEnv("userresbmp19"),3))!="BMP"
+      DBUSER_RES19_BMP     = FILE "€toExeEnv("userresbmp19")€"
+  .endif
+  .if ! empty(toExeEnv("userresbmp20")) .AND. UPPER(RIGHT(toExeEnv("userresbmp20"),3))!="BMP"
+      DBUSER_RES20_BMP     = FILE "€toExeEnv("userresbmp20")€"
+  .endif
+
+  .if ! empty(toExeEnv("ver_company")) .OR. ! empty(toExeEnv("ver_productname")) .OR. ! empty(toExeEnv("ver_productver"))
+     VERSION
+  .if ! empty(toExeEnv("ver_company")) 
+         "CompanyName"      = "€toExeEnv("ver_company")€"
+  .endif
+  .if ! empty(toExeEnv("ver_productname")) 
+         "ProductName"      = "€toExeEnv("ver_productname")€"
+  .endif
+  .if ! empty(toExeEnv("ver_productver"))
+         "ProductVersion"   = "€toExeEnv("ver_productver")€"
+  .endif
+  .if ! empty(toExeEnv("ver_filever"))
+         "FileVersion"      = "€toExeEnv("ver_filever")€"
+  .endif
+  .if ! empty(toExeEnv("ver_filedescr"))
+         "FileDescription"  = "€toExeEnv("ver_filedescr")€" 
+  .endif
+  .if ! empty(toExeEnv("ver_internalnam"))
+         "InternalName"     = "€toExeEnv("ver_internalnam")€" 
+  .endif
+  .if ! empty(toExeEnv("ver_copyright"))
+         "LegalCopyright"   = "€toExeEnv("ver_copyright")€"  
+  .endif
+  .if ! empty(toExeEnv("ver_originalnam"))
+         "OriginalFilename" = "€toExeEnv("ver_originalnam")€"  
+  .endif
+  .endif
+
+
+.close
+
+
+

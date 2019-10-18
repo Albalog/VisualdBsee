@@ -1,0 +1,105 @@
+.parameter cPar1
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : REPORT2
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab report tipo fattura
+.* ----------------------------------------------------------------------------
+.M->cTmgName := "report2.tmg "
+.if "ins" $ cPar1
+    .M->ProPrj           := NewProg("prj","1")
+    .M->CodObj           := NewCod("obj")
+    .M->cObjLab          := M->CodObj
+    .*
+    .oo_bld->(dBnet("app",0))
+    .oo_bld->EXE         := oo_exe->exe
+    .oo_bld->OBJ         := M->CodObj
+    .oo_bld->TYP         := "prn"
+    .oo_bld->WDO         := "prn"
+    .oo_bld->EXT         := "prg"
+    .oo_bld->PRJINCN     := M->ProPrj
+    .oo_bld->SECTION     := "1"
+    .oo_bld->COMPILE     := "1"
+    .oo_bld->LINK        := "1"
+    .oo_bld->FLGGEN      := "1"
+    .oo_bld->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto nel file make/link..." ,75) )
+    .*
+    .oo_obj->(dBnet("app",0))
+    .oo_obj->OBJ         := M->CodObj
+    .oo_obj->TYP         := "prn"
+    .oo_obj->WDO         := "prn"
+    .oo_obj->EXT         := "prg"
+    .oo_obj->DBF         := M->MDbf
+    .oo_obj->TMPCOD      := "00"
+    .oo_obj->PRG         := M->MPrgDrv
+    .oo_obj->OBJDES      := M->cTitle
+    .oo_obj->ROW         := 03
+    .oo_obj->COL         := 02
+    .oo_obj->ROW1        := 60
+    .oo_obj->COL1        := 999
+    .oo_obj->OBJRL       := "0"
+    .oo_obj->VFLOAT      := "1"
+    .oo_obj->FLGUPD      := "1"
+    .oo_obj->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto oggetto report..."+Trim(oo_obj->OBJDES) ,75) )
+    .msg "Aggiunto oggetto : " + Trim(oo_obj->OBJDES)
+    .*
+.endif
+.*
+.if "grp" $ cPar1
+    .*------------------------------------------- Aggiungo nel file OO_PRN
+    .*------------ gruppo header di report
+    .CodPrn := NewCod("prn")
+    .oo_prn->(dBnet("app",0))
+    .oo_prn->PRN         := M->CodPrn
+    .oo_prn->OBJ         := M->CodObj
+    .oo_prn->REC_ID      := "G"
+    .oo_prn->TYP         := "rep"
+    .oo_prn->GRP         := "00"
+    .oo_prn->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto Header di stampa..." ,75) )
+    .*
+    .CodPrn := NewCod("prn")
+    .oo_prn->(dBnet("app",0))
+    .oo_prn->PRN         := M->CodPrn
+    .oo_prn->OBJ         := M->CodObj
+    .oo_prn->REC_ID      := "G"
+    .oo_prn->GRP         := "AA"
+    .oo_prn->TYP         := "mst"
+    .oo_prn->FILE        := M->mDbf
+    .oo_prn->TYPCOD      := "dbf"
+    .oo_prn->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto file master..." ,75) )
+    .*
+    .*------------------------------------------- Aggiunge nelle opzioni l'indice del file master
+    .ToWrite( "prn", oo_prn->PRN, "indexcode", M->mNdx)
+    .*------------------------------------------- Aggiunge nelle opzioni la banda di body
+    .ToWrite( "prn", oo_prn->PRN+"bdy", "bandactive", "1")
+    .*
+    .*------------ gruppo 2
+    .tcGrpExpr := "ÛdbNdxExp(M->Mdbf1,M->Mndxrel, 'als')Û"
+    .CodPrn := NewCod("prn")
+    .oo_prn->(dBnet("app",0))
+    .oo_prn->PRN         := M->CodPrn
+    .oo_prn->OBJ         := M->CodObj
+    .oo_prn->REC_ID      := "G"
+    .oo_prn->GRP         := "BA"
+    .oo_prn->TYP         := "rel"
+    .oo_prn->FILE        := M->tcRel
+    .oo_prn->TYPCOD      := "rel"
+    .oo_prn->(dBnet("url"))
+    .*
+    .__dbFrameDis( Padr(M->cTmgName+"Aggiunto file in relazione..." ,75) )
+    .*
+    .*------------------------------------------- Aggiungo nelle opzioni il salto pagina dopo raggruppamento
+    .ToWrite( "prn", oo_prn->PRN, "breakafterfoot", "1")
+    .*------------------------------------------- Aggiungo nelle opzioni la banda di body
+    .ToWrite( "prn", oo_prn->PRN+"bdy", "bandactive", "1")
+    .*
+.endif
+.msg "Aggiunto oggetto :" + oo_obj->objDes

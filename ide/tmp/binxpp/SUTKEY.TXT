@@ -1,0 +1,75 @@
+<CAP> CHIAVI DI RICERCA
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ CHIAVI DI RICERCA ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ Alla pressione del tasto F7, viene presentata una finestra
+ all'interno della quale i dati dell'archivio richiesto verranno
+ presentati secondo l'ordine della chiave selezionata.
+
+ La finestra pu• essere spostata a video con l'utilizzo dei tasti
+ ALT-FRECCE DIREZIONALI.
+
+ Esempio di selezione di una chiave :
+ ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+         Alla pressione del tasto F7 viene visualizzata la
+         finestra contenente l'elenco delle chiavi previste:
+
+<BeginBox>
+         ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+         ³Codice Anagrafico ³
+         ³Ragione sociale   ³    ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ÚÄ> ³Titolare          ³ ³³ ³ Rossi Giovanni>               ³
+     ³   ³Citta'            ³ \/ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+     ³   ³Provincia         ³                     ³
+     ³   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ                     ³
+     ³                                            ³
+     ³                                            ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³                                                              ³
+     ÀÄÄ Spostando il cursore, utilizzando i tasti freccia,         ³
+         oppure il puntatore del mouse, sulla chiave desiderata,    ³
+         viene visualizzato sulla destra l'apposito spazio nel      ³
+         quale digitare i dati relativi al campo chiave prescelto.  ³
+                                                                    ³
+                                                                    ³
+                                                  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+                                                  ³
+         Premendo un'ulteriore volta il tasto F7, oppure utilizzando
+         il mouse sul simbolo freccia che collega le due finestre,
+         viene presentata una maschera nella quale viene presentato
+         l'elenco degli inserimenti effettuati sul file ordinati
+         secondo la chiave selezionata.
+
+<EndBox>
+
+  possibile digitare una parte (anche solo un carattere) della chiave
+ per operare la selezione.
+
+
+ TASTI DELLA FUNZIONE DI RICERCA
+ ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+ F1    ³ Tasti disponibili.
+        ³
+ F7     ³ Finestra archivio corrente, secondo l'ordine
+        ³ della chiave selezionata e a partire da
+        ³ quanto digitato.
+        ³
+ C-F7   ³ Chiavi di accesso sul file di lookup.
+        ³
+ F8     ³ Finestra sequenziale per contenuto ($) .
+        ³ Supponete che della ditta
+        ³         "MATERIALI INDUSTRIALI"
+        ³ voi siete certi di ricordare soltanto "ALI".
+        ³ Digitate "ALI" nel campo chiave e premete F8.
+        ³ Il sistema effettuer… una ricerca su tutto
+        ³ l'archivio e visualizzer… tutte le aziende
+        ³ che contengono la sequenza di caratteri "ALI".
+        ³
+ C-F8   ³ Costruzione interattiva filtro di selezione.
+        ³
+ <ÄÙ    ³ Localizza la chiave digitata e seleziona il
+        ³ documento.
+        ³
+ ESC    ³ Rinuncia al posizionamento sul file.

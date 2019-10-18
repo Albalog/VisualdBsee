@@ -1,0 +1,24 @@
+<CAP> HELP ON LINE
+
+L'help in linea viene attivato alla pressione del tasto F1.
+
+L'help viene visualizzato in una finestra che dispone delle seguenti
+funzionalit…:
+
+* anzitutto viene mostrato l'elenco degli argomenti disponibili. Per
+  accedere ad un argomento, Š sufficiente selezionarlo utilizzando i
+  tasti freccia gi— e freccia su e quindi premere Invio.
+  Molte volte la scelta di un argomento provoca l'apertura di un
+  elenco subordinato.
+
+* I pulsanti SOMMARIO e PRECEDENTE, visualizzati nella parte superiore
+  della finestra, consentono, rispettivamente, di accedere all'indice
+  generale dell'help e alla pagina di help precedentemente selezionata.
+
+* La barra del menu, attivabile premendo Alt-Barra, contiene due sottomenu
+  denominati FILE e ?.
+  Il menu FILE consente di stampare la pagina di help (STAMPA ARGOMENTO) e
+  di uscire dall'help (ESCI).
+  Il menu ? consente di ottenere questa pagina di help.
+
+Per abbandonare l'help, premere Esc o selezionare da menu File/Esci.

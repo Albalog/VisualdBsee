@@ -1,0 +1,50 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ACTTBR.tmp
+.* RELEASE      : 5.0
+.* VERSION      : d
+.* DESCRIZIONE  : Inizializza la toolbar dell'oggetto
+.* ----------------------------------------------------------------------------
+.foreach toolbaritem oo_mnu->MNUON != "-"
+   .if oo_mnu->MNUTYP=="lin"
+ATTACH TOOLSEPARATOR TO oWin ð   // ACTTBR.TMP
+   .else
+      .M->cMnuLab  := if(oo_mnu->MNUTYP=="lin" ,"" ,trim(oo_mnu->MNULAB) )
+      .M->cTImg    := toImage(toToolbarItem("xbimgorigin"), toToolbarItem("xbimgdata"))
+      .M->cTpfkdes := toMenu("tooltiptext")
+      .M->cTpfkCn1 := ""
+      .if toToolbarItem("activeink") == "1"
+         .M->cTpfkCn1 := cTpfkCn1 + "i"
+      .endif
+      .if toToolbarItem("activeins") == "1"
+         .M->cTpfkCn1 := cTpfkCn1 + "a"
+      .endif
+      .if toToolbarItem("activemod") == "1"
+         .M->cTpfkCn1 := cTpfkCn1 + "m"
+      .endif
+      .M->cTpfkCn1 := ["]+cTpfkCn1+[")]
+      .if !empty(toToolbarItem("pfkcondition")) .AND. toToolbarItem("pfkcondition")!=".T."
+         .M->cTpfkCn1 := cTpfkCn1 + ".AND. (" + toToolbarItem("pfkcondition")+")"
+      .endif
+      .M->bTfun    := toToolbarItem("pfkfunction")
+      .if Empty(bTfun)
+         .M->bTfun  := [dbMsgErr( dfStdMsg( MSG_ATTBUTUND ) )]
+      .else
+         .M->bTfun    := Alltrim(tStrTran( bTfun ,alltrim(oo_obj->PRG) ))
+      .endif
+      .M->cTpfkCn2 := iif( empty(toToolbarItem("pfkruncond")) ,[.T.] ,toToolbarItem("pfkruncond") )
+ATTACH TOOLITEM TO oWin                ð ; // ACTTBR.TMP
+        EXECUTE {|mp1, mp2, oBtn| ÛbTfunÛ}            ð ; //
+        WHEN    {|| (cState $ ÛcTpfkCn1Û } ð ; //
+        RUNTIME {|cCHILD,cLABEL,cID|ÛcTpfkCn2Û}         ð ; //
+        .if !empty(cMnuLab)
+        PROMPT   ÛtExpCast(cMnuLab)Û   ð ; //
+        .endif
+        .if ! empty(cTpfkdes)
+        TOOLTIP "ÛcTpfkdesÛ"           ð ; //
+        .endif
+        .if ! empty(cTImg)
+        IMAGES  ÛcTImgÛ                ð ; //
+        .endif
+        ID "ÛOO_MNU->MNUOBJ+OO_MNU->MNUÛ"  
+   .endif
+.next

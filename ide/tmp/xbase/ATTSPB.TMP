@@ -1,0 +1,97 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTSPB.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control SPIN BUTTON ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTcnd := ["]+tItmActive()+["]
+.if !empty(toItem("spbcondition")) .AND. toItem("spbcondition")!=".T."
+   .M->cTcnd := cTcnd + ".AND.(" + toItem("spbcondition") +")"
+.endif
+.cTvar := if( Empty( toItem("spbdataorigin") ) ,"cDmmVar" ,toItem("spbdataorigin") )
+.M->cTc:= ["]+tItmCol("promptcolor")+[","]+tItmCol("hotkeycolor")    +[","]+;
+              tItmCol("datacolor")  +[","]+tItmCol("datahilitecolor")+[","]+;
+              tItmCol("datacolor")  +["]
+.M->cXTc := ""
+.if empty(toItem("xbpromptcolor")) .and. empty(toItem("xbdatacolor"))
+   .M->cXTc := "{"+cTc+"}"
+.else
+   .if empty(toItem("xbpromptcolor"))
+      .M->cXTc := ["]+tItmCol("promptcolor") +[",NIL,"]
+   .else
+      .M->cXTc := ["]+toItem("xbpromptcolor") +[",NIL,"]
+   .endif
+   .if empty(toItem("xbdatacolor"))
+      .M->cXTc := cXTc+tItmCol("datacolor") +[",NIL,NIL]
+   .else
+      .M->cXTc := cXTc+toItem("xbdatacolor") +[",NIL,NIL]
+   .endif
+   .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+.endif
+.M->cFont  := toItem("fontname")
+.M->cPFont := toItem("promptfontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.if ! empty(cPFont) .and. at("(", cPFont) == 0
+    .M->cPFont := ["]+cPFont+["]
+.endif
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL GET AS SPINBUTTON '+cTvarÛ ð ; // ATTSPB.TMP
+                 AT ÛnTr1+[,]+nTc1Û   ð ; // Coordinate
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 SIZE       {ÛnTc2Û,ÛnTr2Û} ð ; // Dimensioni Campo get
+                 COORDINATE  W_COORDINATE_PIXEL ð ; // Coordinate in Pixel
+.endif
+.if !(cTpag=="1")
+                 PAGE       ÛcTpagÛ  ð ; // Pagina
+.endif
+                 COLOR      ÛcXTcÛ   ð ; // Array dei colori
+.if !Empty(cTpro)
+   .cTproAt := Str(tPromptRow(),4)+" ,"+Str(tPromptCol(),4)
+                 PROMPT   ÛtExpCast(cTpro)Û ð ; // Prompt
+                 PROMPTAT ÛcTproAtÛ ð ; // Coordinate prompt
+.endif
+                 PICTURESAY "ÛcTpicSÛ"ð ; // Picture in say
+                 DISPLAYIF  ÛcTdisÛ   ð ; // Visualizza se...
+.do case
+   .case toItem("spbdatatype") == "0"
+        .cTmin := toItem("spbminvalue")
+        .cTmax := toItem("spbmaxvalue")
+        .cTstp := toItem("spbstepvalue")
+        .if !Empty(cTmin)
+                 MIN        ÛcTminÛ   ð ; // Valore minimo
+        .endif
+        .if !Empty(cTmax)
+                 MAX        ÛcTmaxÛ   ð ; // Valore massimo
+        .endif
+        .if !Empty(cTstp)
+                 STEP       ÛcTstpÛ   ð ; // Step
+        .endif
+   .case toItem("spbdatatype") == "1"
+        .cTarr := toItem("spbarraydef")
+        .if !Empty(cTarr)
+                 ARRAY      ÛcTarrÛ   ð ; // Array
+        .endif
+.endcase
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+.endif
+.if !Empty(cTrefGr)
+                 REFRESHGRP "ÛcTrefGrÛ" ð ; // Comanda refresh del gruppo
+.endif
+.if !Empty(toItem("whenclicked"))
+                 WHENCLICKED {||ÛtoItem("whenclicked")Û}   ð ; // Funzione chiamata alla selezione control
+.endif
+.if toItem("controlgap")=="1"
+                 GAP   1                ð ; // Spaziatura icona control/dati
+.endif
+.if !Empty(cFont)
+                 FONT       ÛcFontÛ ð ; // Font Name (XBASE)
+.endif
+.if ! empty(cTpro) .and. !Empty(cPFont)
+                 PROMPTFONT ÛcPFontÛ ð ; // Prompt Font Name (XBASE)
+.endif
+                 ACTIVE   {||cState $ ÛcTcndÛ } ð ; // Stato di attivazione
+                 VARNAME "ÛcTVarÛ" ð ; //
+                 MESSAGE ÛtExpCast(cTmsg)Û ð   // Messaggio utente

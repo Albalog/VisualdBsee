@@ -1,0 +1,12 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : INJDFF
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Elenco dei punti di iniezione codice per le funzione
+.*              : di cancellazione record del file.
+.*              : NON UTILIZZATO PER LA GENERAZIONE.
+.* ----------------------------------------------------------------------------
+.inj DFF1 Punto dichiarazione variabili statiche
+.inj DFF2 Prima della CASCADE ricorsiva
+.inj DFF8 Prima dell'istruzione DBDELETE() cancellazione record
+.inj DFF9 Prima dell'istruzione RETURN

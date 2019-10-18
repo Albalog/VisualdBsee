@@ -1,0 +1,16 @@
+.parameter cTObj
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : NEWOBJ
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab per valorizzare il codice oggetto
+.* ----------------------------------------------------------------------------
+.NewObj := .F.
+.oo_obj->(DbSetOrder(2))
+.IF ! oo_obj->(dbSeek(upper(Padr(cTObj,8))))
+   .NewObj := .T.
+   .CodObj := NewCod("obj")
+.else
+   .CodObj := oo_obj->OBJ
+.endif
+.oo_obj->(DbSetOrder(1))

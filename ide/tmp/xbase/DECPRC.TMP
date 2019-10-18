@@ -1,0 +1,31 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : DECPRC.TMP
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Dichiara le variabili di calcolo del report come STATIC
+.* ----------------------------------------------------------------------------
+.M->nTCnt := 1
+.m->nTLen := len( aTprc  )
+.do while nTCnt <= nTlen
+   .do case
+      .case nTCnt = 1
+/*
+  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³ dichiarazione variabili di calcolo ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*/
+
+         .if nTlen > 1
+STATIC ÛaTprc[nTcnt,1]Û ,;ð //  ÛdfTabData("calctype", aTprc[nTcnt,2])Û
+         .else
+STATIC ÛaTprc[nTcnt,1]Û   ð //  ÛdfTabData("calctype", aTprc[nTcnt,2])Û
+         .endif
+      .case nTCnt == nTLen
+       ÛaTprc[nTcnt,1]Û   ð //  ÛdfTabData("calctype", aTprc[nTcnt,2])Û
+      .case nTCnt < nTLen
+       ÛaTprc[nTcnt,1]Û ,;ð //  ÛdfTabData("calctype", aTprc[nTcnt,2])Û
+      .otherwise
+          .dbmsgerr("array di lunghezza nulla")
+   .endcase
+   .M->nTCnt := nTCnt +1
+.enddo

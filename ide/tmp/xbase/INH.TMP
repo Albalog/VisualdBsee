@@ -1,0 +1,16 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : INH
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Campi ereditati su relazioni 1:N
+.* ----------------------------------------------------------------------------
+.dd_rel->(dbSetOrder(1))
+.dd_rel->(dbSeek(oo_obj->OBJREL))
+.foreach inhvalue
+   .M->cTsym := dd_sym->SYM_NAM
+   .M->cTexp := toInHerit("inheritexpr")
+   .if ! Empty( cTexp )
+aadd( aInh ,{ "Û+AllTrim(cTsym)+'" ,{||'+cTexpÛ }})
+   .endif
+.next
+.dd_dbf->(dbGoto( nTdbfRec))

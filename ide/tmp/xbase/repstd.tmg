@@ -1,0 +1,519 @@
+.parameter cTRepType, cTRel
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : REPSTD
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Grab impostazione repord standard
+.* ----------------------------------------------------------------------------
+.* TEMPLATE PER IMPOSTAZIONE REPORT STANDARD
+.*  cTRepType    tipo report "pr1" tipo lista, "pr2" tipo fattura
+.*  cTRel        codice relazione
+.*
+.cTDbfFile := ""       ./ file figlio di relazione
+.cTLenPic  := ""       ./ dimensione picture
+.nTNumWrd  := 0        ./ numero di parole della descrizione del simbolo
+.nTWidWrd  := 0        ./ lunghezza massima singola parola
+.nTMaxLen  := 0        ./ massimo tra max picture e max parola
+.nTCnt     := 0        ./ contatore
+.nTCnt1    := 0        ./ ulteriore contatore
+.nTColMax  := 0        ./ colonna massima in stampa
+.M->aTArrFie  := {}    ./ array dei campi
+.M->aTArrTag  := {}    ./ array dei recno dei campi selezionati
+.*
+.nTpadIdCode := 12     ./ PAD campo OPTIDCODE in oo_opt
+.nTpadCode   := 15     ./ PAD campo OPTCODE   in oo_opt
+.*
+.if cTRepType == NIL
+   .cTRepType := "pr1"
+.endif
+.*
+.if cTRel == NIL
+    .cTRel := ""
+.endif
+.*
+.dd_dbf->( dbSetOrder( 1 ) )
+.*
+.if cTRepType == "pr1"
+   .dd_dbf->( dbSeek( oo_obj->DBF ) )
+.else
+   .dd_rel->( dbSetOrder( 1 ) )
+   .dd_rel->( dbSeek( cTRel ) )
+   .dd_dbf->( dbSeek( dd_rel->file1 ) )
+.endif
+.*
+.cTDbfFile := dd_dbf->FILE
+.*
+.*  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.*  ³ costruzione array campi ³
+.*  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+.*
+.foreach field
+.*
+      .nNumWrd := NumToken(trim(dd_sym->sym_des), " ")
+      .nWidWrd  := 0
+      .nTCnt    := 1
+      .*
+      .do while nTCnt <= nNumWrd
+          .nWidWrd := MAX( nWidWrd, len(Token(dd_sym->sym_des, " ", nTCnt) ) )
+          .nTCnt := nTCnt + 1
+      .enddo
+      .*
+      .if dd_sym->sym_typ == "M"
+         .cTLenPic := 60
+      .else
+         .cTLenPic := len(trim(dd_sym->sym_pic))
+      .endif
+      .*
+      .nTMaxLen := MAX(cTLenPic, nWidWrd )
+      .*
+      .Aadd( aTArrFie, { dd_fie->(recno()), nTMaxLen, nNumWrd } )
+      .*
+.next
+.*
+.*   ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.*   ³ finestra tag sui campi ³
+.*   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+.*
+.tRepStdWin()
+.*
+.if act == "esc"
+   .return
+.endif
+.*
+.* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.* ³ creazione item di default in oo_itm ³
+.* ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+.if !oo_itm->( dbNet( "dbf", 0) )
+   .return
+.endif
+.*
+.__dbFrameOn( 06 ,05, 18, 75, "Impostazione report standard" )
+.*
+.* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.* ³ item di banner di stampa ³
+.* ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ        := oo_obj->obj
+.oo_itm->ITM        := "0001"               ./ Codice item nell'oggetto
+.oo_itm->BAND       := "00H"                ./ banda
+.oo_itm->TYP        := "fon"                ./ print data
+.oo_itm->ROW        := 1                    ./ posizione riga cursore
+.oo_itm->COL        := 3                    ./ posizione colonna cursore
+.oo_itm->FONT       := "100"                ./ Tipo di font
+.oo_itm->ITMSAY     := "report"             ./ Decodifica testo say
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1")  ./ Attributo di stampa
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ        := oo_obj->obj
+.oo_itm->ITM        := "0002"               ./ Codice item nell'oggetto
+.oo_itm->BAND       := "00H"                ./ banda
+.oo_itm->TYP        := "say"                ./ print data
+.oo_itm->ROW        := 7                    ./ posizione riga cursore
+.oo_itm->COL        := 3                    ./ posizione colonna cursore
+.oo_itm->ITMSAY     := oo_obj->OBJDES       ./ Decodifica testo say
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1")  ./ Attributo di stampa
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ        := oo_obj->obj
+.oo_itm->ITM        := "0003"               ./ Codice item nell'oggetto
+.oo_itm->BAND       := "00H"                ./ banda
+.oo_itm->TYP        := "say"                ./ print data
+.oo_itm->ROW        := 8                    ./ posizione riga cursore
+.oo_itm->COL        := 3                    ./ posizione colonna cursore
+.oo_itm->ITMSAY     := "eventuale condizione di filtro di query:"  ./ Decodifica testo say
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1")  ./ Attributo di stampa
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ        := oo_obj->obj
+.oo_itm->ITM        := "0004"               ./ Codice item nell'oggetto
+.oo_itm->BAND       := "00H"                ./ banda
+.oo_itm->TYP        := "exp"                ./ print data
+.oo_itm->ROW        := 9                    ./ posizione riga cursore
+.oo_itm->COL        := 3                    ./ posizione colonna cursore
+.oo_itm->WIDTH      := 60                   ./ Formattazione orizzontale multiriga
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("expression", nTpadCode) , "dfPrnFltDes()")
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1")  ./ Attributo di stampa
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.* ³ item di page header      ³
+.* ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ       := oo_obj->obj
+.oo_itm->ITM       := "0005"               ./ Codice item nell'oggetto
+.oo_itm->BAND      := "00S"                ./ banda
+.oo_itm->TYP       := "say"                ./ print data
+.oo_itm->ROW       := 0                    ./ posizione riga cursore
+.oo_itm->COL       := 2                    ./ posizione colonna cursore
+.oo_itm->ITMSAY    := "Nr. pagina"     ./ Testo say
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ       := oo_obj->obj     ./ Oggetto
+.oo_itm->ITM       := "0006"          ./ Codice item nell'oggetto
+.oo_itm->BAND      := "00S"           ./ banda
+.oo_itm->TYP       := "exp"           ./ Tipo
+.oo_itm->ROW       := 0               ./ Posizione riga    cursore
+.oo_itm->COL       := 15              ./ posizione colonna cursore
+.oo_itm->PICO      := "9999"          ./ Picture in output
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+.* Decodifica testo say
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("expression", nTpadCode) , "dfPrnPage()")
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ       := oo_obj->obj        ./ Oggetto
+.oo_itm->ITM       := "0007"             ./ Codice item nell'oggetto
+.oo_itm->BAND      := "00S"              ./ banda
+.oo_itm->TYP       := "say"              ./ Tipo
+.oo_itm->ROW       := 0                  ./ Posizione riga    cursore
+.oo_itm->COL       := 60                 ./ posizione colonna cursore
+.oo_itm->ITMSAY    := "Data :"       ./ testo say
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ       := oo_obj->obj     ./ Oggetto
+.oo_itm->ITM       := "0008"          ./ Codice item nell'oggetto
+.oo_itm->BAND      := "00S"           ./ banda
+.oo_itm->TYP       := "exp"           ./ Tipo
+.oo_itm->ROW       := 0               ./ Posizione riga    cursore
+.if toExeEnv("setcentury")=="1"
+    .oo_itm->COL       := 68              ./ posizione colonna cursore
+    .oo_itm->PICO      := "99/99/9999"    ./ Picture in output
+.else
+    .oo_itm->COL       := 70              ./ posizione colonna cursore
+    .oo_itm->PICO      := "99/99/99"      ./ Picture in output
+.endif
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+.*
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("expression", nTpadCode) , "date()")
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ       := oo_obj->obj     ./ Oggetto
+.oo_itm->ITM       := "0009"          ./ Codice item nell'oggetto
+.oo_itm->BAND      := "00S"           ./ banda
+.oo_itm->TYP       := "box"           ./ Tipo
+.oo_itm->ROW       := 1               ./ Posizione riga
+.oo_itm->COL       := 0               ./ posizione colonna
+.oo_itm->ROW1      := 1               ./ Posizione ultima riga
+.oo_itm->COL1      := 80              ./ posizione ultima colonna
+.oo_itm->FONT      := "01"            ./ Tipo di font
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+.*
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item box",70) )
+.*
+.* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.* ³ item di fine stampa ³
+.* ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ       := oo_obj->obj         ./ Oggetto
+.oo_itm->ITM       := "0010"              ./ Codice item nell'oggetto
+.oo_itm->BAND      := "00F"               ./ banda
+.oo_itm->TYP       := "say"               ./ Tipo
+.oo_itm->ROW       := 0                   ./ Posizione riga    cursore
+.oo_itm->COL       := 0                   ./ posizione colonna cursore
+.oo_itm->ITMSAY    := "Fine Report"   ./ testo say
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ       := oo_obj->obj     ./ Oggetto
+.oo_itm->ITM       := "0011"          ./ Codice item nell'oggetto
+.oo_itm->BAND      := "00F"           ./ banda
+.oo_itm->TYP       := "say"           ./ Tipo
+.oo_itm->ROW       := 0               ./ Posizione riga    cursore
+.oo_itm->COL       := 14              ./ posizione colonna cursore
+.oo_itm->ITMSAY    := oo_obj->OBJDES  ./ Decodifica testo say
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.* ³ item di fine pagina ³
+.* ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+.oo_itm->( dbAppend() )
+.oo_itm->OBJ       := oo_obj->obj         ./ Oggetto
+.oo_itm->ITM       := "0012"              ./ Codice item nell'oggetto
+.oo_itm->BAND      := "00P"               ./ banda
+.oo_itm->TYP       := "say"               ./ Tipo
+.oo_itm->ROW       := 0                   ./ Posizione riga    cursore
+.oo_itm->COL       := 10                  ./ posizione colonna cursore
+.oo_itm->ITMSAY    := "Fine Pagina"   ./ testo say
+.OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+.__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+.*
+.* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.* ³ item di testata gruppi ³
+.* ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+.*
+.lTLastGrp := .F.         ./ .T. se Š l'ultimo raggruppamento
+.nTDCol    := 0           ./ Offset di colonna per il gruppo corrente
+.nTCntItm  := 13          ./ progressivo item di stampa
+.nTRow     := 1           ./ riga corrente
+.nTCol     := 0           ./ colonna corrente
+.nTMaxRow  := 0           ./ riga massima di banda
+.nTPtrRec  := 0           ./ indice array campi selezionati
+.*
+.oo_prn->( dbSetOrder( 1 ) )
+.oo_prn->( dbSeek( oo_obj->obj+"G"+"00" ) ) ./allineamento record di report
+.do while oo_obj->obj+"G" == oo_prn->obj+oo_prn->rec_id .AND. !oo_prn->(eof())
+    .*
+    .* check se Š l'ultimo raggruppamento
+    .*
+    .oo_prn->( dbSkip( 1 ) )
+    .if oo_prn->(eof()) .OR. (oo_obj->obj+"G" != (oo_prn->obj+oo_prn->rec_id))
+        .lTLastGrp := .T.
+    .endif
+    .oo_prn->( dbSkip( -1 ) )
+    .*
+.*   ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.*   ³decodifica nome file proprietario gruppo ³
+.*   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+    .*
+    .cNameFile := ""
+    .if oo_prn->typcod == "dbf"   ./ il codice Š codice di file
+        .cNameFile := dfGetDbf(oo_prn->file, {||tDbfAliasName()})
+    .else                         ./ il codice Š codice di relazione
+        .dd_rel->( dbSetOrder( 1 ) )
+        .dd_rel->( dbSeek( oo_prn->file ) )
+        .cNameFile := dfGetDbf(dd_rel->file1, {||tDbfAliasName()})
+    .endif
+    .*
+    .nTDCol := nTDCol + 5    ./ incremento indentatura generale per livelli
+    .*
+    .if oo_prn->grp != "00"  ./ se non Š il record generale di report
+    .*
+        .*  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+        .*  ³ stampa a 2 livelli       ³
+        .*  ³                          ³
+        .*  ³ Items body 1ø livello    ³
+        .*  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+        .*
+        .if oo_prn->grp == "AA" .AND. cTRepType == "pr2"
+            .dd_fie->( dbSeek( oo_obj->dbf ) )
+            .do while dd_fie->file == oo_obj->dbf .AND. !dd_fie->(eof())
+                .*
+                .dd_sym->( dbSetOrder( 1 ) )
+                .dd_sym->( dbSeek( dd_fie->sym ) )
+                .*
+                .nTCol    := 0
+                .nTCntItm := nTCntItm + 1
+                .*
+                .oo_itm->( dbAppend() )
+                .oo_itm->OBJ       := oo_obj->obj
+                .oo_itm->ITM       := PadL(nTCntItm,4, "0")   ./ Codice item nell'oggetto
+                .oo_itm->BAND      := "AAB"                   ./ banda
+                .oo_itm->TYP       := "say"                   ./ print data
+                .oo_itm->ROW       := nTRow                   ./ posizione riga cursore
+                .oo_itm->COL       := nTCol + nTDCol          ./ posizione colonna cursore
+                .oo_itm->ITMSAY    := trim(dd_sym->sym_des)   ./ Decodifica testo say
+                .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+                .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+                .*
+                .nTCntItm := nTCntItm + 1
+                .nTCol    := max(len(trim(dd_sym->sym_des)),15)+2
+                .*
+                .oo_itm->( dbAppend() )
+                .oo_itm->OBJ       := oo_obj->obj
+                .oo_itm->ITM       := PadL(nTCntItm,4, "0") ./ Codice item nell'oggetto
+                .oo_itm->BAND      := "AAB"                 ./ banda
+                .oo_itm->TYP       := "get"                 ./ Tipo : print value
+                .oo_itm->ROW       := nTRow                 ./ posizione riga cursore
+                .oo_itm->COL       := nTCol + nTDCol        ./ posizione colonna cursore
+                .oo_itm->ITMGET    := dd_fie->sym           ./ Codice simbolo
+                .oo_itm->ALS       := dd_fie->file          ./ Alias nome file
+                .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+                .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+                .*
+                .if dd_sym->sym_typ == "M"
+                    .oo_itm->WIDTH := 60
+                .endif
+                .*
+                .nTRow := nTRow + 1
+                .*
+                .dd_fie->( dbSkip( 1 ) )
+            .enddo
+            .*
+           .* calcolo dell'altezza di banda
+           .OptWrite( "prn"+Padr(oo_prn->PRN+"bdy", nTpadIdCode)        + ;
+                       padR("bandheight", nTpadCode) , alltrim(str(nTRow)) )
+            .*
+           .nTCol := 0
+        .endif
+        .*
+        .if oo_prn->grp != "AA" .AND. cTRepType == "pr1"
+            .oo_itm->( dbAppend() )
+            .oo_itm->OBJ       := oo_obj->obj
+            .oo_itm->ITM       := PadL(nTCntItm,4, "0")     ./ Codice item nell'oggetto
+            .oo_itm->BAND      := oo_prn->grp+"H"           ./ banda
+            .oo_itm->TYP       := "say"                     ./ print data
+            .oo_itm->ROW       := 0                         ./ posizione riga cursore
+            .oo_itm->COL       := 0 + nTDCol                ./ posizione colonna cursore
+            .oo_itm->ITMSAY    := "Header File"         ./ testo say
+            .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+            .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+            .*
+            .nTCntItm := nTCntItm + 1
+            .oo_itm->( dbAppend() )
+            .oo_itm->OBJ       := oo_obj->obj
+            .oo_itm->ITM       := PadL(nTCntItm,4, "0")     ./ Codice item nell'oggetto
+            .oo_itm->BAND      := oo_prn->grp+"H"           ./ banda
+            .oo_itm->TYP       := "say"                     ./ print data
+            .oo_itm->ROW       := 0                         ./ posizione riga cursore
+            .oo_itm->COL       := 12 + nTDCol               ./ posizione colonna cursore
+            .oo_itm->ITMSAY    := cNameFile                 ./ Decodifica testo say
+            .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+            .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+            .*
+            .nTCntItm := nTCntItm + 1
+            .oo_itm->( dbAppend() )
+            .oo_itm->OBJ       := oo_obj->obj
+            .oo_itm->ITM       := PadL(nTCntItm,4, "0")     ./ Codice item nell'oggetto
+            .oo_itm->BAND      := oo_prn->grp+"H"           ./ banda
+            .oo_itm->TYP       := "say"                     ./ print data
+            .oo_itm->ROW       := 0                         ./ posizione riga cursore
+            .oo_itm->COL       := 21+ nTDCol                ./ posizione colonna cursore
+            .oo_itm->ITMSAY    := "livello"             ./ testo say
+            .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+            .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+            .*
+            .nTCntItm := nTCntItm + 1
+            .oo_itm->( dbAppend() )
+            .oo_itm->OBJ       := oo_obj->obj
+            .oo_itm->ITM       := PadL(nTCntItm,4, "0")     ./ Codice item nell'oggetto
+            .oo_itm->BAND      := oo_prn->grp+"H"           ./ banda
+            .oo_itm->TYP       := "say"                     ./ print data
+            .oo_itm->ROW       := 0                         ./ posizione riga cursore
+            .oo_itm->COL       := 29 + nTDCol               ./ posizione colonna cursore
+            .oo_itm->ITMSAY    := str( ASC(substr(oo_prn->Grp,2,1))-ASC("A"),1) ./ Decodifica testo say
+            .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+            .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+            .*
+            .nTCntItm := nTCntItm + 1
+            .oo_itm->( dbAppend() )
+            .oo_itm->OBJ       := oo_obj->obj
+            .oo_itm->ITM       := PadL(nTCntItm,4, "0")            ./ Codice item nell'oggetto
+            .oo_itm->BAND      := oo_prn->grp+"H"                  ./ banda
+            .oo_itm->TYP       := "say"                            ./ print data
+            .oo_itm->ROW       := 0                                ./ posizione riga cursore
+            .oo_itm->COL       := 31 + nTDCol                      ./ posizione colonna cursore
+            .oo_itm->ITMSAY    := "Espressione di raggruppamento:" ./ testo say
+            .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+            .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+            .*
+            .nTCntItm := nTCntItm + 1
+            .oo_itm->( dbAppend() )
+            .oo_itm->OBJ       := oo_obj->obj
+            .oo_itm->ITM       := PadL(nTCntItm,4, "0")   ./ Codice item nell'oggetto
+            .oo_itm->BAND      := oo_prn->grp+"H"         ./ banda
+            .oo_itm->TYP       := "exp"                   ./ print data
+            .oo_itm->ROW       := 0                       ./ posizione riga cursore
+            .oo_itm->COL       := 66 + nTDCol             ./ posizione colonna cursore
+            .oo_itm->PICO      := "@X"                    ./ Picture in output
+            .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+            .*
+            .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("expression", nTpadCode) ,;
+                       trim( tOption( "prn", OO_PRN->PRN, "grpexpr", "grpexp" ) ) )
+            .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+        .endif
+        .*
+    .endif
+    .*
+    .if lTLastGrp                ./ se ultimo raggruppamento
+        .nTMaxRow := 0           ./ si intesta l'header
+        .nTCnt := 1
+        .do while  nTCnt <= len(aTArrTag)
+            .nTPtrRec := Ascan( atArrFie ,{|aArr|aArr[1] == aTArrTag[ntCnt]} )
+            .if nTPtrRec != 0
+                .ntRec := aTArrTag[nTCnt]
+                .dd_fie->( dbGoto( ntRec ) )
+                .dd_sym->( dbSetOrder( 1 ) )
+                .dd_sym->( dbSeek( dd_fie->sym ) )
+                .nTRow    := 2
+                .nTMaxRow := Max(nTMaxRow, atArrFie[nTPtrRec, 3])
+                .ntCnt1   := 1
+               .*
+               .do while  nTCnt1 <= atArrFie[nTPtrRec, 3]
+                   .nTCntItm := nTCntItm + 1
+                   .oo_itm->( dbAppend() )
+                   .oo_itm->OBJ       := oo_obj->obj
+                   .oo_itm->ITM       := PadL(nTCntItm,4, "0")   ./ Codice item nell'oggetto
+                   .oo_itm->BAND      := oo_prn->grp+"H"         ./ banda
+                   .oo_itm->TYP       := "say"                   ./ print data
+                   .oo_itm->ROW       := nTRow                   ./ posizione riga cursore
+                   .oo_itm->COL       := nTCol + nTDCol          ./ posizione colonna cursore
+                   .oo_itm->ITMSAY    := Token(trim(dd_sym->sym_des), " ", nTCnt1)   ./ Decodifica testo say
+                   .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+                   .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+                   .nTRow := nTRow + 1
+                   .nTCnt1 := nTCnt1 + 1
+               .enddo
+               .*
+            .endif
+            .*
+            .nTCnt    := nTCnt + 1
+            .nTCntItm := nTCntItm + 1
+            .nTCol    := nTCol + atArrFie[nTPtrRec, 2] + 2
+            .*
+        .enddo
+        .*
+        .* altezza di banda = massima riga + 2
+        .*
+        .OptWrite( "prn"+Padr(oo_prn->PRN+"hea", nTpadIdCode)            + ;
+                  padR("bandheight", nTpadCode) , alltrim(str(nTMaxRow+2)) )
+        .*
+    .endif
+    .nTCntItm := nTCntItm + 1
+    .*
+    .oo_prn->( dbSkip( 1 ) )
+.enddo
+.*
+.* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+.* ³ item di body ³
+.* ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+.*
+.nTCnt := 1
+.nTCol := 0
+.*
+.dd_sym->( dbSeek( dd_sym->sym ) )   ./ ##
+.*
+.do while nTCnt <= len(aTArrTag)
+    .nTPtrRec := Ascan( aTArrFie ,{|x|x[1] == aTArrTag[nTCnt]} )
+    .if nTPtrRec != 0
+        .*
+        .nTRec := aTArrTag[nTCnt]
+        .dd_fie->( dbGoto( nTRec ) )
+        .dd_sym->( dbSetOrder( 1 ) )
+        .dd_sym->( dbSeek( dd_fie->sym ) )
+        .*
+        .oo_itm->( dbAppend() )
+        .oo_itm->OBJ       := oo_obj->obj
+        .oo_itm->ITM       := PadL(nTCntItm,4, "0")   ./ Codice item nell'oggetto
+        .oo_itm->BAND      := if(cTRepType == "pr2", "BAB", "AAB")  ./ banda
+        .oo_itm->TYP       := "get"                   ./ Tipo : print value
+        .oo_itm->ROW       := 0                       ./ posizione riga cursore
+        .oo_itm->COL       := nTCol + nTDCol          ./ posizione colonna cursore
+        .oo_itm->ITMGET    := dd_fie->sym             ./ Codice simbolo
+        .oo_itm->ALS       := dd_fie->file            ./ Alias nome file
+        .oo_itm->REL       := cTRel                   ./ nodo file figlio
+        .OptWrite( "itm"+Padr(oo_itm->OBJ+oo_itm->itm, nTpadIdCode)+padR("typeface", nTpadCode) , "1") ./ Attributo di stampa
+        .__dbFrameDis( Padr("Report "+trim(oo_obj->PRG)+" Aggiunto item "+Trim(oo_itm->TYP) ,70) )
+        .*
+        .if dd_sym->sym_typ == "M"
+            .oo_itm->WIDTH := 60
+        .endif
+        .nTCntItm := nTCntItm + 1
+        .nTCol    := nTCol + atArrFie[nTPtrRec, 2] + 2
+    .endif
+    .ntCnt    := nTCnt + 1
+.enddo
+.oo_itm->( dbNet( "unl") )
+.__dbFrameOff()

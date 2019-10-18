@@ -1,0 +1,61 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTRDB.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control RADIO BUTTON ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTcnd := ["]+tItmActive()+["]
+.if !empty(toItem("rdbcondition")) .AND. toItem("rdbcondition")!=".T."
+   .M->cTcnd := cTcnd + ".AND.(" + toItem("rdbcondition") +")"
+.endif
+.M->cTvar := if( Empty( toItem("rdbdataorigin") ) ,"cDmmVar" ,toItem("rdbdataorigin") )
+.M->cTval := if( Empty( toItem("rdbdatavalue" ) ) ,"NIL" ,toItem("rdbdatavalue") )
+.M->cTc   := ["]+tItmCol("promptcolor")    +[","]+tItmCol("hotkeycolor")+[","]+;
+                 tItmCol("prompthilitecol")+[","]+tItmCol("iconcolor")  +["]
+.M->cXTc := ""
+.if empty(toItem("xbpromptcolor"))
+   .M->cXTc := "{"+cTc+"}"
+.else
+   .if empty(toItem("xbpromptcolor"))
+      .M->cXTc := ["]+tItmCol("promptcolor") +[",NIL,NIL,NIL]
+   .else
+      .M->cXTc := ["]+toItem("xbpromptcolor") +[",NIL,NIL,NIL]
+   .endif
+   .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+.endif
+.M->cTgap := toItem("promptgap")
+.M->cFont := toItem("fontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL GET AS RADIOBUTTON '+cTvar+'  PROMPT '+tExpCast(trim(oo_itm->ITMSAY))Û ð ; // ATTRDB.tmp
+                 AT ÛnTr1+[,]+nTc1Û   ð ; // Coordinate
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 SIZE       {ÛnTc2Û,ÛnTr2Û} ð ; // Dimensioni Campo get
+                 COORDINATE  W_COORDINATE_PIXEL ð ; // Coordinate in Pixel
+.endif
+                 VALUE    ÛcTvalÛ     ð ; // Valore
+                 GAP      ÛcTgapÛ     ð ; // Spazio ICONA / PROMPT
+.if !(cTpag=="1")
+                 PAGE     ÛcTpagÛ     ð ; // Pagina
+.endif
+                 COLOR    ÛcXTcÛ     ð ; // Array dei colori
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+.endif
+.if !Empty(cTrefGr)
+                 REFRESHGRP "ÛcTrefGrÛ" ð ; // Esegue il gruppo di refresh
+.endif
+.if !Empty(toItem("whenclicked"))
+                 WHENCLICKED {||ÛtoItem("whenclicked")Û}   ð ; // Funzione chiamata alla selezione control
+.endif
+.if !(cTdis=="{||.T.}")
+                 DISPLAYIF ÛcTdisÛ    ð ; // Display condizionale
+.endif
+.if !Empty(cFont)
+                 FONT       ÛcFontÛ ð ; // Font Name (XBASE)
+.endif
+                 ACTIVE  {||cState $ ÛcTcndÛ } ð ; // Stato di attivazione
+                 VARNAME "ÛcTvarÛ" ð ; //
+                 MESSAGE ÛtExpCast(cTmsg)Û ð   // Messaggio utente

@@ -1,0 +1,43 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : UPDDBF
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Aggiorna o crea i file del progetto su disco
+.* ----------------------------------------------------------------------------
+.if toFile("rddtype") $ "1-2-4-5"
+    .return
+.endif
+.M->ExePath := "..\exe\"
+.if dd_fie->(DbSeek(dd_dbf->file))
+   .if dd_dbf->(dbNet("rec"))
+      .dd_dbf->FLGUPD := ""
+      .dd_dbf->(dbNet("url"))
+      .M->FileMstName := M->ExePath + tDbfFileName()
+      .M->FileDmmName := ""
+      .if file( FileMstName+".dbf" )
+         .M->FileDmmName := M->ExePath + "DmmDbf"
+      .endif
+      .aDbf    := {}
+      .foreach field
+         .AADD(aDbf,{dd_sym->SYM_NAM,dd_sym->SYM_TYP,dd_sym->SYM_LEN,dd_sym->SYM_DEC})
+      .next
+      .if !empty(FileDmmName)
+         .dbCreate(FileDmmName,aDbf)
+         .msg [AGGIORNA IL FILE -> ] + FileMstName + [ ATTENDERE PREGO !!]
+         .* NOT Y2K
+         .* tUpdDbf( FileDmmName ,FileMstName )
+      .else
+         .msg [CREA IL FILE -> ] + FileMstName
+         .dbCreate(FileMstName,aDbf)
+      .endif
+      .*
+   .endif
+.else
+   .if type("OS()")=="C"
+      .* Visual dBsee
+      .dfAlert([Il File : ] + tDbfFileName() + [ non ha campi !])
+   .else
+      .msg [Il File : ] + tDbfFileName() + [ non ha campi !]
+      .inkey(5)
+   .endif
+.endif

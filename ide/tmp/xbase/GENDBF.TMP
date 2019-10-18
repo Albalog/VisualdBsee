@@ -1,0 +1,26 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GENDBF
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Genera i file della base dati del progetto in formato DBF
+.* NOTE         : Puo' essere richiamato aggiungendo una voce in configura
+.*              : TOOLS di Visual dBsee
+.* ----------------------------------------------------------------------------
+.M->nDbfRec := dd_dbf->(Recno())
+.dd_dbf->(DbSetorder(2))
+.if !Empty(aData:=dd_dbf->(tForeachArr("file" ,"dd_dbf->FILE_TYP=='0'" ,{||tDbfList()},aRec:={} )))
+   .usermsg [Ctrl+Barra=Tag/Untag file - Ctrl+/=Tag tutti - Ctrl+\=Untag tutti - <Ù=Conferma-Esc=Rinuncia]
+   .dBwar(0,0,0,0,[SCELTA FILE PER GENERAZIONE],[],aData,aTag:={} ,1,0,[dbwar],NIL, [ret-esc],[s],[s],0)
+   .if M->Act!="esc" .and. !Empty(aTag)
+       .M->nCnt := 1
+       .do while nCnt <= len(aTag)
+           .if aTag[nCnt] != 0
+               .nRec := aRec[ aTag[nCnt] ]
+               .dd_dbf->(DbGoto(nRec))
+               .do UpdDbf
+           .endif
+           .M->nCnt := nCnt + 1
+       .enddo
+   .endif
+.endif
+.dd_dbf->(DbGoto(nDbfRec))

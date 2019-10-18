@@ -1,0 +1,42 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : NLTR
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Lock dei records delle transazioni
+.* ----------------------------------------------------------------------------
+.M->nTtrnMov := 0
+.foreach tranpos
+   .if oo_trn->TrnWriMod == "t"
+      .M->cTdbfTgt := tDbfTrnTgt()
+      .if !empty(toTrans("trnkey"))
+IF ÛcTdbfTgt+[->(dfS(]+str(dd_ndx->NdxIncN,2)+[,]+toTrans("trnkey")Û))
+      .else
+IF ! (ÛcTdbfTgtÛ->(Eof()))
+      .endif
+   IF lBreak
+      IF ! ÛcTdbfTgtÛ->(dfNet(NET_RECORDLOCK)) ;BREAK ;END
+   ELSE
+      ÛcTdbfTgtÛ->(dfNet(NET_RECORDLOCK,0))
+   END
+ENDIF
+   .endif
+   .if oo_trn->TrnWriMod == "m"
+      .M->nTtrnMov := nTtrnMov+1
+   .endif
+.next
+.if nTtrnMov > 0
+IF cState == DE_STATE_MOD
+   .foreach tranpos
+      .if oo_trn->TrnWriMod == "m"
+         .M->cTdbfTgt := tDbfTrnTgt()
+         .if !empty(toTrans("trnkey"))
+   IF ÛcTdbfTgt+[->(dfS(]+str(dd_ndx->NdxIncN,2)+[,]+toTrans("trnkey")Û))
+         .else
+   IF ! (ÛcTdbfTgtÛ->(Eof()))
+         .endif
+      IF ! ÛcTdbfTgtÛ->(dfNet(NET_RECORDLOCK)) ;BREAK ;END
+   ENDIF
+      .endif
+   .next
+ENDIF
+.endif

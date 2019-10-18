@@ -1,0 +1,42 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : DBFUSE
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Apertura base dati per oggetti
+.* ----------------------------------------------------------------------------
+.if !Empty(aItmDbf[1][2])
+/*⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+  ≥  MASTER FILE   ≥
+  ¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒŸ*/
+IF !dfUse( "€aItmDbf[1][2]€" ,NIL ,aFile ) ;RETU .F. ;END     // Funzione di apertura file (vedere Norton Guide)
+.endif
+
+.M->nTcnt:= 2
+.do while nTcnt <= len(aItmDbf)
+    .if aItmDbf[nTcnt][1] == "0"
+       .if nTcnt== 2
+/*⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+  ≥  LOOK-UP FILE  ≥
+  ¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒŸ*/
+       .endif
+       .if !Empty(aItmDbf[nTcnt][2])
+IF !dfUse( "€aItmDbf[nTcnt][2]€" ,NIL ,aFile ) ;RETU .F. ;END
+       .endif
+    .endif
+    .M->nTcnt := nTcnt +1
+.enddo
+
+.dd_dbf->(dbGoto( nTdbfRec ))
+.if lTtrnRep .or. lTtrnApp
+   .M->lTfrs := .T.
+   .foreach tranpos
+      .if lTfrs
+/*⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
+  ≥TRANSACTION FILE≥
+  ¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒŸ*/
+         .M->lTfrs := .F.
+      .endif
+      .M->cTdbfTgt := tDbfTrnTgt()
+IF !dfUse( "€cTdbfTgt€" ,NIL ,aFile ) ;RETU .F. ;END
+   .next
+.endif

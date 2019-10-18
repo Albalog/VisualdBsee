@@ -1,0 +1,40 @@
+.if !empty( cTPrintIf )
+IF €cTPrintIf€
+.endif
+.if M->lCrystal
+.* €space(ntMrg)€dfReportOutPut( €nTrow+[, ]+nTcol+[, ]+trim(toItem("expression"))+[, {"]+tControlID() +[", "]+trim(oo_itm->PicO) +["]+IIF(oo_itm->WIDTH = 0, [}], [, .T. }])€ )
+   .if oo_itm->WIDTH = 0
+     .M->cT_pic := trim(oo_itm->PicO)
+     .if AT("\", cT_pic) != 0
+        .* ignoro la picture e prendo solo la struttura del campo
+        .M->cT_pic := '"'+Token( M->cT_pic ,"\" ,2)+'",'+Token( M->cT_pic ,"\" ,3)+','+Token( M->cT_pic ,"\" ,4)
+     .else
+        .M->cT_pic := '"'+cT_pic+'"'
+     .endif
+€space(ntMrg)€dfReportOutPut( €nTrow+[, ]+nTcol+[, ]+trim(toItem("expression"))+[, {"]+tControlID() +[", ]+cT_pic+[ },"]+M->cBandAlias+["]€ )
+   .else
+€space(ntMrg)€dfReportOutPut( €nTrow+[, ]+nTcol+[, ]+trim(toItem("expression"))+[, {"]+tControlID() +[", "M", 10, 0}]+[,"]+M->cBandAlias+["]€ )
+   .endif
+.else
+   .if toItem("bitmap") == "1"
+€space(ntMrg)€dfPrintImage( €nTrow+[, ]+nTcol+[, ]+trim(toItem("expression"))+[, ]+toItem("printimgsizew")+[, ]+;
+                toItem("printimgsizeh")€ )
+   .else
+      .M->cFont := toItem("fontname")
+      .if ! empty(cFont) .and. at("(", cFont) == 0
+          .M->cFont := ["]+cFont+["]
+      .endif
+      .if oo_itm->WIDTH != 0 ./  item multiriga
+€space(ntMrg)€dfPrint( €nTrow+[, ]+nTcol+[, ]+trim(toItem("expression"))+[, "]+ trim(oo_itm->PicO) +[", ]+;
+                cTattr+[, .T.,]+alltrim(str(oo_itm->WIDTH))+[, ]+toItem("prnprecolumn")+[, ]+toItem("prnpostcolumn")+[, ]+toItem("prnfiller")+[, ]+M->cFont€ )
+      .else
+         .if ! empty(cFont)
+             .M->cFont := ",,,,,, "+cFont
+         .endif
+€space(ntMrg)€dfPrint( €nTrow+[, ]+nTcol+[, ]+trim(toItem("expression"))+[, "]+ trim(oo_itm->PicO) +[", ] + cTattr + cFont€ )
+      .endif
+   .endif
+.endif
+.if !empty( cTPrintIf )
+ENDIF
+.endif

@@ -1,4 +1,4 @@
-::@echo off
+@echo off
 
 SET DMMCLP=%CLIPPERCMD%
 SET DMMXPP=%XPPCMDLINE%
@@ -23,7 +23,7 @@ echo *******************
 strtran dblang.base dblang.xpj rel=%rel% defines=%defines% cur=%cur%
 pbuild dblang.xpj %2 %3 %4 >> %DMMLOG%
 if ERRORLEVEL 1 GOTO :error
- del dblang.xpj > nul
+del dblang.xpj > nul
 aimplib %REL%\DBLANGIT.DEF /omf /o%REL%\omf\dblang.lib
 
 if "%1" == "/DYNAMIC" goto :dynamic
@@ -41,15 +41,13 @@ strtran dynamic.base dynamic.xpj rel=%rel% defines=%defines% cur=%cur% lib="%lib
 SET XX=%CD%
 copy dynamic.xpj %cur%%rel%\dynamic.xpj
 cd %cur%%rel%
-@echo on
 pbuild dynamic.xpj %2 %3 %4 >> %DMMLOG%
-@echo off
-echo %CD%
-del %DMMLOG%
-del dynamic.xpj
 cd %XX%
 if ERRORLEVEL 1 GOTO :error
-del dynamic.xpj > nul
+del %cur%%rel%\%DMMLOG%
+del %cur%%rel%\dynamic.xpj
+del dynamic.xpj
+@echo on
 aimplib %REL%\VDBSEE1S.DEF /omf /o%REL%\omf\VDBSEE1S.lib
 aimplib %REL%\VDBSEE1O.DEF /omf /o%REL%\omf\VDBSEE1O.lib
 del uuid.lib
@@ -63,8 +61,8 @@ copy makelib.base makelib.bat  > nul
 strtran static.base    static.xpj   rel=%rel% defines=%defines% cur=%cur%
 pbuild static.xpj %2 %3 %4 >> %DMMLOG%
 if ERRORLEVEL 1 GOTO :error
- del %cur%static.xpj > nul
- del %cur%makelib.bat
+del %cur%static.xpj > nul
+del %cur%makelib.bat
 goto exit
 
 :error

@@ -1,0 +1,76 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDQRYGET
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge gli item in get della query in un array di get
+.* ----------------------------------------------------------------------------
+aQuery := {}       ð  // array dei control in get
+.*
+.nTCnt := 1
+.do while nTCnt <= len( aTQuery )
+    .nTItmPos := aTQuery[ m->nTCnt, 1]
+    .oo_itm->( dbGoto( nTItmPos ) )
+    .dd_sym->( dbSetOrder( 1 ) )
+    .dd_sym->( dbSeek( oo_itm->ITMGET ) )
+    .cTItmDef := ""
+    .do case
+        .case dd_sym->SYM_TYP == "C"
+             .cTItmDef := "SPACE("+alltrim(str(dd_SYM->SYM_LEN,3))+")"
+             .*
+        .case dd_sym->SYM_TYP == "N"
+             .cTItmDef := "0"
+             .*
+        .case dd_sym->SYM_TYP = [D]
+             .cTItmDef := "ctod(space(8))"
+             .*
+        .case dd_sym->SYM_TYP = [M]
+             .cTItmDef := "SPACE(10)"
+             .*
+        .case dd_sym->SYM_TYP = [L]
+             .cTItmDef := ".T."
+             .*
+        .otherwise
+             .dbmsgErr("Tipo : "+dd_sym->SYM_TYP + " sconosciuto ! ")
+    .endcase
+    .if oo_itm->TYP $ "get-rel"
+        .cTAlign := ""
+        .if oo_itm->TYP == "rel" .AND. ToItem("editcondition") == "1"
+           .cTSep := ""
+           .foreach alignitem
+               .M->cTseek := alltrim(toRelation("relkey"))
+               .M->cTson  := tLkUpFileSon()
+               .if dd_rel->RELTYP == "1" .AND. dd_dbf->file_typ != "1"
+                   .cTAlign := cTAlign+cTSep+cTson+[->(dfS(]+tLkUpIndex()+[,]+cTseek+[))]
+               .endif
+               .if !empty( cTAlign )
+                  .cTSep := " .and. "
+               .endif
+           .next
+           .*
+           .oo_itm->( dbGoto( nTItmPos ) )
+           .dd_sym->( dbSetOrder( 1 ) )
+           .dd_sym->( dbSeek( oo_itm->ITMGET ) )
+        .endif
+
+ATTACH TO QUERY aQuery DESCRIPTION "Ûalltrim(dd_sym->SYM_DES)Û"    ð ; //  Descrizione
+                       BUFFER      ÛcTItmDefÛ  ð ; //  Get buffer
+                       ALIAS       "ÛdfGetDbf(oo_itm->ALS, {||tDbfAliasName()})Û" ð ; //  File proprietario
+                       FIELD       "Ûalltrim(dd_sym->SYM_NAM)Û"    ð ; //  Variabile
+                       TYPE        "Ûdd_sym->SYM_TYPÛ" ð ; //  Tipo
+                       LEN         Ûalltrim(str(dd_sym->SYM_LEN))Û ð ; //  Lunghezza
+                       .if !empty(cTAlign)
+                       DEC         Ûalltrim(str(dd_sym->SYM_DEC))Û ð ; //  Decimali
+                       RELATION    "ÛcTAlignÛ"   ð   //  allineamento
+                       .else
+                       DEC         Ûalltrim(str(dd_sym->SYM_DEC))Û ð   //  decimali
+                       .endif
+    .else    ./ item tipo espressione
+ATTACH TO QUERY aQuery DESCRIPTION "Ûalltrim(dd_sym->SYM_DES)Û"    ð ; //  Descrizione
+                       BUFFER      ÛcTItmDefÛ  ð ; //  Get buffer
+                       FIELD       ÛtExpCast(toitem("expression"))Û    ð ; //  Espressione
+                       TYPE        "Ûdd_sym->SYM_TYPÛ" ð ; //  Tipo
+                       LEN         Ûalltrim(str(dd_sym->SYM_LEN))Û ð ; //  Lunghezza
+                       DEC         Ûalltrim(str(dd_sym->SYM_DEC))Û ð   //  Decimali
+    .endif
+    .m->nTCnt := m->nTCnt + 1
+.enddo

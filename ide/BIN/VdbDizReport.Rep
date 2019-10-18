@@ -1,0 +1,3580 @@
+object TRpReport
+  PageHeight = 8120
+  PageWidth = 5742
+  PageBackColor = 2147483647
+  SubReports = <
+    item
+      SubReport = TRpSubReport3
+    end
+    item
+      SubReport = TRpSubReport0
+    end
+    item
+      SubReport = TRpSubReport1
+    end
+    item
+      SubReport = TRpSubReport2
+    end
+    item
+      SubReport = TRpSubReport4
+    end
+    item
+      SubReport = TRpSubReport5
+    end>
+  DataInfo = <
+    item
+      Alias = 'DD_DBF'
+      DatabaseAlias = 'XML'
+      MyBaseFilename = 'DD_DBF.xml'
+      MyBaseIndexFields = 'file_name'
+    end
+    item
+      Alias = 'DD_FIE'
+      DatabaseAlias = 'XML'
+      DataSource = 'DD_DBF'
+      MyBaseFilename = 'DD_FIE.xml'
+      MyBaseIndexFields = 'file;sym'
+      MyBaseMasterFields = 'file'
+    end
+    item
+      Alias = 'DD_NDX'
+      DatabaseAlias = 'XML'
+      DataSource = 'DD_DBF'
+      MyBaseFilename = 'DD_NDX.xml'
+      MyBaseIndexFields = 'file;ndx'
+      MyBaseMasterFields = 'file'
+    end
+    item
+      Alias = 'DD_REL'
+      DatabaseAlias = 'XML'
+      DataSource = 'DD_DBF'
+      MyBaseFilename = 'DD_REL.xml'
+      MyBaseIndexFields = 'file2'
+      MyBaseMasterFields = 'file'
+    end
+    item
+      Alias = 'DD_DBF1'
+      DatabaseAlias = 'XML'
+      MyBaseFilename = 'DD_DBF.xml'
+      MyBaseIndexFields = 'file_name'
+    end
+    item
+      Alias = 'DD_SYM'
+      DatabaseAlias = 'XML'
+      MyBaseFilename = 'DD_SYM.xml'
+      MyBaseIndexFields = 'sym_sup;sym_nam'
+    end>
+  DatabaseInfo = <
+    item
+      Alias = 'XML'
+      LoadParams = True
+      LoadDriverParams = True
+      LoginPrompt = False
+      Driver = rpdatamybase
+      ReportTable = 'REPMAN_REPORTS'
+      ReportSearchField = 'REPORT_NAME'
+      ReportField = 'REPORT'
+      ReportGroupsTable = 'REPMAN_GROUPS'
+      ADOConnectionString = ''
+    end>
+  Params = <>
+  TwoPass = True
+  StreamFormat = rpStreamText
+  ReportAction = []
+  Type1Font = poHelvetica
+  WFontName = 'Arial'
+  LFontName = 'Helvetica'
+  object TRpSubReport0: TRpSubReport
+    Sections = <
+      item
+        Section = TRpSection5
+      end
+      item
+        Section = TRpSection1
+      end
+      item
+        Section = TRpSection8
+      end
+      item
+        Section = TRpSection12
+      end>
+    Alias = 'DD_DBF'
+    PrintOnlyIfDataAvailable = False
+  end
+  object TRpSection1: TRpSection
+    Width = 10772
+    Height = 1260
+    SubReport = TRpSubReport0
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecdetail
+    Components = <
+      item
+        Component = TRpShape17
+      end
+      item
+        Component = TRpLabel6
+      end
+      item
+        Component = TRpImage4
+      end
+      item
+        Component = TRpExpression12
+      end
+      item
+        Component = TRpExpression13
+      end
+      item
+        Component = TRpExpression19
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    ChildSubReport = TRpSubReport1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = 'TRUE'
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSubReport1: TRpSubReport
+    Sections = <
+      item
+        Section = TRpSection0
+      end
+      item
+        Section = TRpSection3
+      end
+      item
+        Section = TRpSection2
+      end>
+    Alias = 'DD_FIE'
+    ParentSubReport = TRpSubReport0
+    ParentSection = TRpSection1
+    PrintOnlyIfDataAvailable = False
+  end
+  object TRpSection3: TRpSection
+    Width = 10772
+    Height = 375
+    SubReport = TRpSubReport1
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecdetail
+    Components = <
+      item
+        Component = TRpExpression2
+      end
+      item
+        Component = TRpExpression3
+      end
+      item
+        Component = TRpExpression4
+      end
+      item
+        Component = TRpExpression5
+      end
+      item
+        Component = TRpShape3
+      end
+      item
+        Component = TRpShape5
+      end
+      item
+        Component = TRpShape6
+      end
+      item
+        Component = TRpExpression26
+      end
+      item
+        Component = TRpExpression27
+      end
+      item
+        Component = TRpExpression28
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpExpression2: TRpExpression
+    Width = 1275
+    Height = 240
+    PosX = 915
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 12
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_FIE.sym_nam'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression3: TRpExpression
+    Width = 2985
+    Height = 240
+    PosX = 2535
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 9
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'LEFT(DD_FIE.sym_des,32)'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpSection5: TRpSection
+    Width = 10772
+    Height = 30
+    SubReport = TRpSubReport0
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecpheader
+    Components = <>
+    AutoContract = True
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpExpression4: TRpExpression
+    Width = 1035
+    Height = 225
+    PosX = 5520
+    PosY = 120
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'iif( DD_FIE.sym_typ =='#39'C'#39','#39'Stringa'#39',IIF(DD_FIE.sym_typ =='#39'D'#39','#39'Da' +
+      'ta'#39',IIF(DD_FIE.sym_typ =='#39'N'#39','#39'Numerico'#39',IIF(DD_FIE.sym_typ =='#39'M'#39 +
+      ','#39'Memo'#39',IIF(DD_FIE.sym_typ =='#39'L'#39','#39'Logico'#39','#39#39'))) ))'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression5: TRpExpression
+    Width = 690
+    Height = 225
+    PosX = 6675
+    PosY = 120
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'str(DD_FIE.sym_len)  + IIF(DD_FIE.sym_dec>0,'#39','#39'+str(DD_FIE.sym_d' +
+      'ec),'#39#39')'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpShape3: TRpShape
+    Width = 120
+    Height = 567
+    PosX = 690
+    PosY = 0
+    BrushStyle = 3
+    PenColor = 13557666
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpSection0: TRpSection
+    Width = 10772
+    Height = 885
+    SubReport = TRpSubReport1
+    GroupName = 'CAMPI'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgheader
+    Components = <
+      item
+        Component = TRpShape1
+      end
+      item
+        Component = TRpShape2
+      end
+      item
+        Component = TRpShape4
+      end
+      item
+        Component = TRpShape7
+      end
+      item
+        Component = TRpLabel0
+      end
+      item
+        Component = TRpImage1
+      end
+      item
+        Component = TRpLabel1
+      end
+      item
+        Component = TRpLabel2
+      end
+      item
+        Component = TRpLabel16
+      end
+      item
+        Component = TRpLabel17
+      end
+      item
+        Component = TRpLabel18
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = 'DD_FIE.file'
+    BeginPageExpression = ''
+    ChangeExpression = 'DD_FIE.file'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSection2: TRpSection
+    Width = 10772
+    Height = 0
+    SubReport = TRpSubReport1
+    GroupName = 'CAMPI'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgfooter
+    Components = <>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = 'DD_FIE.file'
+    BeginPageExpression = ''
+    ChangeExpression = 'DD_FIE.file'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpShape1: TRpShape
+    Width = 120
+    Height = 1191
+    PosX = 225
+    PosY = -57
+    PenColor = 13378560
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpShape2: TRpShape
+    Width = 120
+    Height = 1191
+    PosX = 465
+    PosY = -57
+    PenColor = 16705995
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpShape4: TRpShape
+    Width = 120
+    Height = 1191
+    PosX = 690
+    PosY = -57
+    PenColor = 13557666
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpSubReport2: TRpSubReport
+    Sections = <
+      item
+        Section = TRpSection6
+      end
+      item
+        Section = TRpSection4
+      end
+      item
+        Section = TRpSection7
+      end>
+    Alias = 'DD_NDX'
+    ParentSubReport = TRpSubReport0
+    ParentSection = TRpSection8
+    PrintOnlyIfDataAvailable = False
+  end
+  object TRpSection4: TRpSection
+    Width = 10772
+    Height = 405
+    SubReport = TRpSubReport2
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecdetail
+    Components = <
+      item
+        Component = TRpExpression6
+      end
+      item
+        Component = TRpExpression7
+      end
+      item
+        Component = TRpShape10
+      end
+      item
+        Component = TRpShape13
+      end
+      item
+        Component = TRpExpression0
+      end
+      item
+        Component = TRpExpression1
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpExpression6: TRpExpression
+    Width = 1155
+    Height = 270
+    PosX = 690
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_NDX.ndx_nam'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression7: TRpExpression
+    Width = 1620
+    Height = 270
+    PosX = 2070
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 9
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'LEFT(DD_NDX.ndx_des,18)'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpSection6: TRpSection
+    Width = 10772
+    Height = 885
+    SubReport = TRpSubReport2
+    GroupName = 'INDICE'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgheader
+    Components = <
+      item
+        Component = TRpShape9
+      end
+      item
+        Component = TRpShape11
+      end
+      item
+        Component = TRpShape12
+      end
+      item
+        Component = TRpImage2
+      end
+      item
+        Component = TRpLabel4
+      end
+      item
+        Component = TRpLabel3
+      end
+      item
+        Component = TRpLabel7
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = 'DD_NDX.file'
+    BeginPageExpression = ''
+    ChangeExpression = 'DD_NDX.file'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSection7: TRpSection
+    Width = 10772
+    Height = 0
+    SubReport = TRpSubReport2
+    GroupName = 'INDICE'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgfooter
+    Components = <>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = 'DD_NDX.file'
+    BeginPageExpression = ''
+    ChangeExpression = 'DD_NDX.file'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpShape7: TRpShape
+    Width = 9315
+    Height = 75
+    PosX = 810
+    PosY = 810
+    BrushStyle = 2
+    PenColor = 13557666
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpShape5: TRpShape
+    Width = 120
+    Height = 567
+    PosX = 465
+    PosY = 0
+    BrushStyle = 3
+    PenColor = 16705995
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpShape11: TRpShape
+    Width = 120
+    Height = 1020
+    PosX = 465
+    PosY = 0
+    BrushStyle = 3
+    PenColor = 16705995
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpShape13: TRpShape
+    Width = 120
+    Height = 680
+    PosX = 225
+    PosY = 0
+    BrushStyle = 3
+    PenColor = 13378560
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpLabel0: TRpLabel
+    Width = 1950
+    Height = 465
+    PosX = 1605
+    PosY = 345
+    Type1Font = poHelvetica
+    FontSize = 18
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Campi'
+  end
+  object TRpShape6: TRpShape
+    Width = 120
+    Height = 567
+    PosX = 225
+    PosY = 0
+    BrushStyle = 3
+    PenColor = 13378560
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpSection8: TRpSection
+    Width = 10772
+    Height = 45
+    SubReport = TRpSubReport0
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecdetail
+    Components = <>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    ChildSubReport = TRpSubReport2
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSubReport3: TRpSubReport
+    Sections = <
+      item
+        Section = TRpSection9
+      end
+      item
+        Section = TRpSection10
+      end
+      item
+        Section = TRpSection11
+      end
+      item
+        Section = TRpSection21
+      end>
+    Alias = 'DD_DBF1'
+  end
+  object TRpSection10: TRpSection
+    Width = 10772
+    Height = 540
+    SubReport = TRpSubReport3
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecdetail
+    Components = <
+      item
+        Component = TRpExpression9
+      end
+      item
+        Component = TRpImage3
+      end
+      item
+        Component = TRpExpression8
+      end
+      item
+        Component = TRpExpression23
+      end
+      item
+        Component = TRpExpression25
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpExpression9: TRpExpression
+    Width = 3330
+    Height = 345
+    PosX = 2535
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_DBF1.file_des'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression8: TRpExpression
+    Width = 1725
+    Height = 345
+    PosX = 810
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 15
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_DBF1.file_name'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpSection9: TRpSection
+    Width = 10772
+    Height = 2055
+    SubReport = TRpSubReport3
+    GroupName = 'TABELLA'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgheader
+    Components = <
+      item
+        Component = TRpLabel5
+      end
+      item
+        Component = TRpShape16
+      end
+      item
+        Component = TRpLabel15
+      end
+      item
+        Component = TRpLabel9
+      end
+      item
+        Component = TRpLabel20
+      end
+      item
+        Component = TRpLabel21
+      end
+      item
+        Component = TRpLabel22
+      end
+      item
+        Component = TRpExpression29
+      end
+      item
+        Component = TRpExpression30
+      end
+      item
+        Component = TRpLabel25
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSection11: TRpSection
+    Width = 10772
+    Height = 315
+    SubReport = TRpSubReport3
+    GroupName = 'TABELLA'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = True
+    AlignBottom = False
+    SectionType = rpsecgfooter
+    Components = <>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpExpression0: TRpExpression
+    Width = 5070
+    Height = 270
+    PosX = 5055
+    PosY = 120
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_NDX.keyexpr'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression1: TRpExpression
+    Width = 1140
+    Height = 345
+    PosX = 3795
+    PosY = 120
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(DD_NDX.ndx_unq=='#39'P'#39','#39'Primario'#39',IIF(DD_NDX.ndx_key=='#39'U'#39','#39'Univ' +
+      'oco'#39','#39'Secondario'#39'))'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel3: TRpLabel
+    Width = 1035
+    Height = 345
+    PosX = 3795
+    PosY = 465
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Tipo'
+  end
+  object TRpLabel7: TRpLabel
+    Width = 2520
+    Height = 345
+    PosX = 5055
+    PosY = 465
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Chiave Indice'
+  end
+  object TRpSection12: TRpSection
+    Width = 10772
+    Height = 0
+    SubReport = TRpSubReport0
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecdetail
+    Components = <>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    ChildSubReport = TRpSubReport4
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSubReport4: TRpSubReport
+    Sections = <
+      item
+        Section = TRpSection14
+      end
+      item
+        Section = TRpSection13
+      end
+      item
+        Section = TRpSection15
+      end>
+    Alias = 'DD_REL'
+    ParentSubReport = TRpSubReport0
+    ParentSection = TRpSection12
+    PrintOnlyIfDataAvailable = False
+  end
+  object TRpSection13: TRpSection
+    Width = 10772
+    Height = 570
+    SubReport = TRpSubReport4
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecdetail
+    Components = <
+      item
+        Component = TRpShape18
+      end
+      item
+        Component = TRpExpression11
+      end
+      item
+        Component = TRpExpression14
+      end
+      item
+        Component = TRpExpression15
+      end
+      item
+        Component = TRpExpression10
+      end
+      item
+        Component = TRpExpression20
+      end
+      item
+        Component = TRpImage9
+      end
+      item
+        Component = TRpImage10
+      end
+      item
+        Component = TRpImage11
+      end
+      item
+        Component = TRpImage12
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    SkipType = secskipafter
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSection14: TRpSection
+    Width = 10772
+    Height = 915
+    SubReport = TRpSubReport4
+    GroupName = 'RELAZIONI'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgheader
+    Components = <
+      item
+        Component = TRpShape14
+      end
+      item
+        Component = TRpLabel8
+      end
+      item
+        Component = TRpShape15
+      end
+      item
+        Component = TRpImage0
+      end
+      item
+        Component = TRpLabel12
+      end
+      item
+        Component = TRpLabel13
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    FooterAtReportEnd = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = 'DD_REL.fname2'
+    BeginPageExpression = ''
+    ChangeExpression = 'DD_REL.fname2'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSection15: TRpSection
+    Width = 10772
+    Height = 240
+    SubReport = TRpSubReport4
+    GroupName = 'RELAZIONI'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgfooter
+    Components = <>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = 'DD_REL.fname2'
+    BeginPageExpression = ''
+    ChangeExpression = 'DD_REL.fname2'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpShape9: TRpShape
+    Width = 9435
+    Height = 75
+    PosX = 570
+    PosY = 810
+    BrushStyle = 2
+    PenColor = 16705995
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpShape14: TRpShape
+    Width = 9900
+    Height = 113
+    PosX = 225
+    PosY = 810
+    BrushStyle = 2
+    PenColor = 13378560
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpLabel4: TRpLabel
+    Width = 1950
+    Height = 465
+    PosX = 1380
+    PosY = 345
+    Type1Font = poHelvetica
+    FontSize = 18
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Indici'
+  end
+  object TRpLabel8: TRpLabel
+    Width = 1950
+    Height = 465
+    PosX = 1260
+    PosY = 345
+    Type1Font = poHelvetica
+    FontSize = 18
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Relazioni'
+  end
+  object TRpShape12: TRpShape
+    Width = 120
+    Height = 1020
+    PosX = 225
+    PosY = 0
+    BrushStyle = 3
+    PenColor = 13378560
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpImage0: TRpImage
+    Width = 570
+    Height = 540
+    PosX = 465
+    PosY = 225
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      5207000000000000424D52070000000000003604000028000000200000002000
+      000001000800010000001C030000121700001217000000000000000000000000
+      000052000000730000008C00000094000000AD000000BD00000094101000B510
+      1000C6101000AD18180073212100B5212100C6212100A5292900B5292900BD29
+      2900B5313100C631310039393900AD393900C6393900424242004A424200AD42
+      4200B5424200424A4A004A4A4A00BD4A4A00525252007B525200A5525200B552
+      5200D6525200C65A5A00636363007B636300AD636300C6636300736B6B007B6B
+      6B009C737300C67373007B7B7B00847B7B00BD7B7B00D67B7B007B8484008484
+      84008C8C8C00AD8C8C00BD8C8C00CE8C8C0094949400BD949400C69494009C9C
+      9C00A59C9C00C69C9C00CE9C9C009CA59C009C9CA500A59CA5009CA5A500A5A5
+      A500CEA5A500DEA5A500A5ADAD00ADADAD00D6ADAD00DEADAD00CEADB500B5B5
+      B500BDB5B500BDBDBD00CEBDBD00CEBDC600BDC6C600C6C6C600CEC6C600D6C6
+      C600CEC6CE00BDCECE00C6CECE00CECECE00D6CECE00DECED600C6D6D600CED6
+      D600D6D6D600BDDEDE00D6DEDE00DEDEDE00DEE7E700E7E7E700EFEFEF00F7F7
+      F700FFFFFF000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002061
+      00002061000020610000016101611C00016101610000016101611C0001610161
+      00000008616100005C595959075400034E4E3C0006480008314A4A4A00006161
+      00000005616100005E0004590754011D01160523000913354A4A4A0000616100
+      00000005616100005F00055906540010235C4E5E5C4E5E1B354A4A4A00006161
+      000000086161000060595959045100144E4E4E5424544A59594A5C1B384E4A4A
+      000061610000000961610000605C59443000053100123834185A525D5B525D1A
+      324E4E4A000061610000000861610000615C5C1605230013131F2E1F2A262A26
+      222A0B364E4E4E00006161000000001861610000615C5C4459595E545E2F204E
+      250F080C0A08110E044E0004000061610000001861610000615C5C404E545C4A
+      5C2B314E554F4F4F4C4C4C4F044E0004000061610000002061610000615C5C43
+      53585D4D5D2F2C4759483C3F3C3F3D3D384E4E4E000061610000002061610000
+      615E5C2937373B333B1E1C4527131B1A1A1B1A163854544E0000616100000020
+      61610000615E5E0A0D0610060D0A214224524E59594E59163E54545400006161
+      0000000861610000615E5E41063A0012564618574A5B594A5C1B3F5454540000
+      616100000005616100006100055E065C001028584D5C594D5D1B395454540000
+      616100000005616100006100065E055C0010274B49504F495017365454540000
+      616100000005616100006100075E045C00101F190D1512091C07415954540000
+      61610000000761610000615F5F00075E000A5C5C2D1811191411181804590004
+      00006161000000046161000013610009605F5F5E5C0000616100000001610161
+      1C00016101610000016101611C00016101610000000F616100005C4E4A4A4848
+      4844444440000638053500063130000061610000000F616100005E0606060505
+      0404040303000502070100053800006161000000000561610000600005060007
+      0504040403030300050205010005400000616100000000076161000060606000
+      0461076000035E5E5E00045C000759544A00006161000000016101611C000161
+      01610000016101611C0001610161000020610000206100000001}
+  end
+  object TRpShape15: TRpShape
+    Width = 120
+    Height = 1077
+    PosX = 225
+    PosY = 0
+    BrushStyle = 3
+    PenColor = 13378560
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpShape10: TRpShape
+    Width = 120
+    Height = 680
+    PosX = 465
+    PosY = 0
+    BrushStyle = 3
+    PenColor = 16705995
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpShape18: TRpShape
+    Width = 120
+    Height = 737
+    PosX = 225
+    PosY = -57
+    BrushStyle = 3
+    PenColor = 13378560
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpSubReport5: TRpSubReport
+    Sections = <
+      item
+        Section = TRpSection17
+      end
+      item
+        Section = TRpSection19
+      end
+      item
+        Section = TRpSection16
+      end
+      item
+        Section = TRpSection20
+      end
+      item
+        Section = TRpSection18
+      end
+      item
+        Section = TRpSection23
+      end>
+    Alias = 'DD_SYM'
+  end
+  object TRpSection16: TRpSection
+    Width = 10772
+    Height = 495
+    SubReport = TRpSubReport5
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecdetail
+    Components = <
+      item
+        Component = TRpExpression17
+      end
+      item
+        Component = TRpExpression18
+      end
+      item
+        Component = TRpExpression21
+      end
+      item
+        Component = TRpExpression22
+      end
+      item
+        Component = TRpExpression24
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSection17: TRpSection
+    Width = 10755
+    Height = 1170
+    SubReport = TRpSubReport5
+    GroupName = 'SYMBOLI'
+    ChangeBool = False
+    PageRepeat = True
+    SkipPage = True
+    AlignBottom = False
+    SectionType = rpsecgheader
+    Components = <
+      item
+        Component = TRpLabel19
+      end
+      item
+        Component = TRpShape0
+      end
+      item
+        Component = TRpImage5
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    FooterAtReportEnd = True
+    SkipType = secskipbefore
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = '11'
+    BeginPageExpression = 'TRUE'
+    ChangeExpression = '11'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSection18: TRpSection
+    Width = 10772
+    Height = 0
+    SubReport = TRpSubReport5
+    GroupName = 'SYMBOLI'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgfooter
+    Components = <>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = '11'
+    BeginPageExpression = ''
+    ChangeExpression = '11'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpLabel5: TRpLabel
+    Width = 2760
+    Height = 450
+    PosX = 225
+    PosY = 1380
+    Type1Font = poHelvetica
+    FontSize = 18
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Lista Tabelle'
+  end
+  object TRpShape16: TRpShape
+    Width = 10590
+    Height = 75
+    PosX = 105
+    PosY = 1935
+    BrushStyle = 2
+    PenColor = 255
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpSection19: TRpSection
+    Width = 10772
+    Height = 825
+    SubReport = TRpSubReport5
+    GroupName = 'TIPO'
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgheader
+    Components = <
+      item
+        Component = TRpShape8
+      end
+      item
+        Component = TRpExpression16
+      end
+      item
+        Component = TRpImage6
+      end
+      item
+        Component = TRpImage7
+      end
+      item
+        Component = TRpImage8
+      end
+      item
+        Component = TRpLabel10
+      end
+      item
+        Component = TRpLabel11
+      end
+      item
+        Component = TRpLabel14
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = 'DD_SYM.sym_sup'
+    BeginPageExpression = ''
+    ChangeExpression = 'DD_SYM.sym_sup'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpSection20: TRpSection
+    Width = 10772
+    Height = 0
+    SubReport = TRpSubReport5
+    GroupName = 'TIPO'
+    ChangeBool = False
+    PageRepeat = True
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecgfooter
+    Components = <>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = 'DD_SYM.sym_sup'
+    BeginPageExpression = ''
+    ChangeExpression = 'DD_SYM.sym_sup'
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpShape8: TRpShape
+    Width = 10695
+    Height = 120
+    PosX = 0
+    PosY = 690
+    BrushStyle = 2
+    PenColor = 16764831
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpExpression11: TRpExpression
+    Width = 1260
+    Height = 225
+    PosX = 1155
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_REL.fname2'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression14: TRpExpression
+    Width = 1050
+    Height = 264
+    PosX = 3570
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_REL.fname1'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression15: TRpExpression
+    Width = 570
+    Height = 345
+    PosX = 2535
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    FontStyle = 1
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_REL.tiporel'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression10: TRpExpression
+    Width = 1605
+    Height = 345
+    PosX = 8625
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_REL.sym_nam'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression16: TRpExpression
+    Width = 1845
+    Height = 345
+    PosX = 570
+    PosY = 225
+    Type1Font = poHelvetica
+    FontSize = 15
+    FontStyle = 1
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(DD_SYM.sym_sup=='#39'C'#39','#39'Campi'#39',IIF(DD_SYM.sym_sup=='#39'V'#39','#39'Variabi' +
+      'li'#39','#39'Funzioni Utente'#39'))'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression17: TRpExpression
+    Width = 1500
+    Height = 345
+    PosX = 0
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    FontStyle = 1
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_SYM.sym_nam'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression18: TRpExpression
+    Width = 3795
+    Height = 345
+    PosX = 1725
+    PosY = 120
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_SYM.sym_des'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression20: TRpExpression
+    Width = 1155
+    Height = 345
+    PosX = 5865
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_REL.ndx_nam'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpImage6: TRpImage
+    Width = 570
+    Height = 450
+    PosX = 0
+    PosY = 120
+    PrintCondition = 'DD_SYM.sym_sup=='#39'V'#39
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      4A07000000000000424D4A070000000000003604000028000000200000002000
+      0000010008000100000014030000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD000000848484008C8C
+      8C00949494009C9C9C00A5A5A500ADADAD00B5B5B500BDBDBD00C6C6C600CECE
+      CE00D6D6D600DEDEDE00E7E7E700EFEFEF00F7F7F700FFFFFF00000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000000000000000000000201E
+      0000201E0000201E0000011E011E1C00011E011E0000011E011E1C00011E011E
+      000000081E1E00001A191919071807170616000400001E1E000000051E1E0000
+      1B0004190718011706150516000400001E1E000000051E1E00001C0005190418
+      000A15150F001010131315150416000400001E1E000000051E1E00001D000719
+      0014150F0F0F170F0010101313151717161600001E1E000000061E1E00001D1A
+      051900150F0F1E171E170F0F00101013151717171600001E1E00000000181E1E
+      00001E1A1A1919190F171E171E17170F0F0F001011150417000400001E1E0000
+      00111E1E00001E1A1A1A19190F1E171E171E1700040F00030010150004170004
+      00001E1E000000051E1E00001E00051A00070F171E1E17171700040F00030011
+      18000417000400001E1E000000051E1E00001E00051A010F011E0617000E0F0F
+      0F0015181817171700001E1E000000061E1E00001E1B041A00050F1717170F00
+      041700030F0F0000051800051700001E1E000000000F1E1E00001E1B1B1A1A1A
+      0F1717170F00041700030F0F00000618000400001E1E0000000F1E1E00001E1B
+      1B1B1A1A1A0F17170F000517010F010F0618000400001E1E000000051E1E0000
+      1E00051B000A1A1A0F170F1717170F0F04190418000400001E1E000000051E1E
+      00001E00061B00071A1A0F0F170F0F000719000718181800001E1E0000000005
+      1E1E00001E00071B00071A1A0F0F1A1A1A0007190006181800001E1E00000007
+      1E1E00001E1C1C00071B061A0819000400001E1E000000041E1E0000131E0009
+      1D1C1C1B1A00001E1E000000011E011E1C00011E011E0000011E011E1C00011E
+      011E0000000F1E1E00001A1716161515151414141300061205110006100F0000
+      1E1E000000151E1E00001B0E0E0D0C0B0A090908070606050403020006010005
+      1200001E1E00000000051E1E00001D00050E00070C0909090808070004050104
+      0102040100051300001E1E00000000071E1E00001D1D1D00041E071D00031B1B
+      1B00041A000719181600001E1E000000011E011E1C00011E011E0000011E011E
+      1C00011E011E0000201E0000201E00000001}
+  end
+  object TRpImage7: TRpImage
+    Width = 570
+    Height = 465
+    PosX = 0
+    PosY = 120
+    PrintCondition = 'DD_SYM.sym_sup=='#39'C'#39
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      5207000000000000424D52070000000000003604000028000000200000002000
+      000001000800010000001C030000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD000000FF000000FFFF
+      000031313100393939004A4A4A00525252005A5A5A00636363006B6B6B007B7B
+      7B00848484008C8C8C00949494009C9C9C00A5A5A500ADADAD00B5B5B500BDBD
+      BD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEFEF00F7F7F700FFFF
+      FF00000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002028
+      00002028000020280000012801281C00012801280000012801281C0001280128
+      0000000E282800002423232222211F1D1B1A091900091A1B1D1F1F0000282800
+      00000010282800002523232322201D19171515150614000A1516181B1E1F0000
+      282800000009282800002623232322000E00000913161A1D1F00002828000000
+      0009282800002723232322000E0000091215191D1F00002828000000000E2828
+      0000272423232200282828000528000D002828001114191D1F00002828000000
+      002028280000282424232200282828002807070028002828001114191D1F0000
+      28280000000E28280000282424232200282828000528000D002828001114191D
+      2000002828000000002028280000282424242200282828002807070028002828
+      001114191D20000028280000000E28280000282424242300282828000528000D
+      002828001115191E200000282800000000202828000028252424230028282800
+      2807070028002828001115191E20000028280000000E28280000282525242300
+      282828000528000D002828001115191E2000002828000000000D282800002825
+      25242300070700000907000A0012161A1E210000282800000020282800002825
+      25252400100F100F100F100F100F100F0013171B1F2100002828000000202828
+      00002825252524000F100F100F100F100F100F100017191D2021000028280000
+      000528280000280004250E0000091C1D1F212200002828000000000E28280000
+      282626252524232221210620000C1F1F20202121222200002828000000042828
+      000008280B270009262625242400002828000000012801281C00012801280000
+      012801281C00012801280000000F28280000242120201F1F1F1E1E1E1D00061C
+      051B00061A19000028280000001528280000250E0E0D0C0B0A09090807060605
+      04030200060100051C000028280000000005282800002700050E00070C090909
+      08080700040501040102040100051D0000282800000000072828000027272700
+      042807270003252525000424000723222000002828000000012801281C000128
+      01280000012801281C0001280128000020280000202800000001}
+  end
+  object TRpImage8: TRpImage
+    Width = 570
+    Height = 465
+    PosX = 0
+    PosY = 120
+    PrintCondition = 'DD_SYM.sym_sup=='#39'U'#39
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      2207000000000000424D22070000000000003604000028000000200000002000
+      00000100080001000000EC020000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD0000007B7B7B008484
+      84008C8C8C00949494009C9C9C00A5A5A500ADADAD00B5B5B500BDBDBD00C6C6
+      C600CECECE00D6D6D600DEDEDE00E7E7E700EFEFEF00F7F7F700FFFFFF000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000000000000000000000201F
+      0000201F0000201F0000011F011F1C00011F011F0000011F011F1C00011F011F
+      000000081F1F00001B1A1A1A071907180617000400001F1F000000051F1F0000
+      1C00041A071907180517000400001F1F000000051F1F00001D00051A07190718
+      0417000400001F1F000000051F1F00001E00061A0006000F0F19191905160418
+      0006171700001F1F000000061F1F00001E1B051A00050F000F161900050F0116
+      051800051700001F1F00000000071F1F00001F1B1B00041A000B16000F0F0000
+      0F00000F16000618000400001F1F000000081F1F00001F1B1B1B041A000B0F00
+      0F1A1900000F191919000518000400001F1F000000051F1F00001F00051B000E
+      1A1A16000F161A0000000F1619190418000400001F1F000000051F1F00001F00
+      061B00151A1A000F0F00001619001619191918181800001F1F00000000061F1F
+      00001F1C061B00081A0F000F0F0F1A1A071900051800001F1F00000000071F1F
+      00001F1C1C00051B050000040F1A1A1A0719000400001F1F000000081F1F0000
+      1F1C1C1C051B000916000F151A15161A1A000619000400001F1F000000051F1F
+      00001F00051C041B000600000F0F0016041A0419000400001F1F000000051F1F
+      00001F00061C00071B1B1B1600000000071A000719191900001F1F0000000005
+      1F1F00001F00071C071B071A0006191900001F1F000000071F1F00001F1D1D00
+      071C061B081A000400001F1F000000041F1F0000131F00091E1D1D1C1B00001F
+      1F000000011F011F1C00011F011F0000011F011F1C00011F011F0000000F1F1F
+      00001B1817171616161515151400061305120006111000001F1F000000151F1F
+      00001C0E0E0D0C0B0A0909080706060504030200060100051300001F1F000000
+      00051F1F00001E00050E00070C09090908080700040501040102040100051400
+      001F1F00000000071F1F00001E1E1E00041F071E00031C1C1C00041B00071A19
+      1700001F1F000000011F011F1C00011F011F0000011F011F1C00011F011F0000
+      201F0000201F00000001}
+  end
+  object TRpExpression21: TRpExpression
+    Width = 1260
+    Height = 345
+    PosX = 5400
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = 'DD_SYM.sym_sup=='#39'V'#39' OR DD_SYM.sym_sup=='#39'C'#39
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'iif( DD_SYM.sym_typ =='#39'C'#39','#39'Stringa'#39',IIF(DD_SYM.sym_typ =='#39'D'#39','#39'Da' +
+      'ta'#39',IIF(DD_SYM.sym_typ =='#39'N'#39','#39'Numerico'#39',IIF(DD_SYM.sym_typ =='#39'M'#39 +
+      ','#39'Memo'#39',IIF(DD_SYM.sym_typ =='#39'L'#39','#39'Logico'#39','#39#39'))) ))'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression22: TRpExpression
+    Width = 915
+    Height = 345
+    PosX = 6675
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = 'DD_SYM.sym_sup=='#39'V'#39' OR DD_SYM.sym_sup=='#39'C'#39
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'str(DD_SYM.sym_len)  + IIF(DD_SYM.sym_dec>0,'#39','#39'+str(DD_SYM.sym_d' +
+      'ec),'#39#39')'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel11: TRpLabel
+    Width = 690
+    Height = 345
+    PosX = 5400
+    PosY = 345
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = 'DD_SYM.sym_sup=='#39'V'#39' OR DD_SYM.sym_sup=='#39'C'#39
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Tipo'
+  end
+  object TRpImage3: TRpImage
+    Width = 570
+    Height = 525
+    PosX = 120
+    PosY = 0
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      3407000000000000424D34070000000000003604000028000000200000002000
+      00000100080001000000FE020000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD0000004A4A4A006363
+      63006B6B6B007B7B7B00848484008C8C8C00949494009C9C9C00A5A5A500ADAD
+      AD00B5B5B500BDBDBD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEF
+      EF00F7F7F700FFFFFF0000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002022
+      00002022000020220000012201221C00012201220000012201221C0001220122
+      00000017222200001E1D1D1D1C1C1B19171514131313141517181900051A0004
+      0000222200000008222200001F1D1D1D0B000005111316181900041A00040000
+      22220000000922220000201D1D1D000009220006000F10121618041A00040000
+      22220000000D22220000211D1D1D002213131B000B000008191A1A1A00002222
+      0000000922220000211E1D1D0000042201000922000900181A1A1A0000222200
+      0000002022220000221E1E1D002213131B0022131313221313132200181A1A1B
+      000022220000000922220000221E1E1E0000042201000922000900181A1B1B00
+      002222000000002022220000221E1E1E002213131B0022131313221313132200
+      181A1B1B000022220000000922220000221E1E1E000004220100092200090018
+      1A1B1B00002222000000000822220000221F1E1E050700130022131313221313
+      132200181B1B1B00002222000000000822220000221F1F1E0507010009220009
+      00181B1B1C00002222000000000D22220000221F1F1F1E1D002222000B070008
+      191B1C1C0000222200000005222200002200041F00041E00221B0B0700081A1B
+      1C1C0000222200000005222200002200041F011E01000922000C001617191B1C
+      1C1C0000222200000005222200002200051F0B0700031A1B1B00041C00040000
+      22220000000A222200002220201F1F1F0B07011C011C051D0004000022220000
+      000422220000132200092120201F1E00002222000000012201221C0001220122
+      0000012201221C00012201220000000F222200001E1B1A1A1919191818181700
+      06160515000614130000222200000015222200001F0E0E0D0C0B0A0909080706
+      0605040302000601000516000022220000000005222200002100050E00070C09
+      0909080807000405010401020401000517000022220000000007222200002121
+      21000422072100031F1F1F00041E00071D1C1A00002222000000012201221C00
+      012201220000012201221C0001220122000020220000202200000001}
+  end
+  object TRpImage9: TRpImage
+    Width = 570
+    Height = 525
+    PosX = 570
+    PosY = 0
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      3407000000000000424D34070000000000003604000028000000200000002000
+      00000100080001000000FE020000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD0000004A4A4A006363
+      63006B6B6B007B7B7B00848484008C8C8C00949494009C9C9C00A5A5A500ADAD
+      AD00B5B5B500BDBDBD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEF
+      EF00F7F7F700FFFFFF0000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002022
+      00002022000020220000012201221C00012201220000012201221C0001220122
+      00000017222200001E1D1D1D1C1C1B19171514131313141517181900051A0004
+      0000222200000008222200001F1D1D1D0B000005111316181900041A00040000
+      22220000000922220000201D1D1D000009220006000F10121618041A00040000
+      22220000000D22220000211D1D1D002213131B000B000008191A1A1A00002222
+      0000000922220000211E1D1D0000042201000922000900181A1A1A0000222200
+      0000002022220000221E1E1D002213131B0022131313221313132200181A1A1B
+      000022220000000922220000221E1E1E0000042201000922000900181A1B1B00
+      002222000000002022220000221E1E1E002213131B0022131313221313132200
+      181A1B1B000022220000000922220000221E1E1E000004220100092200090018
+      1A1B1B00002222000000000822220000221F1E1E050700130022131313221313
+      132200181B1B1B00002222000000000822220000221F1F1E0507010009220009
+      00181B1B1C00002222000000000D22220000221F1F1F1E1D002222000B070008
+      191B1C1C0000222200000005222200002200041F00041E00221B0B0700081A1B
+      1C1C0000222200000005222200002200041F011E01000922000C001617191B1C
+      1C1C0000222200000005222200002200051F0B0700031A1B1B00041C00040000
+      22220000000A222200002220201F1F1F0B07011C011C051D0004000022220000
+      000422220000132200092120201F1E00002222000000012201221C0001220122
+      0000012201221C00012201220000000F222200001E1B1A1A1919191818181700
+      06160515000614130000222200000015222200001F0E0E0D0C0B0A0909080706
+      0605040302000601000516000022220000000005222200002100050E00070C09
+      0909080807000405010401020401000517000022220000000007222200002121
+      21000422072100031F1F1F00041E00071D1C1A00002222000000012201221C00
+      012201220000012201221C0001220122000020220000202200000001}
+  end
+  object TRpImage10: TRpImage
+    Width = 570
+    Height = 525
+    PosX = 2985
+    PosY = 0
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      3407000000000000424D34070000000000003604000028000000200000002000
+      00000100080001000000FE020000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD0000004A4A4A006363
+      63006B6B6B007B7B7B00848484008C8C8C00949494009C9C9C00A5A5A500ADAD
+      AD00B5B5B500BDBDBD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEF
+      EF00F7F7F700FFFFFF0000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002022
+      00002022000020220000012201221C00012201220000012201221C0001220122
+      00000017222200001E1D1D1D1C1C1B19171514131313141517181900051A0004
+      0000222200000008222200001F1D1D1D0B000005111316181900041A00040000
+      22220000000922220000201D1D1D000009220006000F10121618041A00040000
+      22220000000D22220000211D1D1D002213131B000B000008191A1A1A00002222
+      0000000922220000211E1D1D0000042201000922000900181A1A1A0000222200
+      0000002022220000221E1E1D002213131B0022131313221313132200181A1A1B
+      000022220000000922220000221E1E1E0000042201000922000900181A1B1B00
+      002222000000002022220000221E1E1E002213131B0022131313221313132200
+      181A1B1B000022220000000922220000221E1E1E000004220100092200090018
+      1A1B1B00002222000000000822220000221F1E1E050700130022131313221313
+      132200181B1B1B00002222000000000822220000221F1F1E0507010009220009
+      00181B1B1C00002222000000000D22220000221F1F1F1E1D002222000B070008
+      191B1C1C0000222200000005222200002200041F00041E00221B0B0700081A1B
+      1C1C0000222200000005222200002200041F011E01000922000C001617191B1C
+      1C1C0000222200000005222200002200051F0B0700031A1B1B00041C00040000
+      22220000000A222200002220201F1F1F0B07011C011C051D0004000022220000
+      000422220000132200092120201F1E00002222000000012201221C0001220122
+      0000012201221C00012201220000000F222200001E1B1A1A1919191818181700
+      06160515000614130000222200000015222200001F0E0E0D0C0B0A0909080706
+      0605040302000601000516000022220000000005222200002100050E00070C09
+      0909080807000405010401020401000517000022220000000007222200002121
+      21000422072100031F1F1F00041E00071D1C1A00002222000000012201221C00
+      012201220000012201221C0001220122000020220000202200000001}
+  end
+  object TRpImage2: TRpImage
+    Width = 585
+    Height = 540
+    PosX = 690
+    PosY = 225
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      3E07000000000000424D3E070000000000003604000028000000200000002000
+      0000010008000100000008030000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD0000007B7B7B008484
+      8400848C84008C8C8C00949494009C9C9C00A5A5A500ADADAD00B5B5B500BDBD
+      BD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEFEF00F7F7F70000FF
+      FF00FFFFFF000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002021
+      00002021000020210000012101211C00012101210000012101211C0001210121
+      00000008212100001C1B1B1B071A071906180004000021210000000521210000
+      1D00041B011A011A0510000719190F0F19191900051800040000212100000005
+      212100001E00041B0500000A1A1A00000F0F0F19191904180004000021210000
+      0005212100001F00061B041000071A2000000F0F0F0004190006181800002121
+      00000009212100001F1C1B1B1B000400041A00062000000F0F0F041900051800
+      002121000000000721210000211C1C00041B051000081A1A2000000F0F0F0419
+      0004000021210000000921210000211C1C1C1B00050000121B1B1A1010200000
+      100F0F1919190000212100000005212100002100051C00051B11111110000400
+      000D10200000100F0F1919000021210000000005212100002100041C0400041B
+      0520000A00001A191919000021210000000621210000211D051C011204110010
+      1B1B2000001010101A1A1A19000021210000000921210000211D1D1C1C000500
+      051B000D2000001010101A1A1A00002121000000000B21210000211D1D1D1C1C
+      1C0004120011111B1B1B212000001010101A1A00002121000000000521210000
+      2100041D0500011C011C051B000B20000010101A1A0000212100000000052121
+      00002100061D071C000E1B1B1B2120001B1A1A1A000021210000000521210000
+      2100071D071C071B00061A1A000021210000000721210000211E1E00071D061C
+      081B0004000021210000000421210000132100091F1E1E1D1C00002121000000
+      012101211C00012101210000012101211C00012101210000000F212100001C19
+      1818171717161616150006140513000612100000212100000015212100001D0E
+      0E0D0C0B0A090908070606050403020006010005140000212100000000052121
+      00001F00050E00070C0909090808070004050104010204010005150000212100
+      00000007212100001F1F1F000421071F00031D1D1D00041C00071B1A18000021
+      21000000012101211C00012101210000012101211C0001210121000020210000
+      202100000001}
+  end
+  object TRpImage11: TRpImage
+    Width = 585
+    Height = 540
+    PosX = 5175
+    PosY = 0
+    PrintCondition = 'NOT(TRIM(DD_REL.ndx_nam) == '#39#39')'
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      3E07000000000000424D3E070000000000003604000028000000200000002000
+      0000010008000100000008030000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD0000007B7B7B008484
+      8400848C84008C8C8C00949494009C9C9C00A5A5A500ADADAD00B5B5B500BDBD
+      BD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEFEF00F7F7F70000FF
+      FF00FFFFFF000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002021
+      00002021000020210000012101211C00012101210000012101211C0001210121
+      00000008212100001C1B1B1B071A071906180004000021210000000521210000
+      1D00041B011A011A0510000719190F0F19191900051800040000212100000005
+      212100001E00041B0500000A1A1A00000F0F0F19191904180004000021210000
+      0005212100001F00061B041000071A2000000F0F0F0004190006181800002121
+      00000009212100001F1C1B1B1B000400041A00062000000F0F0F041900051800
+      002121000000000721210000211C1C00041B051000081A1A2000000F0F0F0419
+      0004000021210000000921210000211C1C1C1B00050000121B1B1A1010200000
+      100F0F1919190000212100000005212100002100051C00051B11111110000400
+      000D10200000100F0F1919000021210000000005212100002100041C0400041B
+      0520000A00001A191919000021210000000621210000211D051C011204110010
+      1B1B2000001010101A1A1A19000021210000000921210000211D1D1C1C000500
+      051B000D2000001010101A1A1A00002121000000000B21210000211D1D1D1C1C
+      1C0004120011111B1B1B212000001010101A1A00002121000000000521210000
+      2100041D0500011C011C051B000B20000010101A1A0000212100000000052121
+      00002100061D071C000E1B1B1B2120001B1A1A1A000021210000000521210000
+      2100071D071C071B00061A1A000021210000000721210000211E1E00071D061C
+      081B0004000021210000000421210000132100091F1E1E1D1C00002121000000
+      012101211C00012101210000012101211C00012101210000000F212100001C19
+      1818171717161616150006140513000612100000212100000015212100001D0E
+      0E0D0C0B0A090908070606050403020006010005140000212100000000052121
+      00001F00050E00070C0909090808070004050104010204010005150000212100
+      00000007212100001F1F1F000421071F00031D1D1D00041C00071B1A18000021
+      21000000012101211C00012101210000012101211C0001210121000020210000
+      202100000001}
+  end
+  object TRpImage1: TRpImage
+    Width = 570
+    Height = 465
+    PosX = 915
+    PosY = 225
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      5207000000000000424D52070000000000003604000028000000200000002000
+      000001000800010000001C030000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD000000FF000000FFFF
+      000031313100393939004A4A4A00525252005A5A5A00636363006B6B6B007B7B
+      7B00848484008C8C8C00949494009C9C9C00A5A5A500ADADAD00B5B5B500BDBD
+      BD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEFEF00F7F7F700FFFF
+      FF00000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002028
+      00002028000020280000012801281C00012801280000012801281C0001280128
+      0000000E282800002423232222211F1D1B1A091900091A1B1D1F1F0000282800
+      00000010282800002523232322201D19171515150614000A1516181B1E1F0000
+      282800000009282800002623232322000E00000913161A1D1F00002828000000
+      0009282800002723232322000E0000091215191D1F00002828000000000E2828
+      0000272423232200282828000528000D002828001114191D1F00002828000000
+      002028280000282424232200282828002807070028002828001114191D1F0000
+      28280000000E28280000282424232200282828000528000D002828001114191D
+      2000002828000000002028280000282424242200282828002807070028002828
+      001114191D20000028280000000E28280000282424242300282828000528000D
+      002828001115191E200000282800000000202828000028252424230028282800
+      2807070028002828001115191E20000028280000000E28280000282525242300
+      282828000528000D002828001115191E2000002828000000000D282800002825
+      25242300070700000907000A0012161A1E210000282800000020282800002825
+      25252400100F100F100F100F100F100F0013171B1F2100002828000000202828
+      00002825252524000F100F100F100F100F100F100017191D2021000028280000
+      000528280000280004250E0000091C1D1F212200002828000000000E28280000
+      282626252524232221210620000C1F1F20202121222200002828000000042828
+      000008280B270009262625242400002828000000012801281C00012801280000
+      012801281C00012801280000000F28280000242120201F1F1F1E1E1E1D00061C
+      051B00061A19000028280000001528280000250E0E0D0C0B0A09090807060605
+      04030200060100051C000028280000000005282800002700050E00070C090909
+      08080700040501040102040100051D0000282800000000072828000027272700
+      042807270003252525000424000723222000002828000000012801281C000128
+      01280000012801281C0001280128000020280000202800000001}
+  end
+  object TRpImage12: TRpImage
+    Width = 570
+    Height = 540
+    PosX = 7935
+    PosY = 0
+    PrintCondition = 'NOT(TRIM(DD_REL.sym_nam)=='#39#39')'
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      5207000000000000424D52070000000000003604000028000000200000002000
+      000001000800010000001C030000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD000000FF000000FFFF
+      000031313100393939004A4A4A00525252005A5A5A00636363006B6B6B007B7B
+      7B00848484008C8C8C00949494009C9C9C00A5A5A500ADADAD00B5B5B500BDBD
+      BD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEFEF00F7F7F700FFFF
+      FF00000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002028
+      00002028000020280000012801281C00012801280000012801281C0001280128
+      0000000E282800002423232222211F1D1B1A091900091A1B1D1F1F0000282800
+      00000010282800002523232322201D19171515150614000A1516181B1E1F0000
+      282800000009282800002623232322000E00000913161A1D1F00002828000000
+      0009282800002723232322000E0000091215191D1F00002828000000000E2828
+      0000272423232200282828000528000D002828001114191D1F00002828000000
+      002028280000282424232200282828002807070028002828001114191D1F0000
+      28280000000E28280000282424232200282828000528000D002828001114191D
+      2000002828000000002028280000282424242200282828002807070028002828
+      001114191D20000028280000000E28280000282424242300282828000528000D
+      002828001115191E200000282800000000202828000028252424230028282800
+      2807070028002828001115191E20000028280000000E28280000282525242300
+      282828000528000D002828001115191E2000002828000000000D282800002825
+      25242300070700000907000A0012161A1E210000282800000020282800002825
+      25252400100F100F100F100F100F100F0013171B1F2100002828000000202828
+      00002825252524000F100F100F100F100F100F100017191D2021000028280000
+      000528280000280004250E0000091C1D1F212200002828000000000E28280000
+      282626252524232221210620000C1F1F20202121222200002828000000042828
+      000008280B270009262625242400002828000000012801281C00012801280000
+      012801281C00012801280000000F28280000242120201F1F1F1E1E1E1D00061C
+      051B00061A19000028280000001528280000250E0E0D0C0B0A09090807060605
+      04030200060100051C000028280000000005282800002700050E00070C090909
+      08080700040501040102040100051D0000282800000000072828000027272700
+      042807270003252525000424000723222000002828000000012801281C000128
+      01280000012801281C0001280128000020280000202800000001}
+  end
+  object TRpLabel2: TRpLabel
+    Width = 1035
+    Height = 345
+    PosX = 6330
+    PosY = 465
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Lunghe.'
+  end
+  object TRpLabel12: TRpLabel
+    Width = 2295
+    Height = 345
+    PosX = 7935
+    PosY = 465
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Simbolo Trigger'
+  end
+  object TRpLabel13: TRpLabel
+    Width = 2535
+    Height = 345
+    PosX = 5175
+    PosY = 465
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Indice di Relazione'
+  end
+  object TRpExpression23: TRpExpression
+    Width = 2760
+    Height = 345
+    PosX = 6090
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'IIF(DD_DBF1.file_typ=='#39'1'#39','#39'(Tabella di tipo dBsee)'#39','#39#39')'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel10: TRpLabel
+    Width = 1380
+    Height = 345
+    PosX = 6210
+    PosY = 345
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = 'DD_SYM.sym_sup=='#39'V'#39' OR DD_SYM.sym_sup=='#39'C'#39
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Lunghezza'
+  end
+  object TRpLabel14: TRpLabel
+    Width = 915
+    Height = 345
+    PosX = 7710
+    PosY = 345
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = 'DD_SYM.sym_sup=='#39'V'#39' OR DD_SYM.sym_sup=='#39'C'#39
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Picture'
+  end
+  object TRpExpression24: TRpExpression
+    Width = 3105
+    Height = 270
+    PosX = 7590
+    PosY = 120
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_SYM.sym_pic'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression25: TRpExpression
+    Width = 340
+    Height = 345
+    PosX = 9435
+    PosY = 120
+    Type1Font = poHelvetica
+    FontSize = 13
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 2
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_DBF1.path'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel15: TRpLabel
+    Width = 1035
+    Height = 345
+    PosX = 9435
+    PosY = 1605
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Path'
+  end
+  object TRpLabel1: TRpLabel
+    Width = 690
+    Height = 345
+    PosX = 5640
+    PosY = 465
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Tipo'
+  end
+  object TRpLabel16: TRpLabel
+    Width = 810
+    Height = 345
+    PosX = 7470
+    PosY = 465
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Obbli.'
+  end
+  object TRpExpression26: TRpExpression
+    Width = 315
+    Height = 264
+    PosX = 7710
+    PosY = 120
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_FIE.obb'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression27: TRpExpression
+    Width = 345
+    Height = 240
+    PosX = 8505
+    PosY = 120
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'IIF(DD_FIE.frmtag=='#39'1'#39','#39'Si'#39','#39'No'#39')'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression28: TRpExpression
+    Width = 345
+    Height = 240
+    PosX = 9540
+    PosY = 120
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'IIF(DD_FIE.wintag=='#39'1'#39','#39'Si'#39','#39'No'#39')'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel17: TRpLabel
+    Width = 690
+    Height = 345
+    PosX = 8280
+    PosY = 465
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Form'
+  end
+  object TRpLabel18: TRpLabel
+    Width = 1155
+    Height = 345
+    PosX = 9090
+    PosY = 465
+    Type1Font = poHelvetica
+    FontSize = 15
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Window'
+  end
+  object TRpExpression30: TRpExpression
+    Width = 690
+    Height = 345
+    PosX = 9435
+    PosY = 1035
+    Type1Font = poHelvetica
+    FontSize = 11
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'TIME'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpSection21: TRpSection
+    Width = 10772
+    Height = 630
+    SubReport = TRpSubReport3
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = True
+    AlignBottom = False
+    SectionType = rpsecpfooter
+    Components = <
+      item
+        Component = TRpExpression31
+      end
+      item
+        Component = TRpExpression32
+      end
+      item
+        Component = TRpShape19
+      end
+      item
+        Component = TRpLabel23
+      end
+      item
+        Component = TRpLabel24
+      end
+      item
+        Component = TRpExpression33
+      end
+      item
+        Component = TRpLabel26
+      end
+      item
+        Component = TRpLabel27
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpLabel9: TRpLabel
+    Width = 1840
+    Height = 340
+    PosX = 225
+    PosY = 690
+    Type1Font = poHelvetica
+    FontSize = 12
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Nome Progetto:'
+  end
+  object TRpLabel21: TRpLabel
+    Width = 5640
+    Height = 345
+    PosX = 2190
+    PosY = 690
+    Type1Font = poHelvetica
+    FontSize = 12
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = '<<INFO_DESPRJ>>'
+  end
+  object TRpExpression29: TRpExpression
+    Width = 1140
+    Height = 345
+    PosX = 9435
+    PosY = 690
+    Type1Font = poHelvetica
+    FontSize = 11
+    DataType = rpParamString
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'TODAY '
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel25: TRpLabel
+    Width = 10530
+    Height = 570
+    PosX = 225
+    PosY = 0
+    Type1Font = poHelvetica
+    FontSize = 24
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Stampa Dizionario Dati Progetto Visual dBsee'
+  end
+  object TRpLabel22: TRpLabel
+    Width = 7035
+    Height = 300
+    PosX = 2190
+    PosY = 1035
+    Type1Font = poHelvetica
+    FontSize = 12
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = '<<INFO_PATH>>'
+  end
+  object TRpLabel20: TRpLabel
+    Width = 1840
+    Height = 340
+    PosX = 225
+    PosY = 1035
+    Type1Font = poHelvetica
+    FontSize = 12
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Path Progetto:'
+  end
+  object TRpSection23: TRpSection
+    Width = 10772
+    Height = 630
+    SubReport = TRpSubReport5
+    ChangeBool = False
+    PageRepeat = False
+    SkipPage = False
+    AlignBottom = False
+    SectionType = rpsecpfooter
+    Components = <
+      item
+        Component = TRpExpression37
+      end
+      item
+        Component = TRpShape21
+      end
+      item
+        Component = TRpLabel32
+      end
+      item
+        Component = TRpLabel33
+      end
+      item
+        Component = TRpExpression38
+      end
+      item
+        Component = TRpLabel34
+      end
+      item
+        Component = TRpLabel35
+      end
+      item
+        Component = TRpExpression39
+      end>
+    ExternalTable = 'REPMAN_REPORTS'
+    ExternalField = 'REPORT'
+    ExternalSearchField = 'REPORT_NAME'
+    StreamFormat = rpStreamText
+    FooterAtReportEnd = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    ChangeExpression = ''
+    BeginPageExpression = ''
+    ChangeExpression = ''
+    SkipExpreV = ''
+    SkipExpreH = ''
+    SkipToPageExpre = ''
+    BackExpression = ''
+    Stream = {0000000000000000}
+  end
+  object TRpExpression37: TRpExpression
+    Width = 465
+    Height = 225
+    PosX = 10230
+    PosY = 345
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'PAGECOUNT'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpShape21: TRpShape
+    Width = 10815
+    Height = 120
+    PosX = 0
+    PosY = 0
+    Shape = rpsHorzLine
+    PenWidth = 0
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpLabel32: TRpLabel
+    Width = 1845
+    Height = 225
+    PosX = 225
+    PosY = 120
+    Type1Font = poHelvetica
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Nome Progetto:'
+  end
+  object TRpLabel33: TRpLabel
+    Width = 5640
+    Height = 225
+    PosX = 1950
+    PosY = 120
+    Type1Font = poHelvetica
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = '<<INFO_DESPRJ>>'
+  end
+  object TRpExpression38: TRpExpression
+    Width = 1020
+    Height = 225
+    PosX = 9435
+    PosY = 120
+    Type1Font = poHelvetica
+    DataType = rpParamString
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'TODAY '
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel34: TRpLabel
+    Width = 7365
+    Height = 225
+    PosX = 1950
+    PosY = 345
+    Type1Font = poHelvetica
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = '<<INFO_PATH>>'
+  end
+  object TRpLabel35: TRpLabel
+    Width = 1845
+    Height = 225
+    PosX = 225
+    PosY = 345
+    Type1Font = poHelvetica
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Path Progetto:'
+  end
+  object TRpExpression39: TRpExpression
+    Width = 570
+    Height = 225
+    PosX = 9435
+    PosY = 345
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = #39'Pag. '#39' + STR(M.PAGE) + '#39' di '#39
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpImage4: TRpImage
+    Width = 555
+    Height = 450
+    PosX = 225
+    PosY = 624
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      3407000000000000424D34070000000000003604000028000000200000002000
+      00000100080001000000FE020000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD0000004A4A4A006363
+      63006B6B6B007B7B7B00848484008C8C8C00949494009C9C9C00A5A5A500ADAD
+      AD00B5B5B500BDBDBD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEF
+      EF00F7F7F700FFFFFF0000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002022
+      00002022000020220000012201221C00012201220000012201221C0001220122
+      00000017222200001E1D1D1D1C1C1B19171514131313141517181900051A0004
+      0000222200000008222200001F1D1D1D0B000005111316181900041A00040000
+      22220000000922220000201D1D1D000009220006000F10121618041A00040000
+      22220000000D22220000211D1D1D002213131B000B000008191A1A1A00002222
+      0000000922220000211E1D1D0000042201000922000900181A1A1A0000222200
+      0000002022220000221E1E1D002213131B0022131313221313132200181A1A1B
+      000022220000000922220000221E1E1E0000042201000922000900181A1B1B00
+      002222000000002022220000221E1E1E002213131B0022131313221313132200
+      181A1B1B000022220000000922220000221E1E1E000004220100092200090018
+      1A1B1B00002222000000000822220000221F1E1E050700130022131313221313
+      132200181B1B1B00002222000000000822220000221F1F1E0507010009220009
+      00181B1B1C00002222000000000D22220000221F1F1F1E1D002222000B070008
+      191B1C1C0000222200000005222200002200041F00041E00221B0B0700081A1B
+      1C1C0000222200000005222200002200041F011E01000922000C001617191B1C
+      1C1C0000222200000005222200002200051F0B0700031A1B1B00041C00040000
+      22220000000A222200002220201F1F1F0B07011C011C051D0004000022220000
+      000422220000132200092120201F1E00002222000000012201221C0001220122
+      0000012201221C00012201220000000F222200001E1B1A1A1919191818181700
+      06160515000614130000222200000015222200001F0E0E0D0C0B0A0909080706
+      0605040302000601000516000022220000000005222200002100050E00070C09
+      0909080807000405010401020401000517000022220000000007222200002121
+      21000422072100031F1F1F00041E00071D1C1A00002222000000012201221C00
+      012201220000012201221C0001220122000020220000202200000001}
+  end
+  object TRpExpression12: TRpExpression
+    Width = 1725
+    Height = 345
+    PosX = 2760
+    PosY = 690
+    Type1Font = poHelvetica
+    FontSize = 15
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_DBF.file_name'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel6: TRpLabel
+    Width = 1950
+    Height = 567
+    PosX = 810
+    PosY = 663
+    Type1Font = poHelvetica
+    FontSize = 18
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Tabella'
+  end
+  object TRpLabel19: TRpLabel
+    Width = 2760
+    Height = 450
+    PosX = 1155
+    PosY = 345
+    Type1Font = poHelvetica
+    FontSize = 18
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Lista Simboli'
+  end
+  object TRpShape0: TRpShape
+    Width = 10740
+    Height = 915
+    PosX = 0
+    PosY = 120
+    BrushStyle = 1
+    PenColor = 16744448
+    Shape = rpsRoundRect
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpImage5: TRpImage
+    Width = 570
+    Height = 450
+    PosX = 345
+    PosY = 345
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    Expression = ''
+    Stream = {
+      4407000000000000424D44070000000000003604000028000000200000002000
+      000001000800010000000E030000121700001217000000000000000000000000
+      0000520000005A000000630000006B000000730000007B000000840000008C00
+      0000940000009C000000A5000000AD000000B5000000BD000000FF000000FFFF
+      00000000840000848400848484008C8C8C00949494009C9C9C00A5A5A500ADAD
+      AD00B5B5B500BDBDBD00C6C6C600CECECE00D6D6D600DEDEDE00E7E7E700EFEF
+      EF00F7F7F7000000FF0000FFFF00FFFFFF000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002024
+      00002024000020240000012401241C00012401240000012401241C0001240124
+      00000008242400001E1D1D1D071C041B000313131300061A0004000024240000
+      0005242400001F00041D071C00071B1B000000131300051A0004000024240000
+      0005242400002000051D00031C1C1300041C00071312121200131300041A0004
+      0000242400000005242400002100061D00061313131C1C1C0512000A00131B1B
+      1A1A000024240000000C24240000211E1D1D1D22000004130612000A00131B1B
+      1B1A000024240000001224240000241E1E1D1D2222220013131312230512051B
+      0004000024240000000924240000241E1E1E1D00042200060000131223230412
+      051B00040000242400000005242400002400041E000F222222111111001D1323
+      2312121C1C00041B00040000242400000005242400002400041E012201220411
+      00061D1D1D121212041C00071B1B1B00002424000000000F24240000241F1E1E
+      1E222211111D1D000713051C00051B00002424000000001024240000241F1F1E
+      1E22111E1E1E131D040F01000113061C0004000024240000000824240000241F
+      1F1F071E0110040F01000113061C00040000242400000005242400002400051F
+      051E0110040F000400131D1D041C00040000242400000005242400002400061F
+      041E0110040F000C00131D1D1D1C1C1C0000242400000005242400002400071F
+      00041E1E1E10040F0107051D00061C1C00002424000000072424000024202000
+      071F011E0610071D0004000024240000000424240000132400092120201F1E00
+      002424000000012401241C00012401240000012401241C00012401240000000F
+      242400001E1B1A1A191919181818170006160515000614130000242400000015
+      242400001F0E0E0D0C0B0A090908070606050403020006010005160000242400
+      00000005242400002100050E00070C0909090808070004050104010204010005
+      1700002424000000000724240000212121000424072100031F1F1F00041E0007
+      1D1C1A00002424000000012401241C00012401240000012401241C0001240124
+      000020240000202400000001}
+  end
+  object TRpExpression32: TRpExpression
+    Width = 465
+    Height = 225
+    PosX = 10230
+    PosY = 345
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'PAGECOUNT'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpShape19: TRpShape
+    Width = 10815
+    Height = 120
+    PosX = 0
+    PosY = 0
+    Shape = rpsHorzLine
+    PenWidth = 0
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpLabel23: TRpLabel
+    Width = 1845
+    Height = 225
+    PosX = 225
+    PosY = 120
+    Type1Font = poHelvetica
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Nome Progetto:'
+  end
+  object TRpLabel24: TRpLabel
+    Width = 5640
+    Height = 225
+    PosX = 1950
+    PosY = 120
+    Type1Font = poHelvetica
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = '<<INFO_DESPRJ>>'
+  end
+  object TRpExpression33: TRpExpression
+    Width = 1020
+    Height = 225
+    PosX = 9435
+    PosY = 120
+    Type1Font = poHelvetica
+    DataType = rpParamString
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'TODAY '
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel26: TRpLabel
+    Width = 7365
+    Height = 225
+    PosX = 1950
+    PosY = 345
+    Type1Font = poHelvetica
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = '<<INFO_PATH>>'
+  end
+  object TRpLabel27: TRpLabel
+    Width = 1845
+    Height = 225
+    PosX = 225
+    PosY = 345
+    Type1Font = poHelvetica
+    FontStyle = 1
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Path Progetto:'
+  end
+  object TRpExpression31: TRpExpression
+    Width = 570
+    Height = 225
+    PosX = 9435
+    PosY = 345
+    Type1Font = poHelvetica
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = #39'Pag. '#39' + STR(M.PAGE) + '#39' di '#39
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression19: TRpExpression
+    Width = 1605
+    Height = 345
+    PosX = 8400
+    PosY = 690
+    Type1Font = poHelvetica
+    FontSize = 11
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'IIF(DD_DBF.file_typ=='#39'1'#39','#39'(Tabella dBsee)'#39','#39#39')'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpShape17: TRpShape
+    Width = 10575
+    Height = 765
+    PosX = 0
+    PosY = 465
+    BrushStyle = 1
+    PenColor = 13466926
+    PenWidth = 113
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpExpression13: TRpExpression
+    Width = 3330
+    Height = 345
+    PosX = 4605
+    PosY = 690
+    Type1Font = poHelvetica
+    FontSize = 15
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DD_DBF.file_des'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+end

@@ -1,0 +1,29 @@
+.EnvId       := "GrabPr2"
+.oDlg:=DlgNew( 03 ,12 ,"Stampa tipo fattura" ,.T. ,"@" )
+.DlgRow( oDlg ,"                                                      ")
+.DlgRow( oDlg ," Etichetta di menu : @01                              ")
+.DlgRow( oDlg ," Archivio testata  : @02                              ")
+.DlgRow( oDlg ," Indice            : @03        di testata            ")
+.DlgRow( oDlg ," Archivio righe    : @04                              ")
+.DlgRow( oDlg ," Indice            : @05        di relazione          ")
+.DlgRow( oDlg ," Nome programma    : @06                              ")
+.DlgRow( oDlg ," @07                                                  ")
+.DlgRow( oDlg ,"                                                      ")
+.DlgRow( oDlg ,"                                                      ")
+.DlgRow( oDlg ," @20  @25                                             ")
+.DlgRow( oDlg ,"                                                      ")
+.DlgGet( oDlg ,"mEti" ,"@01" ,{||M->mEti} ,{||.T.} ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",NIL,;
+            "Digitare titolo etichetta di menu" )
+.DlgGet( oDlg ,"mDbf" ,"@02" ,{||M->mDbf} ,{|cM,nS|FmDbf(cM,nS)}  ,"XXXXXXXX" ,NIL,;
+           "Digitare nome file di testata | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mNdx" ,"@03" ,{||M->mNdx} ,{|cM,nS|FmNdx(cM,nS)}  ,"XXXXXXXX" ,NIL,;
+           "Digitare nome indice di testata | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mDbf1","@04" ,{||M->mDbf1} ,{|cM,nS|FmDbf(cM,nS,"m->Mdbf1")} ,"XXXXXXXX" ,NIL,;
+           "Digitare nome file righe | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mNdxRel","@05" ,{||M->mNdxRel} ,{|cM,nS|FMndxRel(cM,nS,mdbf,mdbf1)} ,"XXXXXXXX" ,NIL,;
+           "Digitare nome file indice di relazione | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mPrgDrv" ,"@06" ,{||M->mPrgDrv} ,{|cM,nS|FmPrgDrv(cM,nS,m->mDbf,"Pr2")} ,"XXXXXXX" ,NIL,;
+            "Digitare nome programma !")
+.DlgCkb( oDlg ,"lRepStd" ,"@07" ,{|x|M->lRepStd:=x} ,M->lRepStd ,"Modalit… report standard" )
+.DlgBut( oDlg ,"But1"  ,"@20" ,{||.T.} ,{||DlgWri(oDlg)}    ,"^OK")
+.DlgBut( oDlg ,"But2"  ,"@25" ,{||.F.} ,{||DlgEsc(oDlg)}    ,"^Rinuncia")

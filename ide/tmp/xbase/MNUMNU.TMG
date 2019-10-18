@@ -1,0 +1,46 @@
+.parameter cTact
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : MNUMNU
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab etichette di menu per nuovo oggetto main di sottoprogetto
+.* ----------------------------------------------------------------------------
+.M->cTmgName := "mnufrm.tmg "
+.M->Crlf     := chr(13) + chr(10)
+.*
+.if "gestione" $ cTact
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := "1"
+   .oo_mnu->MNUTYP      := "lab"
+   .oo_mnu->MNULAB      := "^Gestione"
+   .oo_mnu->MNUUSR      := "Raggruppa i data entry del programma"
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.if "stampe" $ cTact
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := "2"
+   .oo_mnu->MNUTYP      := "lab"
+   .oo_mnu->MNULAB      := "^Stampe"
+   .oo_mnu->MNUUSR      := "Raggruppa le stampe del programma"
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif
+.if "servizio" $ cTact
+   .M->CodMnu := NewCod("mnu")
+   .oo_mnu->(dBnet("app",0))
+   .oo_mnu->MNUOBJ      := oo_obj->OBJ
+   .oo_mnu->MNU         := M->CodMnu
+   .oo_mnu->CHO         := "3"
+   .oo_mnu->MNUTYP      := "lab"
+   .oo_mnu->MNULAB      := "Se^rvizio"
+   .oo_mnu->MNUUSR      := "Raggruppa le procedure di servizio del programma"
+   .oo_mnu->(dBnet("url"))
+   .__dbFrameDis( Padr(M->cTmgName+"Appesa etichetta..."+Trim(oo_mnu->MNULAB) ,70) )
+.endif

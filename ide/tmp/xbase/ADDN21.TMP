@@ -1,0 +1,31 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDN21
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge ITEM che comandano un LOOK-UP ad array
+.*                  : control per la  dichiarazione delle variabili
+.* ----------------------------------------------------------------------------
+.if tItmLkUpGet( oo_itm->ITMGET, oo_obj->DBF )
+   .foreach inhlookup oo_itm->ITMGET != dd_inh->INHSYM
+     .M->cTsym  := dd_sym->SYM_NAM
+     .M->cTsymD := alltrim(dd_sym->SYM_DES)
+     .M->cTdef  := ""
+     .M->cTwri  := ""
+     .if dd_sym->SYM_SUP == "V"
+        .do case
+           .case !Empty( toItem("prevalitem") )
+                .cTdef := cTsym+[ := ]+toItem("prevalitem")
+           .case !Empty( toSymbol("default") )
+                .cTdef := cTsym+[ := if(cState==DE_STATE_ADD ,]+toSymbol("default")+[ ,]+tDefIniGet() +[)]
+           .otherwise
+                .cTdef := cTsym+[ := ]+tDefIniGet()
+        .endcase
+     .else
+        .M->cTdef := cTsym+[ := ]+cTdbf+[->]+AllTrim(cTsym)
+        .M->cTwri := cTdbf+[->]+LTRIM(cTsym)+[ := ]+cTsym
+     .endif
+     .if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+        .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,"n21fie" ,cTdef ,cTwri, cTsymD } )
+     .endif
+   .next
+.endif

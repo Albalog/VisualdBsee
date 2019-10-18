@@ -1,0 +1,88 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ACTLSBA
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Inizializza oggetto List-Box tipo ARRAY-BOX
+.* ----------------------------------------------------------------------------
+.M->cTtitle := Alltrim( oo_itm->ITMSAY )
+.M->nOFR    := IF( oo_itm->TYP=="cmb",1,0 )
+/* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+   ³ Inizializza List-Box su array (vedere Norton Guide ) ³
+   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+ÛcIdC+[ := 0->(tbBrwNew(]+str(oo_itm->ROW+nOFR,4) Û ð,; // Prima  Riga
+                      Ûstr(oo_itm->COL,4) Û ð,; // Prima  Colonna
+                      Ûstr(oo_itm->ROW1,4)Û ð,; // Ultima Riga
+                      Ûstr(oo_itm->COL1,4)Û ð,; // Ultima Colonna
+.if type("OS()")=="C"    
+.* Visual dBsee
+                      W_OBJ_ARRAYBOX                 ,; // List-Box su ARRAY
+                      NIL                   ð,; // Label
+                      W_COORDINATE_PIXEL             )) // Gestione in Pixel 
+.else
+                      W_OBJ_ARRAYBOX        ð)) // List-Box su ARRAY
+.endif
+                      
+
+.if oo_itm->TYP!="cmb"
+ÛcIdC+[:W_TITLE      := ]+tExpCast(cTtitle)Û ð // Titolo oggetto browse
+.endif
+.if empty(toItem("xbfillerboxcolo"))
+ÛcIdC+':W_COLORARRAY[AC_LSB_BACK  ]      := "'+tItmCol("fillerboxcolor")Û"  ð   // Colore fondo
+.else
+ÛcIdC+':W_COLORARRAY[AC_LSB_BACK  ]      := "'+toItem("xbfillerboxcolo")Û"  ð   // Colore fondo
+.endif
+ÛcIdC+':W_COLORARRAY[AC_LSB_TOPLEFT]     := "'+tItmCol("topleftcolor")Û"    ð   //    "   bordo superiore
+ÛcIdC+':W_COLORARRAY[AC_LSB_BOTTOMRIGHT] := "'+tItmCol("bottomrightcolo")Û" ð   //    "   bordo inferiore
+.if empty(toItem("xbpromptcolor"))
+ÛcIdC+':W_COLORARRAY[AC_LSB_PROMPT]      := "'+tItmCol("promptcolor")Û"     ð   //    "   prompt
+.else
+ÛcIdC+':W_COLORARRAY[AC_LSB_PROMPT]      := "'+toItem("xbpromptcolor")Û"     ð   //    "   prompt
+.endif
+.if empty(toItem("xbprompthilitec"))
+ÛcIdC+':W_COLORARRAY[AC_LSB_HILITE]      := "'+tItmCol("prompthilitecol")Û" ð   //    "   prompt selezionato
+.else
+ÛcIdC+':W_COLORARRAY[AC_LSB_HILITE]      := "'+toItem("xbprompthilitec")Û" ð   //    "   prompt selezionato
+.endif
+ÛcIdC+':W_COLORARRAY[AC_LSB_HOTKEY]      := "'+tItmCol("hotkeycolor")Û"     ð   //    "   hot key
+ÛcIdC+':COLORSPEC    := "'+tItmCol("fillerboxcolor")Û"
+.M->lTcolTag:=.F.
+.M->cTagFun :=""
+.foreach itemgroup oo_itm->TYP=="tag"
+  .M->lTcolTag := .T.
+  .M->cTagFun  := toItem("tagfunction")
+.next
+.if lTcolTag
+ÛcIdCÛ:W_TAGARRAY   := {}         ð   // Array dei tag
+   .if !Empty(cTagFun)
+ÛcIdC+[:W_TAGFUNCTION:= {|lTag|]+cTagFunÛ} ð   // Funzione sul tag
+   .endif
+.endif
+.if !Empty(cTrefGr)
+ATTACH REFRESH GROUP "ÛcTrefGr+[" TO ]+cIdCÛ:W_R_GROUP
+.endif
+.m->cHotKey := ""
+.if toItem("horscrollbar") == "1"
+    .m->cHotKey := m->cHotKey + "+ W_MM_HSCROLLBAR "
+.endif
+.if toItem("verscrollbar") == "1"
+    .m->cHotKey := m->cHotKey + "+ W_MM_VSCROLLBAR "
+.endif
+ÛcIdC+[:W_MOUSEMETHOD:= W_MM_EDIT ]+M->cHotKeyÛ
+.if toItem("linecursor") == "1"
+ÛcIdC+[:W_LINECURSOR:= .T.]Û
+.endif
+.if toItem("linerow") == "1"
+ÛcIdC+[:W_ROWLINESEPARATOR := .T.]Û
+.endif
+ÛcIdC+[:W_HEADERROWS := ]+TRIM(toItem("rowsinheader"))Û
+.if toItem("lsbloadcblk")== "1" .and. toItem("lsbdatatype") == "1" .AND. !Empty(TRIM(toItem("lsbroworigin")))
+.if !empty(TRIM(toItem("lsbarraydef")))
+ÛcIdC+[:W_LOADARRAYFUNCTION := {||]+TRIM(toItem("lsbroworigin")) +" := "+TRIM(toItem("lsbarraydef"))+ [}]Û
+.else
+ÛcIdC+[:W_LOADARRAYFUNCTION := {||]+TRIM(toItem("lsbroworigin")) + [}]Û
+.endif
+.endif
+.dd_dbf->(dbGoto( nTdbfRec))
+
+.do PutCtrl with "def" ,"lsbarr"+toItem("lsbroworigin")
+

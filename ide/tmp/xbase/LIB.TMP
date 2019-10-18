@@ -1,0 +1,21 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : LIB
+.* RELEASE      : 4.4
+.* VERSION      :
+.* DESCRIZIONE  : Template for create a lib with Visual dBsee repository
+.* ----------------------------------------------------------------------------
+.M->cTOut := ALLTRIM(oo_exe->ExeName)
+.out €tSourcePath()+"\golib.bat"€
+del €cTout€.lib
+lib @lib.lnk
+.close
+
+.out €tSourcePath()+"\lib.lnk"€
+€cTout€
+
+.foreach link oo_bld->typ $ "drv-frm-brw-prn-qry"
+   .M->cTprg := AllTrim(oo_obj->PRG)
+€cTprg€.obj&
+.next
+€";"€
+.close

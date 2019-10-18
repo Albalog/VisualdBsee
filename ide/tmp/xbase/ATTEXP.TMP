@@ -1,0 +1,94 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTEXP.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control EXPRESSION ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTexp := toItem("expression")
+.M->cTrtm := toItem("realtime")
+.M->cFont  := toItem("fontname")
+.M->cTipAlign := ""
+.M->cTproAt   := ""
+.*Commentato per release VDB 1.6.0
+.*M->cTpro     := Trim(oo_itm->ITMSAY)
+.M->cPFont := toItem("promptfontname")
+.if ! empty(cFont) .and. at("(", cFont) == 0
+    .M->cFont := ["]+cFont+["]
+.endif
+.if ! empty(cPFont) .and. at("(", cPFont) == 0
+    .M->cPFont := ["]+cPFont+["]
+.endif
+.M->cTc   := [NIL,NIL,"]+tItmCol("datacolor")+[",NIL,NIL]
+.M->cXTc := ""
+.if empty(toItem("xbpromptcolor")) .and. empty(toItem("xbdatacolor"))
+   .M->cXTc := "{"+cTc+"}"
+.else
+   .if empty(toItem("xbpromptcolor"))
+      .M->cXTc := [NIL,NIL,"]
+   .else
+      .M->cXTc := ["]+toItem("xbpromptcolor") +[",NIL,"]
+   .endif
+   .if empty(toItem("xbdatacolor"))
+      .M->cXTc := cXTc+tItmCol("datacolor") +[",NIL]
+   .else
+      .M->cXTc := cXTc+toItem("xbdatacolor") +[",NIL]
+   .endif
+   .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+.endif
+.M->cTRotation := toItem("rotation")
+.if EMPTY(cTRotation)
+   .M->cTRotation := "0"
+.endif
+.M->cTShadowDepth := toItem("shadowdepth")
+.if EMPTY(cTShadowDepth)
+   .M->cTShadowDepth := "0"
+.endif
+.M->nTPaintStyle:= tPaintStyle(toItem("paintstyle"))
+.if type("OS()")=="C"    
+.* Visual dBsee
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL FUNCTION '+cTexp+' AT '+nTr1+','+nTc1+','+nTr2+','+nTc2Û ð ; // ATTEXP.TMP
+                 COORDINATE  W_COORDINATE_PIXEL  ð ; // Coordinate in Pixel
+   .if !EMPTY(toItem("xball_vert")) .OR. !EMPTY(toItem("xball_oriz"))
+      .M->cTipAlign := tAlign(toItem("xball_oriz"), toItem("xball_vert"))
+                 ALIGNMENT ÛM->cTipAlignÛ  ð ; // FUNCTION ALIGNMENT
+   .endif
+.else
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL FUNCTION '+cTexp+' AT '+nTr1+','+nTc1+',0,0'Û ð ; // ATTEXP.TMP
+.endif
+.if !(cTpag=="1")
+                 PAGE        ÛcTpagÛ  ð ; // Pagina
+.endif
+                 COLOR    ÛcXTcÛ       ð ; // Array dei colori
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+.endif
+.if cTrtm=="1"
+                 REALTIME             ð ; // Aggiornato in tempo reale
+.endif
+.if !(cTdis=="{||.T.}")
+                 DISPLAYIF ÛcTdisÛ    ð ; // Display condizionale
+.endif
+.if !Empty(cFont)
+                 FONT      ÛcFontÛ ð ; // Font Name (XBASE)
+.endif
+.if !Empty(cTpro) .and. !Empty(cPFont)
+                 PROMPTFONT ÛcPFontÛ ð ; // Prompt Font Name (XBASE)
+.endif
+.if !Empty(cTpro)
+       .cTproAt := Str(tPromptRow(),4)+" ,"+Str(tPromptCol(),4)
+                 PROMPT    ÛtExpCast(cTpro)Û ð ; // Prompt
+                 PROMPTAT  ÛcTproAtÛ   ð ; // Coordinate prompt
+.endif
+.if VAL(toItem("bitmap")) != 0
+                 BITMAPOPTION ÛtoItem("bitmap")Û  ð ; // Bitmap (XBASE)
+.endif
+.if cTRotation != "0"
+                 ROTATION    ÛcTRotationÛ ð ; // Rotation (XBASE)
+.endif
+.if cTShadowDepth != "0"
+                 SHADOWDEPTH ÛcTShadowDepthÛ ð ; // Shadow Depth (XBASE)
+.endif
+.if ! EMPTY(nTPaintStyle)
+                 PAINTSTYLE ÛnTPaintStyleÛ ð ; // Paint Style (XBASE)
+.endif
+                 PICTURESAY "ÛcTpicSÛ" ð   // Picture in say

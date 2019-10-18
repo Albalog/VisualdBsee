@@ -1,0 +1,30 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GENHLP
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Rigenera il file di help del sottoprogetto
+.* ----------------------------------------------------------------------------
+.if toExeEnv("helpformat")=="1"
+  .chk := "N"
+  .chk := tChkHlpCHM()
+  .if chk == "Y" 
+.do genhlpch
+  .endif
+.else
+  .if ! file(tExePath()+"\dbHlp.dbf") .OR. dBMsgDis( "tgenhlp" ) == 1
+     .*.if (toExeEnv("compiler")=="3")
+     .*   .msg [Generazione file di HELP del progetto in corso.]
+     .*   .foreach make oo_bld->EXT=="prg"
+     .*      .M->cTprg := tExePath() +"\html\" +AllTrim(oo_obj->PRG) +".htm"
+     .*      .M->nHandle := FCREATE( M->cTprg )
+     .*      .FWRITE( M->nHandle, "test" )
+     .*      .FCLOSE( M->nHandle )
+     .*   .next
+     .*.else
+        .msg [Generazione file di HELP del progetto in corso.]
+        .tCopyFile( dfExeTmp()+"dbHlp.dbf" ,tExePath()+"\dbHlp.dbf" )
+        .GenHlp()
+     .*.endif
+  .endif
+.endif
+

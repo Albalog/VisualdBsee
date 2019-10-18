@@ -1,0 +1,38 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDCKB
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge ITEM CHECK BOX ad array control per la
+.*                  : dichiarazione delle variabili
+.* ----------------------------------------------------------------------------
+.M->cTsym  := toItem("ckbdataorigin")
+.M->cTsymD := dfGetSym(upper(PadR(cTsym, 10)), {||alltrim(dd_sym->SYM_DES)}, 2)
+.M->cToTyp := toItem("origintype")
+.if ! Empty( cTsym )
+   .M->cTckb := ""
+   .M->cTpre := toItem("datadefault")
+   .M->cTdef := ""
+   .M->cTwri := ""
+   .M->nEle  := 0
+   .if toItem("origintype") == "0"
+      .M->cTckb := "ckbfie"
+      .M->cTali := if( !Empty(cTdbf) ,cTdbf+"->" ,"" )
+      .M->cTwri := cTali+LTRIM(Padr(cTsym,10))+[ := ]+cTsym
+      .M->cTdef := Padr(cTsym,10)+[ := ]+cTali+Alltrim(cTsym)
+      .if ! Empty(cTpre)
+         .M->cTdef := Padr(cTsym,10)+[ := IF(cState==DE_STATE_ADD,]+cTpre+[,]+cTali+Alltrim(cTsym)+[)]
+      .endif
+   .else
+      .M->cTckb := "ckbvar"
+      .if ! Empty(cTpre)
+         .M->cTdef := Padr(cTsym,10)+[ := IF(Empty(]+cTsym+[),]+cTpre+[,]+cTsym+[)]
+      .endif
+   .endif
+   .if (nEle:=Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } )) == 0
+      .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,cTckb ,cTdef ,cTwri, cTsymD } )
+   .else
+      .if ! Empty( cTpre )
+         .aTcontrol[nEle][3] := cTdef
+      .endif
+   .endif
+.endif

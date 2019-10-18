@@ -1,0 +1,29 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDREL
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge ITEM di RELAZIONE ad array control per la
+.*                  : dichiarazione delle variabili
+.* ----------------------------------------------------------------------------
+.foreach control oo_itm->TYP=="rel"
+  .if toItem( "editcondition" ) == "1"
+     .M->cTals  := tGetAliasName( oo_itm->ALS )
+     .M->cTsym  := dd_sym->SYM_NAM
+     .M->cTsymD := alltrim(dd_sym->SYM_DES)
+     .M->cTstr  := cTals+[->]+trim(cTsym)
+     .M->cTdefE := toSymbol("default")
+     .M->cTdef  := ""
+     .if ! Empty( cTdefE )
+         .M->cTdef := cTsym+[ := iif(cState==DE_STATE_ADD ,]+cTdefE+[ ,]+cTstr+[)]
+     .else
+         .M->cTdef := cTsym+[ := ]+cTstr
+     .endif
+     .M->cTwri := cTdbf+[->]+LTRIM(cTsym)+[ := ]+cTsym
+     .if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+        .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,"121fie" ,cTdef ,cTwri, cTsymD } )
+     .endif
+     .if Ascan( aTrel11   ,{|x|x[1]==AllTrim(Lower(cTals)) } ) == 0
+        .aadd(  aTrel11   ,{ AllTrim(Lower(cTals)) ,"pos121" ,cTdef ,cTwri } )
+     .endif
+  .endif
+.next

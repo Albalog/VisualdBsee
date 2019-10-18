@@ -1,0 +1,7 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : VARGLO
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Dichiarazione variabili MEMVAR
+.* ----------------------------------------------------------------------------
+MEMVAR Act, Sa, A, EnvId, SubId, BackFun  ð //  Variabili di ambiente dBsee

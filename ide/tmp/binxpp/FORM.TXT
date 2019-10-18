@@ -1,0 +1,102 @@
+---------------------------------------
+GESTIONE DI DATA-ENTRY con oggetto FORM
+---------------------------------------
+
+Una base di dati Š una raccolta integrata di dati basata su un software che
+permette di eseguire interrogazioni ed aggiornamenti, garantendo
+l'integrit… e la privatezza. In dBsee gli accessi alla base dati vengono
+realizzati attraverso delle Gestioni di Data Entry. Un sistema di Data
+Entry Š definito come una finestra all'interno della quale sono presenti
+degli elementi grafici che permettono di accedere alla base dati
+dell'applicazione.
+
+Ogni sistema di Data Entry ha sempre associato un file principale. Il
+sistema Š quindi in grado di gestire tutti i dati contenuti nel file
+principale e tutti quelli provenienti da file ad esso relazionati.
+
+In una gestione di Data Entry realizzata attraverso un oggetto di tipo Form
+viene visualizzato in ogni istante un solo record del file principale
+associato alla gestione. La gestione in tal caso pu• essere pensata come
+uno schedario nella quale viene visualizzata una sola scheda alla volta.
+
+La finestra che realizza la gestione di Data Entry semplice Š generalmente
+dotata di un titolo, visualizzato nella parte superiore. La finestra
+pu• essere spostata sullo schermo tramite l'utilizzo del mouse, puntando il
+cursore sulla banda del titolo.
+
+In alto a sinistra Š presente un Control Menu Box che permette di accedere
+al menu della gestione. Per accedere al menu, premere il mouse sul Control
+Menu Box o utilizzare i tasti Alt-Barra.
+
+Il menu contiene delle opzioni che permettono di stabilire se i dati
+devono essere gestiti in sola visualizzazione, in modifica, in ricerca
+oppure in inserimento.
+
+Per consentire l'accesso ai dati, la gestione contiene degli elementi
+grafici denominati Control che consentono di visualizzare, modificare o
+inserire delle informazioni.  I tipi di control gestiti sono i seguenti:
+
+* SAY  = Riga di testo
+
+* FONT = Riga di testo formata da caratteri di grosse dimensioni.
+
+* GET  = Visualizzazione di un dato con possibilit… di inserimento e
+         modifica
+
+* BOX  = Riquadro contenente delle informazioni di interresse particolare
+
+* GROUP BOX = Riquadro contenente un insieme di Radio Button o di Check
+              Box, dotato di un titolo.
+
+* ICON = Elemento grafico (punto esclamativo, mano aperta...) utilizzato
+         per attrarre l'attenzione dell'utente su una operazione da
+         compiere.
+
+* PUSHBUTTON = Pulsante a cui Š associata una azione. Il pulsante pu•
+               essere attivato utilizzando il mouse oppure il tasto Invio.
+               Per passare da un pulsante al successivo usare il tasto Tab.
+
+* RADIO BUTTON = Un Radio Button si presenta come un simbolo circolare
+                 affiancato da una descrizione testuale. Pi— Radio Button
+                 vengono utilizzati per mostrare tutti i possibili valori
+                 di un campo o di una variabile. Un punto (DOT) all'interno
+                 di uno dei simboli circolari indica il valore attuale del
+                 campo. In fase di modifica, il valore del campo associato
+                 al Radio Button pu• essere modificato tramite il mouse o
+                 il tasto Barra.
+
+* CHECK BOX = Un Check Box si presenta come un simbolo quadrato affiancato
+              da una descrizione testuale. Un Check Box viene utilizzato per
+              visualizzare il valore di un campo o di una variabile che pu•
+              assumere solo due valori prefissati. La presenza o l'assenza
+              di un simbolo 'û' all'interno del quadrato indica il valore
+              attuale del campo associato, che pu• essere modificato
+              tramite il mouse o il tasto Barra Spazio.
+
+* COMBINATION BOX = Un Combination Box Š una normale Get a cui Š
+                    associato una List Box. La List Box contiene tutti i
+                    valori possibili per quel campo. La List Box pu• essere
+                    aperta tramite la pressione del pulsante sinistro del
+                    mouse oppure utilizzando i tasti Alt-Freccia Gi—.
+
+* SPIN BUTTON = Uno Spin Button Š un Get a cui sono associati due pulsanti
+                (freccia gi— e freccia su), che permettono di modificare il
+                valore del campo facendolo variare in un range predefinito.
+                I tasti vengono utilizzati rispettivamente per decrementare
+                e incrementare il valore del campo.
+
+* LIST BOX = Finestra che visualizza il contenuto di un file o di un array
+             come un insieme di righe suddivise in pi— colonne. La finestra
+             Š dotata di barre di scorrimento orizzontali e verticali che
+             permettono di effettuare lo scrolling delle informazioni
+             riportate, tramite il mouse o i tasti cursore. Se previsto
+             dall'applicazione, la pressione del tasto Invio permette di
+             accedere ad un finestra che consente di effettuare la modifica
+             o l'inserimento dei dati visualizzati nella List Box.
+
+             Un List Box pu• contenere una colonna di Tag che, se presente,
+             Š la prima colonna a sinistra. Questa colonna viene usata per
+             selezionare insiemi di righe. Per selezionare/deselezionare
+             una riga, usare il mouse o i tasti Ctrl-Barra.
+
+Per abbandonare la gestione di Data Entry, premere il tasto Esc.

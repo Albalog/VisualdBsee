@@ -1,0 +1,186 @@
+<CAP> INTERFACCIA CUA
+
+ L'applicazione generata Š dotata di interfaccia utente CUA.  CUA Š
+ l'acronimo delle parole inglesi 'Common User Access', cioŠ
+ interfaccia comune per l'utente.
+
+ Lo standard CUA definisce un insieme di propriet… che l'interfaccia
+ dell'applicazione deve obbligatoriamente possedere tra cui, per
+ esempio, la barra orizzontale del menu, oltre ad un insieme di
+ modalit… d'interazione che possono essere sfruttate per definire i
+ dialoghi tra l'utente ed il sistema.  Le componenti principali
+ dell'interfaccia sono:
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ IL MENU PRINCIPALE ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ Il menu principale Š quello associato alla prima finestra
+ dell'applicazione e viene visualizzato nella parte superiore del
+ video. Tale menu consente di attuare tutte le funzionalit…
+ previste dell'applicazione.
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ LE FINESTRE ED I CONTROL ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ I diversi oggetti definiti all'interno nell'applicazione si
+ presentano all'utente come finestre che possono essere spostate a
+ video con l'utilizzo del mouse o dei tasti direzionali.  In caso di
+ utilizzo dei tasti direzionali per lo spostamento delle
+ finiestre, sar… necessario attivare il Contol-menu box dell'oggetto
+ (tasti ALT-BARRA SPAZIO, quindi i tasti di spostamento orizzontale)
+ ed effettuare la scelta "Sposta".
+
+ Per quanto riguarda le finestre che contengono i dati presentati in
+ colonne, (vengono definite Window, Browse, List Box, ecc.) possono
+ essere anche liberamente dimensionate utilizzando il mouse o i tasti
+ funzione.
+
+ Ogni finestra Š dotata di un titolo e di un menu.  Ogni maschera,
+ infatti, sulla quale pu• essere effettuato un data entry, ha, o
+ comunque pu• avere, un menu che permette di entrare in modifica sui
+ dati visualizzati, di cancellarli, di creare un nuovo record,
+ eccetera.
+
+ Nell'angolo superiore sinistro della finestra viene visualizzato un
+ Control-menu box che consente di accedere, attraverso l'utilizzo del
+ mouse o dei tasti ALT-BARRA SPAZIO, al menu di sistema della
+ finestra.
+
+ Un doppio clic del mouse sul Control-menu box, consente di chiudere
+ l'oggetto attivo, ed equivale, in pratica, alla pressione del tasto
+ ESC.
+
+ Le finestre che vengono presentate contengono dei dati o delle
+ informazioni, visualizzate in uno o pi— control.  Tutte le tipologie
+ di control utilizzate sono previste dalle norme sull'interfaccia CUA.
+ Vanno dai semplici campi di testo, ai Pushbutton, ai Combination Box.
+ In fase di modifica o inserimento, l'utente pu• interagire
+ direttamente con questi control per inserire o aggiornare le
+ informazioni.  Ogni control posizionato sulla gestione di data entry
+ possiede dei tasti ad esso contestuali.  L'elenco di tali tasti Š
+ attivabile dalla pressione di SHIFT-F1 oppure dal pulsante KEY posto
+ nella parte destra della Barra di Stato (attivabile unicamente dal
+ mouse).  Di seguito viene proposta una sintesi dei tasti principali
+ associati ai control:
+
+  Barra Spazio
+     Consente di attivare un control di tipo Check Box o di tipo
+     Radio Button.
+
+  Tab / Shift-Tab
+     Consentono di passare da un control ad un altro all'interno
+     della gestione di data entry.
+
+  Ins, Barra Spazio e Canc
+     Consentono rispettivamente, all'interno di una finestra che
+     contiene delle colonne (List Box, Browse o Window), di inserire,
+     modificare o cancellare una riga.
+
+  Ctrl - -> e Ctrl - <-
+     All'interno di una finestra che contiene delle colonne (List Box,
+     Browse o Window), consentono rispettivamente di allargare e di
+     stringere la dimensione di una colonna.
+
+  Ctrl-Barra Spazio e Ctrl-\
+     All'interno di una List Box o di una Browse contenente la
+     colonna di Tag, consentono rispettivamente di
+     selezionare/deselezionare un elemento e di deselezionare tutti
+     gli elementi evenualmente selezionati nell'oggetto.
+
+  Ctrl-Ins e Shift-Ins
+     Consentono di effettuare rispettivamente il Copia ed Incolla
+     nel e dal buffer del contenuto della voce sulla quale il
+     cursore si trova posizionato.
+
+  Tasti di movimento verticale
+     Su un control di tipo Spin Button, consentono di ciclare tra i
+     valori definiti.
+
+  Alt-F1
+     Consente di attivare la calcolatrice di dBsee.
+
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ Barra di stato
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+ Nella parte inferiore del video Š presente una barra di stato che
+ consente all'utente di avere a disposizione un help contestuale alla
+ posizione del cursore.
+
+ Il testo che verr… presentato nella barra di stato pu• essere
+ impostato dal progettista all'interno del quadro di definizione
+ dell'elemento (una voce di menu o un control), come valore del
+ parametro "Messaggio" o "Descrizione".
+
+ Nella parte destra di tale barra sono presenti quattro pulsanti
+ attivabili unicamente con l'utilizzo del mouse.  Questi sostituiscono
+ in pratica le funzionalit… del tasti di "Conferma" (pulsante OK), di
+ help contestuale (pulsante HLP) di help contestuale sui tasti
+ (pulsante KEY) e di abbandono della maschera (pulsante ESC).
+
+ Le finestre contengono dei dati o delle informazioni, visualizzate in
+ uno o pi— control.  Sono infatti gestiti tutti i control previsti
+ dall'interfaccia CUA, come, per esempio, i box di testo, i font
+ semigrafici, i Radio Button, i Check Box, gli Spin Button, le List
+ Box, i Combo Box, i Group box, i Pushbutton, ecc.
+
+ Radio Button, Check Box e Spin Button sono control che consentono di
+ visualizzare il contenuto di un campo e di una variabile in modo pi—
+ intuitivo rispetto all'uso di una semplice get, dando inoltre
+ all'utente di modificare il valore visualizzato semplicemente
+ premendo il tasto sinistro del mouse.
+
+ I Radio Button vengono utilizzati per visualizzare i valori di un
+ campo che pu• assumere solo alcuni valori predefiniti:  ogni Radio
+ Button indica un valore specifico, che pu• essere attivato dalla
+ pressione del tasto BARRA SPAZIO.
+
+ Un Check Box viene utilizzato per visualizzare il valore di un campo
+ che pu• assumere solo due valori predefiniti:  la presenza di un
+ segno di visto nel box, o la sua assenza, serve ad individuare il
+ valore del campo.  Un valore pu• essere attivato dalla pressione del
+ tasto BARRA SPAZIO.
+
+ Uno Spin Button Š costituito da un campo di edit a cui sono associati
+ una coppia di pulsanti che permettono di incrementare o decrementare
+ il valore del campo.
+
+ Le List Box sono control che permettono di visualizzare i record di
+ un file in una tabella suddivisa in righe e colonne, fornendo
+ all'utente la possibilit… di navigare tra i vari record e i
+ rispettivi campi; vengono soprattutto usate per visualizzare gli N
+ record posti in relazione con un determinato record del file
+ principale associato al Form di cui la List Box fa parte.
+
+ I combo Box sono dei control costituiti da due parti: una riga di
+ edit che contiene il valore attuale del campo e una List Box che
+ contiene tutti i suoi possibili valori. L'utilizzo pi— comune di
+ questo tipo di control Š per la visualizzazione di dati presenti
+ nella maschera, ma decodificati altrove.
+
+ I control di tipo Memo sono dei control all'interno del quale
+ Š possibile inserire dei commenti testuali relativi alla
+ gestione di data entry corrente. L'edit all'interno di questi
+ control, viene attivato dalla pressione del tasto BARRA SPAZIO.
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ UTILIZZO DEL MOUSE ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ L'applicazione consente l'utilizzo del mouse in tutti i diversi
+ ambienti e maschere di data entry definiti.
+
+ Il puntatore del mouse pu• essere presentato in modalit… grafica o in
+ modalit… testo, semplicemente impostando un parametro all'interno del
+ file dBstart.ini nella directory \EXE dell'applicazione in corso di
+ sviluppo.  Il parametro interessato Š "MouseVga"; se impostato a NO
+ il puntatore del mouse sar… di tipo testo, impostato a YES sar…
+ grafico.
+
+ Nella parte destra della Barra di stato, posta nella parte inferiore
+ del video, sono presenti dei pulsanti che consentono di effettuare
+ operazioni di salvataggio o abbandono della maschera, o attivazione
+ degli Help sia contestuali che sui tasti, unicamente con l'utilizzo
+ del mouse.

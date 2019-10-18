@@ -1,0 +1,31 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADD121
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge ITEM di RELAZIONE 1:1 ad array control per
+.*                  : la dichiarazione delle variabili
+.* ----------------------------------------------------------------------------
+.M->cTals  := tGetAliasName( oo_itm->ALS )
+.M->cTsym  := dd_sym->SYM_NAM
+.M->cTsymD := alltrim(dd_sym->SYM_DES)
+.M->cTstr  := cTals+[->]+trim(cTsym)
+.M->cTdefE := toSymbol("default")
+.M->cTdef  := ""
+.if ! Empty( cTdefE )
+    .M->cTdef := cTsym+[ := iif(cState==DE_STATE_ADD ,]+cTdefE+[ ,]+cTstr+[)]
+.else
+    .M->cTdef := cTsym+[ := ]+cTstr
+.endif
+.M->cTwri := cTals+[->]+LTRIM(cTsym)+[ := ]+cTsym
+.if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+   .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,"121"+cTals ,cTdef ,cTwri, cTsymD } )
+.endif
+.if Ascan( aTrel11   ,{|x|Lower(x[1])==Lower(cTals) } ) == 0
+   .dd_rel->(dbSetOrder(1))
+   .dd_rel->(dbSeek(oo_itm->REL))
+   .dd_ndx->(dbSetOrder(2))
+   .if dd_ndx->(dbSeek(dd_rel->RELNDX))
+      .cTseek := cTals+"->(dfS("+Str(dd_ndx->NDXINCN,3)+","+toRelation('relkey')+"))"
+      .aadd(  aTrel11   ,{ cTals ,cTseek ,oo_itm->REL} )
+   .endif
+.endif

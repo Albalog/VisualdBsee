@@ -1,0 +1,7 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : GENUSRM
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Mette il messaggio utente della generazione
+.* ----------------------------------------------------------------------------
+.dbUsrNew( "" )

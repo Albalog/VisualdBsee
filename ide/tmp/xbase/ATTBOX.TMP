@@ -1,0 +1,40 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTBOX.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control BOX ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTipAlign := ""
+.M->cBoxtype  := ""
+.M->cFil:= ToItem("fillerboxchar")
+.M->cTc := ["]+tItmCol("topleftcolor")    +[","]+;
+               tItmCol("fillerboxcolor")  +[","]+;
+               tItmCol("bottomrightcolor")+["]
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL BOX '+PadL(AllTrim(oo_itm->font),2,"0")Û ð ; // ATTBOX.TMP
+                 AT ÛnTr1+','+nTc1+','+nTr2+','+nTc2Û ð ; // Coordinate
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 BOXTEXT Û'"'+AllTrim(oo_itm->Itmsay)+'"'Û  ð ; // BOX Text
+                 COORDINATE  W_COORDINATE_PIXEL ð ; // Tipo Coordinate 
+   .if !EMPTY(toItem("xball_vert")) .OR. !EMPTY(toItem("xball_oriz"))
+      .M->cTipAlign := tAlign(toItem("xball_oriz"), toItem("xball_vert"))
+                 ALIGNMENT ÛM->cTipAlignÛ ð ; // BOX Caption ALIGNMENT
+   .endif
+   .if !EMPTY(trim(toItem("xbboxtype"))) 
+      .M->cBoxtype := tBoxType(toItem("xbboxtype") ) 
+                 BOXTYPE   ÛM->cBoxtypeÛ ð ; // BOX Type
+   .endif
+.endif
+.if !(cTpag=="1")
+                 PAGE  ÛcTpagÛ ð ; // Pagina
+.endif
+.if !Empty(cFil)
+                 FILL  ÛcFilÛ  ð ; // Carattere di riempimento
+.endif
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+.endif
+.if !(cTdis=="{||.T.}")
+                 DISPLAYIF ÛcTdisÛ ð ; // Display condizionale
+.endif
+                 COLOR {ÛcTcÛ} ð   // Array dei colori

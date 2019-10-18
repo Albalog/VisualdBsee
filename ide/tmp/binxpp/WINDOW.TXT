@@ -1,0 +1,11 @@
+---------------------------
+Gestioni con oggetti WINDOW
+---------------------------
+
+Un sistema definito utilizzando un oggetto di tipo Window consente di
+visualizzare dei dati organizzati su pi— righe e colonne.  Questa gestione
+viene utilizzata per visualizzare i record di un file o le righe di un
+array a due dimensioni.
+
+Un oggetto WINDOW Š del tutto analogo ad un oggetto BROWSE, con la
+differenza che i dati in esso visualizzati non possono essere modificati.

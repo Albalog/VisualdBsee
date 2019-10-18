@@ -1,0 +1,23 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDVAR
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge ITEM VARIABILI ad array control per la
+.*                  : dichiarazione delle variabili
+.* ----------------------------------------------------------------------------
+.M->cTsym  := dd_sym->SYM_NAM
+.M->cTsymD := alltrim(dd_sym->SYM_DES)
+.M->cTdef  := ""
+.M->cTwri  := ""
+.do case
+   .case ! Empty( toItem("prevalitem") )
+        .cTdef := cTsym+[ := ]+toItem("prevalitem")
+   .case !Empty( toSymbol("default") )
+        .cTdef := cTsym+[ := if(cState==DE_STATE_ADD ,]+toSymbol("default")+[ ,]+;
+                        [ IF(]+TRIM(cTsym)+[==NIL,]+tDefIniGet()+[,]+TRIM(cTsym)+[) )]
+   .otherwise
+        .cTdef := cTsym+[ := ]+tDefIniGet()
+.endcase
+.if Ascan( aTcontrol ,{|x|x[1]==AllTrim(Lower(cTsym)) } ) == 0
+   .aadd(  aTcontrol ,{ AllTrim(Lower(cTsym)) ,"getvar" ,cTdef ,cTwri, cTsymD } )
+.endif

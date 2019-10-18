@@ -1,0 +1,98 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTGET.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control ENTRY FIELD ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTsym1   := ""
+.M->cTcnd    := tItmActive()
+.M->cTwvc    := iif( toItem("editcondition")=="1", ".T.", ".F.")
+.M->cTipAlign:= ""
+.if tUdfGet( cTnSeek ,aTukLast )
+   .M->cTwvc  := iif( toItem("editcondition")=="1" ,cTsym+"(ab)" ,".F." )
+.endif
+.M->nTpfkItm := 0
+.oo_mnu->(dbSetOrder(1))
+.if oo_mnu->(dbSeek(oo_itm->OBJ+oo_itm->ITM+oo_itm->IGC))
+.do pfkitm
+.endif
+   .M->cTsys  := iif(empty(toItem('getfunction')),'""',["]+toItem('getfunction')+["])
+   .M->cTc    := ["]+tItmCol("promptcolor") +[","]+tItmCol("hotkeycolor")     +[","]+;
+                     tItmCol("datacolor")   +[","]+tItmCol("datahilitecolor") +[","]+;
+                     tItmCol("topleftcolor")+[","]+tItmCol("bottomrightcolor")+["]
+   .M->cXTc := ""
+   .if empty(toItem("xbpromptcolor")) .and. empty(toItem("xbdatacolor"))
+      .M->cXTc := "{"+cTc+"}"
+   .else
+      .if empty(toItem("xbpromptcolor"))
+         .M->cXTc := ["]+tItmCol("promptcolor") +[",NIL,"]
+      .else
+         .M->cXTc := ["]+toItem("xbpromptcolor") +[",NIL,"]
+      .endif
+      .if empty(toItem("xbdatacolor"))
+         .M->cXTc := cXTc+tItmCol("datacolor") +[",NIL,NIL,NIL]
+      .else
+         .M->cXTc := cXTc+toItem("xbdatacolor") +[",NIL,NIL,NIL]
+      .endif
+      .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+   .endif
+   .M->cFont  := toItem("fontname")
+   .M->cPFont := toItem("promptfontname")
+   .if ! empty(cFont) .and. at("(", cFont) == 0
+       .M->cFont := ["]+cFont+["]
+   .endif
+   .if ! empty(cPFont) .and. at("(", cPFont) == 0
+       .M->cPFont := ["]+cPFont+["]
+   .endif
+   .if oo_itm->WDO == "rel" 
+      .M->cTsym1 := tLeadItm()+"->"+cTsym
+   .else
+      .M->cTsym1 := cTsym
+   .endif
+
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL GET AS TEXTFIELD '+cTsym1+' AT '+nTr1+','+nTc1+','+nTr2+','+nTc2Û ð ; // ATTGET.TMP
+.if type("OS()")=="C"    
+.* Visual dBsee
+                 COORDINATE  W_COORDINATE_PIXEL ; // Coordinate in Formato Pixel
+   .if !EMPTY(toItem("xball_vert")) .OR. !EMPTY(toItem("xball_oriz"))
+      .M->cTipAlign := tAlign(toItem("xball_oriz"), toItem("xball_vert"))
+                 ALIGNMENT ÛM->cTipAlignÛ    ð ; // TEXTFIELD ALIGNMENT
+   .endif
+.endif
+.if !(cTpag=="1")
+                 PAGE        ÛcTpagÛ  ð ; // Pagina
+.endif
+                 COLOR ÛcXTcÛ            ð ; // Array dei colori
+                 CONDITION {|ab|ÛcTwvcÛ} ð ; // Funzione When/Valid
+                 SYSFUNCTION ÛcTsysÛ  ð ; // Funzione di sys
+                 MESSAGE ÛtExpCast(cTmsg)Û ð ; // Messaggio
+                 VARNAME "ÛcTSymÛ" ð ; //
+   .if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+   .endif
+   .if !Empty(cTrefGr)
+.*                 REFRESHGRP "ÛcTrefGrÛ" ð ; // Esegue il gruppo di refresh
+   .endif
+   .if toItem("memoinkey")=="1"
+                 NOINKEY              ð ; // Edit memo senza tasto
+   .endif
+   .if !Empty(cTpro)
+                 PROMPT ÛtExpCast(cTpro)Û ð ; // Prompt
+   .endif
+                 BOX   Ûoo_itm->FONTÛ ð ; // Tipo Box
+   .if nTpfkItm > 0
+                 PFK aPfkItm          ð ; // Array dei tasti della get
+   .endif
+   .if !Empty(toItem("memowidth"))
+                 MEMOWIDTH ÛtoItem("memowidth")Û ð ; // Larghezza testo del memo
+   .endif
+   .if !(cTdis=="{||.T.}")
+                 DISPLAYIF ÛcTdisÛ    ð ; // Display condizionale
+   .endif
+   .if !Empty(cFont)
+                 FONT       ÛcFontÛ ð ; // Font Name (XBASE)
+   .endif
+   .if !Empty(cTpro) .and. !Empty(cPFont)
+                 PROMPTFONT ÛcPFontÛ ð ; // Prompt Font Name (XBASE)
+   .endif
+                 ACTIVE   {||cState $ "ÛcTcndÛ" } ð   // Stato di attivazione

@@ -1,0 +1,22 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : APWINBLD
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab appende oggetto nel build del sottoprogetto
+.* ----------------------------------------------------------------------------
+.__dbFrameOn( 06 ,05, 18, 75, "Esecuzione GRAB: apwinbld.tmg in corso..." )
+.__dbFrameDis( "Sottoprogetto: "+ oo_exe->EXE ,70)
+.oo_bld->(dBappend())
+.oo_bld->EXE         := oo_exe->EXE
+.oo_bld->OBJ         := oo_obj->OBJ
+.oo_bld->TYP         := oo_obj->TYP
+.oo_bld->WDO         := oo_obj->WDO
+.oo_bld->EXT         := oo_obj->EXT
+.oo_bld->PRJINCN     := 0
+.oo_bld->SECTION     := "1"
+.oo_bld->COMPILE     := "1"
+.oo_bld->LINK        := "1"
+.oo_bld->FLGGEN      := "1"
+.__dbFrameDis( "Aggiunto oggetto nel file make/link..." ,70)
+.do newobje          ./  APPENDE OGGETTI REFERENZIATI DA OGGETTO MASTER
+.__dbFrameOff()

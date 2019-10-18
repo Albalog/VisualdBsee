@@ -12,7 +12,7 @@ echo.
 pause
 
 set VDBLIB_MAINDIR=%CD%\libreria
-set path=%VDBLIB_MAINDIR%\uti200;%path%
+set path=%VDBLIB_MAINDIR%\uti;%path%
 set include=%VDBLIB_MAINDIR%\INCLUDE;%include%
 set include=%VDBLIB_MAINDIR%\SRC\EXTRA_CH;%include%
 set lib=%VDBLIB_MAINDIR%\output\lib200\rel;%lib%

@@ -1,0 +1,26 @@
+.do case
+    .case cTtypeFace == "2" ./  grassetto
+          .cTattr := "PRN_BOLD"
+    .case cTtypeFace == "3" ./  sottolineato
+          .cTattr := "PRN_UNDERLINE"
+    .case cTtypeFace == "4" ./  grassetto + sottolineato
+          .cTattr := "PRN_BOLD+PRN_UNDERLINE"
+    .case cTtypeFace == "5" ./  doppia larghezza
+          .cTattr := "PRN_ENLARGED"
+    .case cTtypeFace == "6" ./  sovrascritto
+          .cTattr := "PRN_SUPERSCRIPT"
+    .case cTtypeFace == "7" ./  sottoscritto
+          .cTattr := "PRN_SUBSCRIPT"
+    .case cTtypeFace == "8" ./  Condensed
+          .cTattr := "PRN_CONDENSED"
+    .case cTtypeFace == "9" ./  Italico
+          .cTattr := "PRN_ITALIC"
+    .case cTtypeFace == "A" ./  Quality
+          .cTattr := "PRN_NLQ"
+    .case cTtypeFace == "B" ./  sequenza nr. 1 definibile da utente
+          .cTattr := "PRN_USER01"
+    .case cTtypeFace == "C" ./  sequenza nr. 2 definibile da utente
+          .cTattr := "PRN_USER02"
+    .case cTtypeFace == "D" ./  sequenza nr. 3 definibile da utente
+          .cTattr := "PRN_USER03"
+.endcase

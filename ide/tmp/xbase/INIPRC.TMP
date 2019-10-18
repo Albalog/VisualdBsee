@@ -1,0 +1,22 @@
+.parameter cTMode
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : INIPRC.TMP
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Inizializza ai valori di default le variabili di calcolo
+.* ----------------------------------------------------------------------------
+.lTBef := if(cTMode=="bef", .T., .F.)  ./ .T. ricerca i precalcoli
+.nTptr := 1
+.nTRecPos := oo_prn->(recno())
+.oo_prn->(dbSeek(oo_prn->OBJ+oo_prn->REC_ID+oo_prn->GRP))    ./ ##
+.do while nTptr <= len( aTprc)
+    .if oo_prn->GRP == aTPrc[nTptr,4] .AND. lTBef == aTPrc[nTptr,6]
+        .if aTprc[nTptr,2] $ "6-7-8"    ./  min, max, range
+      ÛaTprc[nTptr,1]Û := NIL
+        .else
+      ÛaTprc[nTptr,1]Û := 0
+        .endif
+    .endif
+    .nTptr := nTptr + 1
+.enddo
+.oo_prn->(dbGoto(m->nTRecPos))

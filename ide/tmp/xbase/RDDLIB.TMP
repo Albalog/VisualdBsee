@@ -1,0 +1,52 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : RDDLIB
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Link delle librerie per gli RDD usati nel progetto
+.* ----------------------------------------------------------------------------
+.M->aTrdd := {}
+.M->cTrdd := tRddLib( toProject("rddtype") )
+.if Lower(Subs(cTrdd,1,3))=="lib"
+   .aadd(  aTrdd ,cTrdd )
+   .foreach file
+      .M->cTrdd := tRddLib( toFile("rddtype") )
+      .if Lower(Subs(cTrdd,1,3))=="lib"
+         .if Ascan( aTrdd ,cTrdd ) == 0
+            .aadd(  aTrdd ,cTrdd )
+         .endif
+      .endif
+   .next
+   .M->nTcnt := 1
+   .M->nAlen := Len( aTrdd )
+   .do while (nTcnt <= nAlen )
+      .if "WIN400"$UPPER(aTrdd[nTcnt])
+         .if toExeEnv("compiler")=="1"
+LIB WIN400.LIB
+         .endif
+         .if toExeEnv("compiler")=="2"
+LIB WIN40053.LIB
+         .endif
+      .else
+ÛaTrdd[nTcnt]Û
+      .endif
+      .if "WIN400"$UPPER(aTrdd[nTcnt])
+         .if toExeEnv("compiler")=="1"
+LIB LLIBCA.LIB
+FI  dBsee4AS
+         .endif
+         .if toExeEnv("compiler")=="2"
+LIB LLIBCE.LIB
+FI  dBsee4AS
+         .endif
+         .if toExeEnv("linker")=="2"
+FI blink
+         .endif
+      .endif
+      .if "DBFCDX"$UPPER(aTrdd[nTcnt])
+         .if toExeEnv("compiler")=="2"
+LIB _DBFCDX.LIB
+         .endif
+      .endif
+      .M->nTcnt := nTcnt+1
+   .enddo
+.endif

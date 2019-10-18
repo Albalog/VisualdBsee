@@ -1,0 +1,30 @@
+.parameter cTblock
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : S010OBJ
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Generazione di codice per blocchi su oggetto (Shift+F10)
+.* ----------------------------------------------------------------------------
+.M->nTobjRec:= oo_obj->(recno())
+.M->nTdbfRec:= 0
+.M->cTdbf   := ""
+.dd_dbf->(dbSetOrder(1))
+.IF dd_dbf->(dbSeek(oo_obj->DBF))
+   .M->nTdbfRec:= dd_dbf->(recno())
+   .M->cTdbf   := tDbfAliasName()
+.endif
+.M->aItmDbf := tDbfLoadArray( oo_obj->OBJ )
+.oo_trn->(dbSetOrder(1))
+.M->lTtrnRep:= oo_trn->(dbSeek(oo_obj->DBF+"1"))
+.M->lTtrnApp:= oo_trn->(dbSeek(oo_obj->DBF+"2"))
+.do case
+   .case cTblock == "DBF0"
+.if !Empty(aItmDbf)
+        .out ÛtSourcePath()Û\DmmBlk.txt
+.do dbfuse
+        .lTxtApp := .T.
+        .close
+.endif
+   .otherwise
+        .dbMsgErr( "Operazione non prevista//per blocco di codice : "+cTblock )
+.endcase

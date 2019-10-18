@@ -1,0 +1,47 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ATTIMG.tmp
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Aggiunge control IMMAGINE ad oggetto.
+.* ----------------------------------------------------------------------------
+.M->cTExp := toImage(toItem("xbimgorigin"), toItem("xbimgdata"))
+.*M->cTexp := toItem("xbimgdata")
+.*if VAL(toItem("xbimgorigin")) == 1
+    .*M->cTExp := tExpCast(cTExp)
+.*endif
+.if empty(cTExp)
+    .M->cTExp := '0'
+.endif
+.M->cTrtm := toItem("realtime")
+.M->cTc   := [NIL,NIL,"]+tItmCol("datacolor")+[",NIL,NIL]
+.M->cXTc := ["]+toItem("xbdatacolor")+["]
+.M->nBmp := TImagePosType(VAL(toItem("xbimgopt")))
+.if VAL(toItem("xbimgcenter")) != 0
+   .M->nBmp += "+ FUN_BMP_CENTER "    
+.endif
+.if cXTc == [""]
+   .M->cXTc := "{"+cTc+"}"
+.else
+   .M->cXTc := [NIL,NIL,]+cXTc+[,NIL,NIL]
+   .M->cXTc := 'DFXPPCLRSELECT({'+cXTc+'},{'+cTc+'})'
+.endif
+.M->nTPaintStyle:= tPaintStyle(toItem("paintstyle"))
+ATTACH "ÛcIdC+'" TO oWin:W_CONTROL FUNCTION '+cTexp+' AT '+nTr1+','+nTc1+','+nTr2+','+nTc2Û ð ; // ATTEXP.TMP
+                 COORDINATE  W_COORDINATE_PIXEL   ð ; // Coordinate in Pixel
+.if !(cTpag=="1")
+                 PAGE      ÛcTpagÛ  ð ; // Pagina
+.endif
+                 COLOR     ÛcXTcÛ       ð ; // Array dei colori
+.if !Empty(cTrefId)
+                 REFRESHID "ÛcTrefIdÛ" ð ; // Appartiene ai gruppi di refresh
+.endif
+.if cTrtm=="1"
+                 REALTIME             ð ; // Aggiornato in tempo reale
+.endif
+.if !(cTdis=="{||.T.}")
+                 DISPLAYIF ÛcTdisÛ    ð ; // Display condizionale
+.endif
+.if ! EMPTY(nTPaintStyle)
+                 PAINTSTYLE ÛnTPaintStyleÛ ð ; // Paint Style (XBASE)
+.endif
+                 BITMAPOPTION ÛnBmpÛ  ð  // Bitmap (XBASE)

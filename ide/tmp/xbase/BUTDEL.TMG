@@ -1,0 +1,26 @@
+.parameter nPag
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : BUTDEL
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab pulsante CANCELLAZIONE record corrente
+.* ----------------------------------------------------------------------------
+.M->cItm := NewCod("itm")
+.M->nPro := NewProg("itm")
+.oo_itm->(dBnet("app",0))
+.oo_itm->OBJ         := oo_obj->OBJ
+.oo_itm->ITM         := M->cItm
+.oo_itm->BAND        := IF(nPag>1,"000","001")
+.oo_itm->ITMINCN     := M->nPro
+.oo_itm->TYP         := "but"
+.oo_itm->ITMSAY      := "C^anc."
+.oo_itm->ITMMSG      := "Cancellazione record corrente"
+.oo_itm->ROW         := 0
+.oo_itm->COL         := 28
+.oo_itm->ROW1        := 02
+.oo_itm->COL1        := 34
+.oo_itm->(dBnet("url"))
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butmacrotype"  ,"1" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"butfunction"   ,ALLTRIM(oo_obj->PRG)+"Del(.T.)" )
+.tOWrite("itm",oo_itm->OBJ+oo_itm->ITM,"activeink"     ,"1" )
+.__dbFrameDis( PADR("Aggiunto PULSANTE Canc." ,70) )

@@ -1,0 +1,15 @@
+.oDlg:=DlgNew( 05 ,14 ,"Inserimento oggetto EDIT RIGA" ,.T. ,"@" )
+.DlgRow( oDlg ,"                                                    ")
+.DlgRow( oDlg ," Nome archivio     : @01         Programma: @02     ")
+.DlgRow( oDlg ," Intestazione      : @03                            ")
+.DlgRow( oDlg ,"                                                    ")
+.DlgRow( oDlg ,"                              @25  @26              ")
+.DlgRow( oDlg ,"                                                    ")
+.DlgGet( oDlg ,"mDbf" ,"@01" ,{||M->mDbf} ,{|cM,nS|FmDbfFrm(cM,nS)}  ,"XXXXXXXX" ,NIL,;
+           "Digitare nome file in uso su form per edit riga. | F7=finestra" ,1 )
+.DlgGet( oDlg ,"mPrgFrm1" ,"@02" ,{||M->mPrgFrm1} ,{|cM,nS|FmPrgFrm1(cM,nS,m->mDbf,"Edb")} ,"XXXXXXX" ,NIL,;
+            "Digitare nome programma per oggetto form edit riga.")
+.DlgGet( oDlg ,"cTitle" ,"@03" ,{||M->cTitle} ,{||.T.} ,"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","@S30",;
+            "Digitare l'intestazione dell'oggetto." )
+.DlgBut( oDlg ,"But1"  ,"@25" ,{||.T.} ,{||DlgWri(oDlg)}    ,"^OK")
+.DlgBut( oDlg ,"But2"  ,"@26" ,{||.F.} ,{||DlgEsc(oDlg)}    ,"^Rinuncia")

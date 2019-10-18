@@ -1,0 +1,17 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : INJGET
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Elenco dei punti di iniezione codice per le funzione
+.*              : di controllo get. NON UTILIZZATO PER LA GENERAZIONE.
+.*              : Richiamato dal tasto Alt+J su item in get per elenco
+.*              : punti iniezione.
+.* ----------------------------------------------------------------------------
+.inj GSF1 Punto dichiarazione variabili statiche funzione controllo get
+.inj EDTB Prima del codice standard nel prima della get
+.inj EDTA Dopo il codice standard   nel prima della get
+.inj CHKB Prima del codice standard nel controllo get
+.inj GSF4 Dopo caricamento array per dBlook(), solo se prevista
+.inj CHKA Dopo il codice standard   nel controllo get
+.inj GSF5 Dentro IF nPrePost == FORM_POSTGET  per controlli dopo la get
+.inj GSF9 Prima del comando <RETURN lRet> nella funzione di controllo get

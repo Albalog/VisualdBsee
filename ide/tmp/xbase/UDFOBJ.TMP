@@ -1,0 +1,22 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : UDFOBJ
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Funzioni utente definite sull'oggetto
+.* ----------------------------------------------------------------------------
+.foreach symudfobj
+   .M->cPar := toSymbol("udfparam")
+   .M->cStc := if( dd_sym->SYM_TYP=="S" ,"STATIC " ,"" )
+   .M->cStr := cStc+"FUNCTION "+AllTrim(dd_sym->SYM_NAM)+"("
+   .M->cLen := Len(cStr)
+*******************************************************************************
+   .if ! Empty( cPar )
+ÛcStr+"    ð  ; // "+dd_sym->SYM_DESÛ
+ÛSpace(cLen)+cParÛ ð  ) // Parametri
+   .else
+ÛcStr+" )  ð    // "+dd_sym->SYM_DESÛ
+   .endif
+*******************************************************************************
+.inj fun     ###
+
+.next

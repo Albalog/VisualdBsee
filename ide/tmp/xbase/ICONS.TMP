@@ -1,0 +1,51 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ICONS.TMP
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Inizializzazione ICONE per oggetti browse e form
+.* ----------------------------------------------------------------------------
+.m->cHotKey := ""
+.if toObject("sysmenu") == "1"
+oWin:sysMenu  := .T.
+.else
+oWin:sysMenu  := .F.
+.endif
+.if toObject("minimize") == "1"
+oWin:minButton:= .T.
+.else
+oWin:minButton:= .F.
+.endif
+.if toObject("maximize") == "1"
+oWin:maxButton:= .T.
+.else
+oWin:maxButton:= .F.
+.endif
+.if oo_obj->TYP == "brw"
+   .if toObject("horscrollbar") == "1"
+       .m->cHotKey := m->cHotKey + "+ W_MM_HSCROLLBAR "
+   .endif
+.else
+   .if toObject("horscrollbarf") == "1"
+       .m->cHotKey := m->cHotKey + "+ W_MM_HSCROLLBAR "
+   .endif
+.endif
+.if toObject("verscrollbar") == "1"
+    .m->cHotKey := m->cHotKey + "+ W_MM_VSCROLLBAR "
+.endif
+.if toObject("resizable") == "1"
+    .m->cHotKey := m->cHotKey + "+ W_MM_SIZE "
+.endif
+.if toObject("movable") == "1"
+    .m->cHotKey := m->cHotKey + "+ W_MM_MOVE "
+.endif
+.if toObject("editmouse") == "1"
+    .m->cHotKey := m->cHotKey + "+ W_MM_EDIT "
+.endif
+.if !empty(M->cHotKey)
+/*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³ Control                     ³
+  ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ*/
+oWin:W_MOUSEMETHOD := W_MM_PAGE ÛM->cHotKeyÛ    ð   // Inizializzazione ICONE per mouse
+.else
+oWin:W_MOUSEMETHOD := W_MM_PAGE                 ð   // Inizializzazione ICONE per mouse
+.endif

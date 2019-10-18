@@ -1,0 +1,38 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : NUTR
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : UnLock dei records delle transazioni
+.* ----------------------------------------------------------------------------
+.M->nTtrnMov := 0
+.foreach tranpos
+   .if oo_trn->TrnWriMod == "t"
+      .M->cTdbfTgt := tDbfTrnTgt()
+      .if !empty(toTrans("trnkey"))
+IF ÛcTdbfTgt+[->(dfS(]+str(dd_ndx->NdxIncN,2)+[,]+toTrans("trnkey")Û))
+      .else
+IF ! (ÛcTdbfTgtÛ->(Eof()))
+      .endif
+   ÛcTdbfTgtÛ->(dfNet(NET_RECORDUNLOCK))
+ENDIF
+   .endif
+   .if oo_trn->TrnWriMod == "m"
+      .M->nTtrnMov := nTtrnMov+1
+   .endif
+.next
+.if nTtrnMov > 0
+IF cState == DE_STATE_MOD
+   .foreach tranpos
+      .if oo_trn->TrnWriMod == "m"
+         .M->cTdbfTgt := tDbfTrnTgt()
+         .if !empty(toTrans("trnkey"))
+   IF ÛcTdbfTgt+[->(dfS(]+str(dd_ndx->NdxIncN,2)+[,]+toTrans("trnkey")Û))
+         .else
+   IF ! (ÛcTdbfTgtÛ->(Eof()))
+         .endif
+      ÛcTdbfTgtÛ->(dfNet(NET_RECORDUNLOCK))
+   ENDIF
+      .endif
+   .next
+ENDIF
+.endif

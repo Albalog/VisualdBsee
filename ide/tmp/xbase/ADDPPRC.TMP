@@ -1,0 +1,79 @@
+.parameter cTOwnerFile, cTOwnerGrp
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : ADDPPRC.TMP
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Genera il corpo della funzione che alimenta le variabili
+.*              : di calcolo , per un dato file del record virtuale, e per
+.*              : il suo raggruppamento relativo
+.* ----------------------------------------------------------------------------
+.nTptr := 1
+.nTRecPos := oo_prn->(recno())
+.oo_prn->(dbSeek(oo_prn->OBJ+oo_prn->REC_ID+oo_prn->GRP))    ./ ##
+.do while nTptr <= len(aTprc)
+    .if cTOwnerFile == aTPrc[nTptr,3] .AND. cTOwnerGrp == aTPrc[nTptr,4] .AND. .T. == aTPrc[nTptr,6]
+        .nTRec := aTprc[nTptr,5]
+        .oo_prn->(dbGoto(m->nTRec))
+      // ÛdfTabData("calctype", aTprc[nTptr,2])Û
+        .*
+        .do case
+            .case aTprc[nTptr,2] $ "1-2"    ./  somma, contatore
+      ÛaTprc[nTptr,1] +" += ("+ ToReport('prcexpr')+")"Û
+
+                  .*
+            .case aTprc[nTptr,2] == "3"      ./  media
+      ÛaTprc[nTptr+2,1] +" += ("+ ToReport('prcexpr')+")"Û
+      ÛaTprc[nTptr,1]   +" := "+ trim(aTprc[nTptr+2,1]) + " / ++" + trim(aTprc[nTptr+1,1])Û
+                  .nTptr := nTptr + 2
+
+                  .*
+             .case aTprc[nTptr,2] $ "4-5"     ./  varianza / deviazione standard
+      ÛaTprc[nTptr+2,1] +" += ("+ ToReport('prcexpr')+")"Û
+           nDmm       := Ûtrim(aTprc[nTptr+2,1]) +" / ++"+trim(aTprc[nTptr+1,1])Û
+      ÛaTprc[nTptr+3,1] +" += (("+ ToReport('prcexpr')+") - nDmm)^2"Û
+      IF ÛaTprc[nTptr+1,1]Û == 1
+         ÛaTprc[nTptr,1]Û := 0
+      ELSE
+                  .if aTprc[nTptr,2] == "4"    ./  varianza
+         ÛaTprc[nTptr,1] +" := "+ trim(aTprc[nTptr+3,1])+"/"+trim(aTprc[nTptr+1,1])+" -1"Û
+                  .else                        ./  deviazione standard
+         ÛaTprc[nTptr,1] +" := SQRT( "+ trim(aTprc[nTptr+3,1])+"/"+trim(aTprc[nTptr+1,1])+" -1)"Û
+                  .endif
+      ENDIF
+                  .nTptr := nTptr + 3
+
+                  .*
+             .case aTprc[nTptr,2] == "6"      ./  minimo
+      DEFAULT ÛaTprc[nTptr,1]+" TO (" + ToReport('prcexpr')+")"Û
+      IF ÛaTprc[nTptr,1]+" > (" + ToReport('prcexpr')+")"Û
+         ÛaTprc[nTptr,1]+" := (" + ToReport('prcexpr')+")"Û
+      ENDIF
+
+                  .*
+             .case aTprc[nTptr,2] == "7"      ./  massimo
+      DEFAULT ÛaTprc[nTptr,1]+" TO (" + ToReport('prcexpr')+")"Û
+      IF ÛaTprc[nTptr,1]+" < (" + ToReport('prcexpr')+")"Û
+         ÛaTprc[nTptr,1]+" := (" + ToReport('prcexpr')+")"Û
+      ENDIF
+
+                  .*
+             .case aTprc[nTptr,2] == "8"      ./  range
+      DEFAULT ÛaTprc[nTptr+1,1]+" TO (" + ToReport('prcexpr')+")"Û
+      DEFAULT ÛaTprc[nTptr+2,1]+" TO (" + ToReport('prcexpr')+")"Û
+      IF ÛaTprc[nTptr+1,1]+" > (" + ToReport('prcexpr')+")"Û
+         ÛaTprc[nTptr+1,1]+" := (" + ToReport('prcexpr')+")"Û
+      ENDIF
+      IF ÛaTprc[nTptr+2,1]+" < (" + ToReport('prcexpr')+")"Û
+         ÛaTprc[nTptr+2,1]+" := (" + ToReport('prcexpr')+")"Û
+      ENDIF
+      ÛaTprc[nTptr,1]+" := ABS(" + trim(aTprc[nTptr+2,1])+"-"+trim(aTprc[nTptr+1,1])+")"Û
+                   .nTptr := nTptr + 2
+
+                   .*
+             .otherwise
+                   .dbMsgErr( "Tipo sconosciuto :"+oo_prn->VAR_C_TYPE)
+        .endcase
+    .endif
+    .nTptr := nTptr + 1
+.enddo
+.oo_prn->(dbGoto(m->nTRecPos))

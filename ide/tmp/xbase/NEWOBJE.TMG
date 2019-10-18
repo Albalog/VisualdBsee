@@ -1,0 +1,72 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : NEWOBJE
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Grab per ereditare oggetti associati nel build di sottoprogetto
+.* ----------------------------------------------------------------------------
+.M->nTMstObj := oo_obj->(Recno())
+.do appedb
+.oo_obj->(dbGoto(nTMstObj))
+.*
+.*           APPENDE OGGETTI DA PULSANTE PER OGGETTO MASTER
+.foreach control oo_itm->TYP == "but"
+   .if !Empty( oo_itm->OBJCOD )
+      .if ! TobjInExe( oo_itm->OBJCOD )
+         .oo_obj->(dbSetOrder(1))
+         .oo_obj->(dbSeek( oo_itm->OBJCOD ))
+         .*
+         .do appbld
+         .__dbFrameDis( "Incluso oggetto :"+oo_obj->PRG ,70)
+         .do appedb
+         .oo_obj->(dbGoto(nTMstObj))
+         .*
+      .endif
+   .endif
+.next
+.oo_obj->(dbGoto(nTMstObj))
+.*
+.*           APPENDE OGGETTI DA MENU PER OGGETTO MASTER
+.foreach menuentry
+   .if !Empty( oo_mnu->OBJ )
+      .if ! TobjInExe( oo_mnu->MNU )
+         .oo_obj->(dbSetOrder(1))
+         .oo_obj->(dbSeek( oo_mnu->OBJ ))
+         .nTobjMnu := oo_obj->(Recno())
+         .*
+         .do appbld
+         .do appedb
+         .oo_obj->(dbGoto(nTobjMnu))
+         .*
+         .if !Empty( oo_obj->OBJ2OBJ )
+            .if ! TobjInExe( oo_obj->OBJ2OBJ )
+               .oo_obj->(dbSetOrder(1))
+               .oo_obj->(dbSeek( oo_obj->OBJ2OBJ ))
+               .*
+               .do appbld
+               .__dbFrameDis( "Incluso oggetto :"+oo_obj->PRG ,70)
+               .do appedb
+               .oo_obj->(dbGoto(nTobjMnu))
+               .*
+            .endif
+         .endif
+         .*
+         .__dbFrameDis( "Incluso oggetto :"+oo_obj->PRG ,70)
+         .foreach control oo_itm->TYP == "but"
+            .if !Empty( oo_itm->OBJCOD )
+               .if ! TobjInExe( oo_itm->OBJCOD )
+                  .oo_obj->(dbSetOrder(1))
+                  .oo_obj->(dbSeek( oo_itm->OBJCOD ))
+                  .*
+                  .do appbld
+                  .__dbFrameDis( "Incluso oggetto :"+oo_obj->PRG ,70)
+                  .do appedb
+                  .oo_obj->(dbGoto(nTobjMnu))
+                  .*
+               .endif
+            .endif
+         .next
+      .endif
+      .oo_obj->(dbGoto(nTMstObj))
+   .endif
+.next
+.oo_obj->(dbGoto(nTMstObj))

@@ -1,0 +1,569 @@
+.parameter cTtmp
+.M->cTtmp := lower( cTtmp )
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : REPORT.TMP
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Metodi per oggetto stampa monoutenza
+.* ----------------------------------------------------------------------------
+.do GenUsrM
+.M->lCrystal:= .F.
+.M->lRepMan := .F.
+.if toObject("reporttype") == "1"
+   .M->lCrystal:= .T.
+.endif
+.if toObject("reporttype") == "2"
+   .M->lCrystal:= .T.
+   .M->lRepMan := .T.
+.endif
+.if lRepMan .and. file(tBinPath()+"\"+alltrim(oo_obj->PRG)+".REP")
+    .tCopyFile(tBinPath()+"\"+alltrim(oo_obj->PRG)+".REP", tExePath()+"\"+alltrim(oo_obj->PRG)+".REP")
+.else
+   .if lCrystal .and. file(tBinPath()+"\"+alltrim(oo_obj->PRG)+".RPT")
+      .tCopyFile(tBinPath()+"\"+alltrim(oo_obj->PRG)+".RPT", tExePath()+"\"+alltrim(oo_obj->PRG)+".RPT")
+   .endif
+.endif
+.M->lTnet   := .F.
+.M->nTcnt   := 0
+.M->nTvlc   := 0
+.M->cTstr   := ""
+.M->cTclf   := chr(13) + chr(10)
+.*
+.M->nTobjRec := oo_obj->(recno())
+.M->cTobjTyp := oo_obj->WDO
+.M->cTprg    := alltrim(oo_obj->PRG)
+.M->cTtitle  := alltrim(oo_obj->ObjDes)
+.M->lTIsQuery:= if(!empty(oo_obj->OBJ2OBJ), .T., .F.)
+.oo_obj->(dbSetOrder(1))
+.oo_obj->(dbSeek( oo_obj->OBJ2OBJ ))
+.M->cTQryPrg := alltrim(oo_obj->PRG)
+.oo_obj->(dbGoto( M->nTobjRec ))
+.*
+.dd_rel->(DbSetOrder(1))
+.dd_rel->(DbSeek( oo_obj->OBJREL))
+.M->nTr11Rec:= 0
+.if !dd_rel->(EOF()) .and. !empty(toRelation("relkey"))
+.M->nTr11Rec:= dd_rel->(recno())
+.endif
+.M->nTbrwNdx:= 0
+.dd_ndx->(DbSetOrder(2))
+.if dd_ndx->(DbSeek(dd_rel->RELNDX)) .and. !empty(dd_ndx->NdxIncN)
+.M->nTbrwNdx:= dd_ndx->NdxIncN
+.endif
+.*
+.dd_dbf->(DbSetOrder(1))
+.dd_dbf->(DbSeek( oo_obj->DBF))
+.M->nTdbfRec:= dd_dbf->(recno())
+.M->cTdbf   := tDbfAliasName()
+.M->cTdmm   := trim(subs(PadR(cTdbf,8),1,7))
+.*
+.M->Repdbf := tDbfLoadArray( oo_obj->obj )
+.*
+.M->lUdfObj := .F.
+.foreach symudfobj
+    .M->lUdfObj := .T.
+.next
+.*
+.M->cTAccChk := toProject("accesscheckfunc")
+.if "(" $ cTAccChk
+    .m->cTAccChk := left(cTAccChk, at("(", cTAccChk)-1)
+.endif
+.m->cTAccChk := alltrim(cTAccChk)
+.*
+.dd_dbf->(DbGoto( nTdbfRec))
+.*
+.if tGenerationDividedfortype()
+.out ÛtSourcePath()+"\"+ tsourceGenPath()+cTprgÛ.prg 
+.do info with trim(cTtitle), tSourcePath()+"\"+tsourceGenPath()+cTprg+".prg" ,tGenTemplate()
+.else
+.out ÛtSourcePath()+"\"+cTprgÛ.prg 
+.do info with trim(cTtitle), tSourcePath()+"\"+cTprg+".prg" ,tGenTemplate()
+.endif
+
+
+#INCLUDE "common.ch"
+#INCLUDE "dfReport.ch"
+#INCLUDE "dfNet.ch"
+
+.inj top0 Punto di dichiarazione file INCLUDE *.ch per file sorgente
+.do varglo
+
+STATIC aFile     := {}        ğ,; // Array dei file aperti dall'oggetto
+       aBuffer   := {}        ğ,; // Array generalizzato per oggetto report
+       aVRec     := {}        ğ   // Array del record virtuale
+
+.foreach control oo_itm->TYP == "var"
+STATIC Ûdd_sym->SYM_NAM+" ğ // "+dd_sym->SYM_DESÛ
+.next
+
+.m->aTprc := {}   ./  array delle variabili di calcolo
+.do buildapr      ./  inizializzazione array delle variabili di calcolo
+.do decprc        ./  dichiarazione variabili di calcolo
+
+.inj top1 Punto di dichiarazione STATICHE a livello di file sorgente
+
+      /* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+         ³                 TABELLA METODI DELL'OGGETTO REPORT                             ³
+         ÃÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+         ³ nø ³ mtd.           ³ Descrizione                                              ³
+         ÃÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+         ³  1 ³ exe            ³ Esecutore                                                ³
+         ³  2 ³ dbf            ³ Apre la base dati                                        ³
+         ³  3 ³ dfCreateGVr    ³ Crea il record virtuale (static function)                ³
+         ³  4 ³ repini         ³ Inizializza bande di default (static function)           ³
+         ÃÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+         ³                 METODI PRESENTI SOLO SE UTILIZZATI                             ³
+         ÃÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+         ³    ³ Qry                                ³ Attiva la chiamata al modulo di query³
+         ³    ³ <FILE>Header/body/footer           ³ Funzioni di gestione bande del report³
+         ³    ³ <FILE>Clear                        ³ Inizializza le variabili di calcolo  ³
+         ³    ³ <FILE>Add                          ³ Incrementa le variabili di calcolo   ³
+         ÀÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+
+
+*******************************************************************************
+FUNCTION ÛcTprgÛExe( ;              ğ // [ 01 ]  ESECUTORE OPERAZIONI
+                     nMode       ,; ğ // nMode = PRINT_ALL     stampa tutto il report
+                                  ; ğ // nMode = PRINT_CURRENT Stampa il record corrente del file master
+                     nUserMenu   ,; ğ // Tipo menu di stampa
+                                  ; ğ // PM_MENU     Menu di configurazione
+                                  ; ğ // PM_MESSAGE  Warning di stampa
+                                  ; ğ // PM_NUL      Nessun avviso
+                     cIdPrinter  ,; ğ // Identificatore di stampante
+                     cIdPort     ,; ğ // Nome porta di uscita
+                     lQry        ,; ğ // .T. = esegue la query
+                     nOrder      ,; ğ // Numero indice file master
+                     bKey        ,; ğ // Chiave di primo posizionamento file master
+                     bFilter     ,; ğ // Condizione di filtro sul file master
+                     bBreak      ,; ğ // Condizione di break sul file master
+                     cReportTitle,; ğ // Titolo del Report
+                     xParameter   ) ğ // Parametro Opzionale passato all'Entit…
+
+*******************************************************************************
+.block exe0 esegue le operazioni elementari dell'oggetto
+
+DEFAULT nMode TO PRINT_ALL    ğ // Stampa l'intero report
+DEFAULT lQry  TO nMode==PRINT_ALL ğ // Esegue la query
+
+PRIVATE  EnvId:="ÛcTprgÛ" ,SubId:=""  ğ // Variabili di ambiente per report
+.if ! empty(cTAccChk)
+
+IF ! ÛcTAccChkÛ(EnvId)
+   RETURN .F.
+ENDIF
+.endif
+
+aBuffer := dfPrnCfg()         ğ //  Inizializzazione array statico ( vedere Norton Guide )
+
+IF ÛcTprgÛDbf()               ğ // Apertura File
+   IF EMPTY( aVRec )
+      dfCreateGVR( aVRec )    ğ // Creazione Record Virtuale
+   ENDIF
+
+   .inj exe0 Prima dell'aggiornamento di chiave, filtro e break
+
+.if lTIsQuery                 ./ query associata al report
+   WHILE .T.
+      dfUpdVr( aVRec, nOrder, bKey, bFilter, bBreak )  ğ // Aggiorna chiave, filtro e break per file master
+      IF lQry
+         ÛcTprgÛQry( xParameter )     ğ //  modulo di query
+         IF Act == "esc"
+            EXIT
+         ENDIF
+      ENDIF
+      IF RepIni( nUserMenu, cIdPrinter, cIdPort, cReportTitle, xParameter ) ğ // Inizializzazione oggetto report
+         .block exe1                              - // Before Printing
+         dfPrnStart( aVRec, nMode )               ğ // Avvia la stampa per l'oggetto report
+         .endblock                                - // After Printing
+      ELSE
+         .inj exe2                                  
+      ENDIF
+      IF !lQry; EXIT; ENDIF
+      aBuffer := dfPrnCfg()   ğ //  Reinizializzazione array statico
+   END
+.else                         ./ non esiste query
+   dfUpdVr( aVRec, nOrder, bKey, bFilter, bBreak ) ğ // Aggiorna chiave, filtro e break per file master
+   IF RepIni( nUserMenu, cIdPrinter, cIdPort, cReportTitle, xParameter )  ğ // Inizializzazione Report
+      dfPrnStart( aVRec, nMode ) ğ // Avvia la stampa per l'oggetto report
+   ENDIF
+.endif
+ENDIF
+
+dfClose( aFile, .T., .T. )  ğ // Chiusura file dell'oggetto ( vedere Norton Guide )
+
+.endblock
+
+RETURN .T.
+
+*******************************************************************************
+FUNCTION ÛcTprgÛDbf()                  ğ // [ 02 ] APERTURA DATABASE
+*******************************************************************************
+.block dbf0 apertura della base dati
+
+.do dbfusere
+
+.endblock
+
+RETURN .T.
+
+
+******************************************************************************
+STATIC PROCEDURE dfCreateGVr( aVirRec ) ğ // [ 03 ] CREAZIONE RECORD VIRTUALE
+******************************************************************************
+LOCAL VRloc                            ğ // array del record virtuale
+LOCAL aFather                          ğ // array di supporto
+LOCAL aGrp                             ğ // array di supporto
+
+.block vrc0 Creazione record virtuale
+
+.foreach repmst
+.*------------*
+
+/* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+   ³ blocco file master ³
+   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+
+.do AddVrFil          ./ aggiunge il file all'array del record virtuale
+    .*
+    .foreach repgrp
+    .*------------*
+.do AddVrGrp          ./ aggiunge il gruppo all'array del record virtuale
+    .next
+    .*
+
+.tPutInj( 0 ,[.inj VRF0] )
+dfVrAddFle( aVirRec, {}, VRLoc )
+
+    .foreach reprel
+    .*------------*
+
+/* ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+   ³ blocco file relazionato ³
+   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ */
+.*
+.do AddVrFil  with "rel"   ./ aggiunge il file all'array del record virtuale
+.*
+        .foreach repgrp
+        .*------------*
+.do AddVrGrp          ./ aggiunge il gruppo all'array del record virtuale
+        .next
+        .*
+        .* aggiunge il blocco del file in relazione
+        .* all'array del record virtuale
+        .*
+aFather := {}
+        .m->nTCnt := 1
+        .do while nTcnt <= len( tGaPathRel() )
+aAdd( aFather , "ÛtGaPathRel( m->nTcnt )Û" )
+            .m->nTCnt := m->nTCnt + 1
+        .enddo
+.tPutInj( 0 ,[.inj VRF0] )
+dfVrAddFle( aVirRec, aFather, VRLoc )
+    .next
+.next
+
+.endblock
+
+RETURN
+
+******************************************************************************
+STATIC FUNCTION RepIni( nUserMenu, cIdPrinter, cIdPort, cReportTitle , xParameter)  ğ // [ 04 ] INIZIALIZZAZIONE BANDE DI DEFAULT
+******************************************************************************
+.block ini0 Inizializzazione bande di default
+
+LOCAL lRet := .T.                            ğ //  Valore di ritorno
+LOCAL cRepFile := ""
+
+aBuffer[ REP_NAME ]          := "ÛM->cTtitleÛ"   ğ //  Intestazione report
+IF !EMPTY(cReportTitle)
+    aBuffer[REP_NAME] := cReportTitle
+ENDIF
+aBuffer[ REP_VREC ]          := aVRec
+.if lRepMan
+
+// ReportManager
+cRepFile := dfReportManagerPath()+"USR_ÛcTprgÛ.REP"
+IF !FILE(cRepFile)
+   cRepFile  := dfReportManagerPath()+"ÛcTprgÛ.REP"
+ENDIF
+
+dfRepManReportSet(aBuffer, cRepFile )
+
+.else
+.if lCrystal
+
+// Crystal Reports
+cRepFile := dfCRWPath()+"ÛcTprgÛ.RPT"
+
+dfCRWReportSet(aBuffer,cRepFile )
+.endif
+.endif
+
+.oo_prn->( dbSetOrder( 1 ) )
+.oo_prn->( dbSeek( oo_obj->OBJ+"G"+"00"))        ./  allineamento record master
+.*
+.nTEject  := toReportBan("breakafterband")
+.cTEject  := if(m->nTEject == "1", ".T.", ".F.")
+.*
+.nTHeaFoo := toReportBan("hasheaderfooter")
+.cTHeaFoo := if(m->nTHeaFoo == "1", ".T.", ".F.")
+.*
+.nTNumber := toReportBan("bannernumbered")
+.cTNumber := if(m->nTNumber == "1", ".T.", ".F.")
+.*
+.if toReportBan("bandactive") == "1"   ./ attiva banda di banner report
+aBuffer[ REP_RB   ]          := {|| ReportBanner() } ğ //  Banner di stampa
+aBuffer[ REP_EJECT_RB ]      := Ûm->cTEjectÛ   ğ //  Salto pagina dopo banda
+aBuffer[ REP_BANNER_FORMAT ] := Ûm->cTHeaFooÛ  ğ //  .T. se vuole PAGEHEADER e PAGEFOOTER
+aBuffer[ REP_BANNER_INPAGE ] := Ûm->cTNumberÛ  ğ //  .T. se Š nel ciclo di conteggio pagine
+aBuffer[ REP_POSRB ]         := ÛtoReportBan("bandpos")Û     ğ //  Posizionamento banda ( 0=relativo )
+aBuffer[ REP_ROWRB ]         := ÛtoReportBan("bandheight")Û  ğ //  Numero di righe banda
+.endif
+.*
+.if toReportHpg("bandactive") == "1"   ./ attiva banda di page header
+
+aBuffer[ REP_PH ]            := {|| PageHeader()   }    ğ //  Header di pagina
+aBuffer[ REP_ROWPH ]         := ÛtoReportHpg("bandheight")Û  ğ //  Numero di righe banda
+   .if !EMPTY(toReportHpg("printif"))
+aBuffer[ REP_CANPH ]         := {||ÛtoReportHpg("printif")Û}
+   .endif
+.endif
+.*
+.if toReportFoo("bandactive") == "1"   ./ attiva banda di footer
+
+aBuffer[ REP_RF ]            := {|| ReportFooter() }     ğ //  Footer di stampa
+aBuffer[ REP_POSRF ]         := ÛtoReportFoo("bandpos")Û ğ //  Posizionamento banda ( 0=relativo )
+   .if !EMPTY(toReportFoo("printif"))
+aBuffer[ REP_CANRF ]         := {||ÛtoReportFoo("printif")Û}
+   .endif
+.endif
+.*
+.if toReportFpg("bandactive") == "1"   ./ attiva banda di page footer
+
+aBuffer[ REP_PF ]            := {|| PageFooter() } ğ //  Footer di pagina
+   .if toReportFpg("relativefooter")=="1"
+aBuffer[ REP_FLOATPF ]       := .T.
+   .endif
+   .if !EMPTY(toReportFpf("printif"))
+aBuffer[ REP_CANPF ]         := {||ÛtoReportFpf("printif")Û}
+   .endif
+.endif
+
+.inj ini0 Dopo inizializzazione bande di default
+
+lRet := dfPrnMenu( aBuffer, nUserMenu, cIdPrinter, cIdPort ) ğ //  Configurazione con parametri di layout
+
+// Elementi dell'array aBuffer che riportano le marginature
+// del report configurate nella funzione dfPrnMenu().
+//
+// Qualora si intenda modificare una o piu' voci, si copino
+// quelle interessate opportunamente scommentate nel punto
+// di iniezione sottostante.
+//
+// aBuffer[ REP_PAGELENGHT ] := 0                  //  numero di righe per pagina
+// aBuffer[ REP_MGN_TOP ]    := 0                  //  Scostamento Header di pagina
+// aBuffer[ REP_MGN_BOTTOM ] := 0                  //  Scostamento Footer di pagina
+// aBuffer[ REP_MGN_LEFT ]   := 0                  //  margine sinistro da aggiungere ad ogni nuova riga
+
+.endblock
+
+RETURN lRet
+
+.if lTIsQuery
+*******************************************************************************
+STATIC PROCEDURE ÛcTprgÛQry(xParameter)             ğ // Modulo di query
+*******************************************************************************
+LOCAL aQuery   := {}      ğ //  Array dei dati in query
+
+.block qry0 query di report
+
+ÛcTQryPrgÛExe( aQuery , xParameter )  ğ // Attivazione oggetto query ÛcTQryPrgÛ
+IF Act != "esc"
+
+   aBuffer[REP_QRY_DES] := aQuery[QRY_OPT_DESC] ğ // Espressione letterale della query
+   aBuffer[REP_QRY_EXP] := aQuery[QRY_OPT_FLTGET] ğ // Espressione di filtro
+
+   .inj qry0 Prima di assegnamento dei parametri di query
+
+
+   dfUpdQryRep(aVRec   ,; ğ //  Aggiorna su file master di stampa:
+               aQuery  ) 
+
+ENDIF
+.endblock
+
+RETURN
+.endif
+
+.foreach reportgroup
+    .if oo_prn->grp == "00"
+    .*gruppo header
+    .*****************
+        .if toReportBan("bandactive") == "1"   ./ attiva banda di banner report
+.do bandload with "hea"
+        .endif
+        .if toReportFoo("bandactive") == "1"   ./ attiva banda di footer
+.do bandload with "foo"
+        .endif
+        .if toReportHpg("bandactive") == "1"   ./ attiva banda di page header
+.do bandload with "pgh"
+        .endif
+        .if toReportFpg("bandactive") == "1"   ./ attiva banda di page footer
+.do bandload with "pgf"
+        .endif
+    .else
+    .*gruppo file master - file in relazione - gruppi
+    .****************************************************
+        .if toReportHea("bandactive") == "1"    ./ attiva banda di header
+.do bandload with "hea"
+        .endif
+        .if toReportFoo("bandactive") == "1"    ./ attiva banda di footer
+.do bandload with "foo"
+        .endif
+        .if toReportBdy("bandactive") == "1" ;  ./ attiva banda di body
+            .and. oo_prn->TYP != "grp"
+.do bandload with "bdy"
+        .endif
+    .endif
+.next
+
+.*
+.*   FUNZIONI DI ALIMENTAZIONE / AZZERAMENTO VARIABILI DI CALCOLO
+.*
+.foreach repmst
+.*------------*
+   .nTptr := Ascan( m->aTprc, {|x|substr(x[4],1,1)==substr(oo_prn->GRP,1,1) } )
+   .if nTptr != 0
+******************************************************************************
+STATIC PROCEDURE ÛtRepAliasName()ÛClear( nGroupLev, lIsPre ) ğ   // Azzera variabili di calcolo
+                                       ğ   // file ÛtRepAliasName()Û
+******************************************************************************
+.block clÛoo_prn->GRPÛ Azzera variabili di calcolo
+IF lIsPre
+   IF nGroupLev == PRN_FILE_LEVEL            ğ // File ÛtRepAliasName()Û
+.do IniPrc with "bef"      ./ template per azzeramento variabili
+       .foreach repgrp
+       .*------------*
+   ELSEIF nGroupLev == ÛtRepLevGrp()Û ğ // Raggruppamento : ÛtoReport("grpexpr")Û
+.do IniPrc with "bef"      ./ template per azzeramento variabili
+        .next
+   ENDIF
+ELSE
+   IF nGroupLev == PRN_FILE_LEVEL            ğ // File ÛtRepAliasName()Û
+.do IniPrc                 ./ template per azzeramento variabili
+       .foreach repgrp
+       .*------------*
+   ELSEIF nGroupLev == ÛtRepLevGrp()Û ğ // Raggruppamento : ÛtoReport("grpexpr")Û
+.do IniPrc                 ./ template per azzeramento variabili
+        .next
+   ENDIF
+ENDIF
+.endblock
+RETURN
+
+   .endif
+   .*
+   .nTptr := Ascan( m->aTprc, {|x|x[3]==oo_prn->FILE .AND. x[7]==oo_prn->TYPCOD } )
+   .if nTptr != 0
+       .m->cTOwnerFile := oo_prn->FILE
+******************************************************************************
+STATIC PROCEDURE ÛtRepAliasName()ÛAdd( nGroupLev, lIsPre ) ğ   //  Incrementa variabili di calcolo
+                                      ğ   //  file ÛtRepAliasName()Û
+******************************************************************************
+.block adÛoo_prn->GRPÛ Incrementa variabili di calcolo
+.*  verifica se occorrono varianze e\o deviazioni standard per il dato file
+.*  in questo caso viene generata una variabile di appoggio
+.if Ascan( aTprc, {|x|x[3]==cTOwnerFile .AND.   ;
+                     (x[2]=="4" .OR. x[2]=="5")}) != 0
+LOCAL nDmm
+
+.endif
+IF lIsPre
+    IF nGroupLev == PRN_FILE_LEVEL            ğ // File ÛtRepAliasName()Û
+.do addpprc with m->cTOwnerFile, oo_prn->GRP     ./ template per incremento variabili
+       .foreach repgrp
+       .*------------*
+    ELSEIF nGroupLev == ÛtRepLevGrp()Û ğ // Raggruppamento : ÛtoReport("grpexpr")Û
+.do addpprc with m->cTOwnerFile, oo_prn->GRP     ./ template per incremento variabili
+        .next
+   ENDIF
+ELSE
+.do addprc with m->cTOwnerFile                   ./ template per incremento variabili
+ENDIF
+.endblock
+RETURN
+
+   .endif
+    .foreach reprel
+    .*------------*
+   .nTptr := Ascan( m->aTprc, {|x|substr(x[4],1,1)==substr(oo_prn->GRP,1,1) } )
+   .if nTptr != 0
+******************************************************************************
+STATIC PROCEDURE ÛtRepAliasName()ÛClear( nGroupLev, lIsPre ) ğ   // Azzera variabili di calcolo
+                                       ğ   // file ÛtRepAliasName()Û
+******************************************************************************
+.block clÛoo_prn->GRPÛ Azzera variabili di calcolo
+IF lIsPre
+   IF nGroupLev == PRN_FILE_LEVEL            ğ // File ÛtRepAliasName()Û
+.do IniPrc with "bef"      ./ template per azzeramento variabili
+       .foreach repgrp
+       .*------------*
+   ELSEIF nGroupLev == ÛtRepLevGrp()Û ğ // Raggruppamento : ÛtoReport("grpexpr")Û
+.do IniPrc with "bef"      ./ template per azzeramento variabili
+        .next
+   ENDIF
+ELSE
+   IF nGroupLev == PRN_FILE_LEVEL            ğ // File ÛtRepAliasName()Û
+.do IniPrc                 ./ template per azzeramento variabili
+       .foreach repgrp
+       .*------------*
+   ELSEIF nGroupLev == ÛtRepLevGrp()Û ğ // Raggruppamento : ÛtoReport("grpexpr")Û
+.do IniPrc                 ./ template per azzeramento variabili
+        .next
+   ENDIF
+ENDIF
+.endblock
+RETURN
+
+   .endif
+   .*
+   .nTptr := Ascan( m->aTprc, {|x|x[3]==oo_prn->FILE .AND. x[7]==oo_prn->TYPCOD } )
+   .if nTptr != 0
+       .m->cTOwnerFile := oo_prn->FILE
+******************************************************************************
+STATIC PROCEDURE ÛtRepAliasName()ÛAdd( nGroupLev, lIsPre ) ğ   //  Incrementa variabili di calcolo
+                                      ğ   //  file ÛtRepAliasName()Û
+******************************************************************************
+.block adÛoo_prn->GRPÛ Incrementa variabili di calcolo
+.*  Verifica se occorrono varianze e\o deviazioni standard per il dato file
+.*  in questo caso viene generata una variabile di appoggio
+.if Ascan( aTprc, {|x|x[3]==cTOwnerFile .AND.   ;
+                     (x[2]=="4" .OR. x[2]=="5")}) != 0
+LOCAL nDmm
+
+.endif
+IF lIsPre
+   IF nGroupLev == PRN_FILE_LEVEL            ğ // File ÛtRepAliasName()Û
+.do addpprc with m->cTOwnerFile, oo_prn->GRP     ./ template per incremento variabili
+       .foreach repgrp
+       .*------------*
+   ELSEIF nGroupLev == ÛtRepLevGrp()Û ğ // Raggruppamento : ÛtoReport("grpexpr")Û
+.do addpprc with m->cTOwnerFile, oo_prn->GRP     ./ template per incremento variabili
+        .next
+   ENDIF
+ELSE
+.do addprc with m->cTOwnerFile    ./ template per incremento variabili
+ENDIF
+.endblock
+RETURN
+
+   .endif
+    .next
+.next
+
+.if lUdfObj
+.do udfobj
+
+.endif
+.inj bot1 Fine file sorgente per oggetto report
+.close

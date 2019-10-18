@@ -1,0 +1,388 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : NDBRID
+.* RELEASE      : 4.1
+.* VERSION      :
+.* DESCRIZIONE  : Funzioni per controllo integrit… dati per multiutenza
+.* ----------------------------------------------------------------------------
+.do GenUsrM
+.out ÛtSourcePath()+"\"+alltrim(oo_obj->PRG)Û.prg
+.do info with trim(oo_obj->ObjDes), tSourcePath()+"\"+alltrim(oo_obj->prg)+[.prg] ,tGenTemplate()
+
+#INCLUDE "Common.ch"
+#INCLUDE "dfWin.ch"
+#INCLUDE "dfGenMsg.ch"
+#INCLUDE "dfNet.ch"
+#INCLUDE "dfStd.ch"
+
+.inj rid1  Inizio file dbRid - Punto per dichiarazione INCLUDE e STATIC GLOBALI
+
+/*
+   TRANSAZIONI SU FILE
+*/
+
+.foreach file
+   .M->cTdbf   := tDbfAliasName()
+   .oo_trn->(dbSetOrder(1))
+   .if oo_trn->(dbSeek(dd_dbf->FILE))
+.do ndbrid1
+   .endif
+.next
+
+/*
+   INTEGRITA' DATI SUI FILE (CANCELLAZIONE RECORD)
+*/
+.foreach file dd_dbf->FILE_TYP != "1"  ./  per tutti i file di tipologia non tabellare
+   .m->cTFileFat := tDbfAliasName()
+
+*******************************************************************************
+FUNCTION ÛcTFileFatÛDid( lLock )  ð //  Delete Integrity Data ÛTrim(dd_dbf->FILE_DES)Û
+*******************************************************************************
+   .lTFoundRes := .F.
+   .lTFoundNul := .F.
+   .lTFoundCas := .F.
+   .lTFoundPre := .F.
+   .M->aTals   := {}
+   .foreach integritysons
+      .M->cTals   := tGetAliasName( dd_rel->FILE1 )
+      .M->RelType := toRelation("refintdel")
+      .do case
+         .case RelType == "0"          ./ relazioni in RESTRICT
+              .lTFoundRes := .T.
+         .case RelType == "1" .and. dd_rel->RELTYP == "2"  ./ relazioni in NULLIFY per 1:N
+              .lTFoundNul := .T.
+         .case RelType == "2"          ./ relazioni in CASCADE
+              .lTFoundCas := .T.
+         .case RelType == "4"          ./ relazioni in PREVENT
+              .lTFoundPre := .T.
+      .endcase
+      .if Ascan( aTals ,{ |x| x == AllTrim(cTals) } ) == 0
+         .if RelType!="3" ./ IGNORE - Remove the file
+            .aadd(  aTals ,AllTrim(cTals) )
+         .endif
+      .endif
+   .next
+LOCAL nRecDel   := Ûm->cTFileFatÛ->(Recno()) ð //  Nø record da cancellare
+   .if lTFoundNul                   ./ se esiste almeno una relazione in NULLIFY
+LOCAL aRecPos   := {}    ð //  Array di recno() per posizionamenti chiavi straniere
+   .endif
+   .if lTFoundRes .OR. lTFoundNul   ./ se esiste almeno una relazione in RESTRICT o NULLIFY
+LOCAL aInfoFile := {}    ð //  Array di recno() e indexord() file in RESTRICT
+   .endif
+   .if lTFoundCas .OR. lTFoundNul .OR. lTFoundRes ./ se esiste almeno una relazione in CASCADE o NULLIFY o RESTRICT
+LOCAL nRecPos   := 0     ð //  Recno() file corrente
+   .endif
+LOCAL nCnt      := 0     ð //  Contatore array di recno()
+LOCAL lRet      := .T.   ð //  Valore di ritorno
+   .*
+   .M->nTCnt := 1
+   .M->nTlen := Len(aTals)
+   .if nTlen > 0
+LOCAL aFile     := {}   ð //  Array dei file aperti dalla funzione
+LOCAL aFileLock := {}   ð //  Array dei lock sui file eseguiti dalla funzione
+   .endif
+.tPutInj( 0 ,[.inj DFF1] )
+DEFAULT lLock  TO .T.     ð //  Default esegue il lock dei file
+
+   .if nTlen > 0
+BEGIN SEQUENCE
+      .M->nTCnt := 1
+      .do while nTCnt  <= nTlen
+      IF ! dfUse( "ÛaTals[nTcnt]Û" ,NIL ,aFile ) ;BREAK  ;END
+         .M->nTCnt := nTcnt +1
+      .enddo
+
+      IF lLock
+         Ûm->cTFileFatÛ->(dbGoto(nRecDel))                        ð // RIPOSIZIONA RECORD DA CANCELLARE
+         IF ! Ûm->cTFileFatÛ->(dfNet(NET_RECORDLOCK)) ;BREAK ;END ð // LOCK DEL RECORD
+         IF Ûm->cTFileFatÛ->(DFISDEL())               ;BREAK ;END
+      .if oo_trn->(dbSeek(dd_dbf->FILE+"1")) .OR. oo_trn->(dbSeek(dd_dbf->FILE+"2"))
+         IF ! Ûm->cTFileFatÛTrn("ltr",DE_STATE_MOD) ;BREAK ;END  ð // LOCK TRANSACTION RECORD
+      .endif
+      ENDIF
+
+      .M->nTCnt := 1
+      .do while nTCnt  <= nTlen
+      IF ! ÛaTals[nTcnt]Û->(dfFileLock( aFileLock )) ;BREAK  ;END
+         .M->nTCnt := nTcnt +1
+      .enddo
+
+      .foreach integritysons
+        .if toRelation("refintdel") == "2"          ./ relazioni in CASCADE
+            .if oo_trn->(dbSeek( dd_rel->FILE1+"0" ))
+               .M->cTals := tGetAliasName( dd_rel->FILE1 )
+      IF ! ÛcTalsÛTrn( "ltf" ) ;BREAK  ;END
+            .endif
+        .endif
+      .next
+
+
+RECOVER
+
+      .foreach integritysons
+        .if toRelation("refintdel") == "2"          ./ relazioni in CASCADE
+            .if oo_trn->(dbSeek( dd_rel->FILE1+"0" ))
+               .M->cTals := tGetAliasName( dd_rel->FILE1 )
+      ÛcTalsÛTrn( "utf" )       ð //  Sblocca i file bloccati dalla transazione
+            .endif
+        .endif
+      .next
+
+      dfFileUnlock( aFileLock ) ð //  Sblocca i file bloccati dalla funzione
+
+      IF lLock
+      .if oo_trn->(dbSeek(dd_dbf->FILE+"1")) .OR. oo_trn->(dbSeek(dd_dbf->FILE+"2"))
+         Ûm->cTFileFatÛTrn("utr",DE_STATE_MOD)    ð // UNLOCK TRANSACTION RECORD
+      .endif
+         Ûm->cTFileFatÛ->(dbGoto(nRecDel))
+         Ûm->cTFileFatÛ->(dfNet(NET_RECORDUNLOCK))
+      ENDIF
+
+      dfClose( aFile, .T., .T. )ð //  Chiude i file aperti dalla funzione
+      RETURN .F.
+END
+   .else
+IF lLock
+
+   BEGIN SEQUENCE
+   .if oo_trn->(dbSeek(dd_dbf->FILE+"1")) .OR. oo_trn->(dbSeek(dd_dbf->FILE+"2"))
+
+         IF ! Ûm->cTFileFatÛTrn("ltr",DE_STATE_MOD) ;BREAK ;END  ð // LOCK TRANSACTION RECORD
+   .endif
+
+         Ûm->cTFileFatÛ->(dbGoto(nRecDel))                        ð // RIPOSIZIONA RECORD DA CANCELLARE
+         IF ! Ûm->cTFileFatÛ->(dfNet(NET_RECORDLOCK)) ;BREAK ;END ð // LOCK DEL RECORD
+
+   RECOVER
+   .if oo_trn->(dbSeek(dd_dbf->FILE+"1")) .OR. oo_trn->(dbSeek(dd_dbf->FILE+"2"))
+         Ûm->cTFileFatÛTrn("utr",DE_STATE_MOD)  ð // UNLOCK TRANSACTION RECORD
+
+   .endif
+         RETURN .F.
+   END
+
+ENDIF
+   .endif
+   .*
+   .if m->lTFoundPre   ./ se esiste almeno una relazione in PREVENT
+
+// Risulta definita una integrita' referenziale di tipo PREVENT
+// a partire dal file Ûm->cTFileFatÛ:
+// la cancellazione del record corrente NON pu• avvenire
+dfClose( aFile, .T., .T. )  ð //  Chiude i file aperti in questa funzione
+RETURN .F.
+   .else
+   .if m->lTFoundRes   ./ se esiste almeno una relazione in RESTRICT
+
+// integrita' referenziale in modalita' RESTRICT :
+// la cancellazione del record corrente pu• avvenire
+// esclusivamente se non esistono chiavi straniere
+BEGIN SEQUENCE
+
+   .endif
+   .foreach integritysons toRelation("refintdel") == "0"          ./ relazioni in RESTRICT
+           .m->cTFileSon := tGetAliasName(dd_rel->FILE1)
+           .*
+      // integrita' referenziale in modalita' RESTRICT tra file Ûm->cTFileFat +" e "+m->cTFileSonÛ
+      Aadd( aInfoFile, { {|nInd, nRec| Ûm->cTFileSonÛ->(OrdSetFocus(nInd)),;ð
+                                       Ûm->cTFileSonÛ->(dbGoto(nRec))}   ,;ð
+                                       Ûm->cTFileSonÛ->(IndexOrd())      ,;ð
+                                       Ûm->cTFileSonÛ->(recno())         })
+         ÛcTFileSon+"->(OrdSetFocus("+alltrim(str(dd_ndx->NDXINCN))+"))"Û
+           .M->cTRelKey := ToRelation('relkey')
+           .if empty( M->cTRelKey )
+               .M->cTRelKey := [""]
+           .endif
+      IF ÛcTFileSon+"->(dbSeek("+M->cTRelKey+"))"Û
+         dbMsgErr( dfStdMsg(MSG_DBRID01) )
+         BREAK
+      END
+   .next
+
+   .if m->lTFoundRes   ./ se esiste almeno una relazione in RESTRICT
+RECOVER
+      lRet := .F.
+END
+
+/*
+  ripristino posizioni precedenti file in RESTRICT
+*/
+
+FOR nCnt := 1 TO len( aInfoFile )
+    eVal( aInfoFile[nCnt,1], aInfoFile[nCnt,2], aInfoFile[nCnt,3] )
+NEXT
+
+IF !lRet
+      .if nTlen > 0
+         .foreach integritysons
+           .if toRelation("refintdel") == "2"          ./ relazioni in CASCADE
+               .if oo_trn->(dbSeek( dd_rel->FILE1+"0" ))
+                  .M->cTals := tGetAliasName( dd_rel->FILE1 )
+   ÛcTalsÛTrn( "utf" )       ð //  Sblocca i file bloccati dalla transazione
+               .endif
+           .endif
+         .next
+
+   dfFileUnlock( aFileLock ) ð //  Sblocca i file bloccati dalla funzione
+
+   IF lLock
+   .if oo_trn->(dbSeek(dd_dbf->FILE+"1")) .OR. oo_trn->(dbSeek(dd_dbf->FILE+"2"))
+      Ûm->cTFileFatÛTrn("utr",DE_STATE_MOD)    ð // UNLOCK TRANSACTION RECORD
+   .endif
+      Ûm->cTFileFatÛ->(dbGoto(nRecDel))
+      Ûm->cTFileFatÛ->(dfNet(NET_RECORDUNLOCK)) ð // SBLOCCA IL RECORD
+   END
+
+   dfClose( aFile, .T., .T. )ð //  Chiude i file aperti in questa funzione
+      .endif
+   RETURN lRet         ð //  esiste almeno una chiave straniera
+ENDIF
+
+   .endif
+
+   .tPutInj( 0 ,[.inj DFF2] )
+
+   .foreach integritysons toRelation("refintdel") $ "1-2"   ./ relazioni in NULLIFY-CASCADE
+      .m->ctRITyp   := torelation("refintdel")              ./ tipo integrit… CASCADE/NULLYFY
+      .m->cTFileSon := tGetAliasName( dd_rel->FILE1 )       ./ file figlio di relazione
+      .if m->ctRITyp == "1"      ./ NULLIFY
+// integrita' referenziale in modalita' NULLIFY tra file Ûm->cTFileFat +" e "+m->cTFileSonÛ
+
+         .if dd_rel->RELTYP == "2"  ./  RELAZIONE 1:N
+aRecPos := {}    ð // reset array di recno() per posizionamenti chiavi straniere
+         .endif
+      .else                      ./ CASCADE
+// integrita' referenziale in modalita' CASCADE tra file Ûm->cTFileFat +" e "+m->cTFileSonÛ
+
+      .endif
+ÛcTFileSon+"->(OrdSetFocus("+alltrim(str(dd_ndx->NDXINCN))+"))"Û
+      .M->cTRelKey := ToRelation('relkey')
+      .if empty( M->cTRelKey )
+ÛcTFileSonÛ->(dbGoBottom())
+ÛcTFileSonÛ->(dbSkip(1))
+      .else
+ÛcTFileSon+"->(dbSeek("+M->cTRelKey+"))"Û
+      .endif
+      .if dd_rel->RELTYP == "2"  ./  RELAZIONE 1:N
+          .M->cTexp  := ToRelation('relbreak')
+          .M->cTexpF := ToRelation('relfilter')
+          .if m->ctRITyp == "1"  ./ Nullify
+WHILE( !(ÛcTexp+") .AND. !"+cTFileSonÛ->(EOF()) )
+      IF !(ÛcTexpFÛ)
+         ÛcTFileSonÛ->(dbSkip(1))
+         LOOP
+      ENDIF
+          .else
+WHILE( ÛcTFileSonÛ->(dfChkDidExp( Ûalltrim(str(dd_ndx->NDXINCN))Û ,; // Index
+   {||ÛcTRelKeyÛ} ,; // Key
+   {||ÛcTexpFÛ} ,; // Filter
+   {||ÛcTexpÛ} ))) // Break
+          .endif
+          .if m->ctRITyp == "1"  ./ NULLIFY
+   //  chiavi straniere da rendere nulle per cancellazione chiave principale
+   //  inizializzazione array di recno()
+
+   aAdd( aRecPos, ÛcTFileSonÛ->(recno()) ) ð //  recno occorrenza chiave straniera
+
+          .else                  ./ CASCADE
+   nRecPos   := Ûm->cTFileSonÛ->(recno()) ð // salvataggio recno() file corrente
+   Ûm->cTFileSonÛDid( .F. )
+   ÛcTFileSon+"->(OrdSetFocus("+alltrim(str(dd_ndx->NDXINCN))+"))"Û
+   Ûm->cTFileSonÛ->(dbGoto(nRecPos))      ð // si ripristina recno() file corrente
+
+          .endif
+          .*
+   ÛcTFileSonÛ->(dbSkip(1))
+ENDDO
+      .else       ./  RELAZIONE 1:1
+IF !ÛcTFileSonÛ->(EOF())
+         .if m->ctRITyp == "1"  ./ NULLIFY
+   //  chiave straniera da rendere nulla per cancellazione chiave principale
+             .foreach nullifyvalue  ./  per tutti i campi da rendere nulli
+   ÛcTFileSonÛ->(dfNullify("Ûtrim(dd_sym->SYM_NAM)Û"))
+             .next  ./  END foreach campi nulli
+             .*
+         .else                  ./ CASCADE
+             .*
+   nRecPos   := Ûm->cTFileSonÛ->(recno()) ð // salvataggio recno() file corrente
+   Ûm->cTFileSonÛDid( .F. )
+   ÛcTFileSon+"->(OrdSetFocus("+alltrim(str(dd_ndx->NDXINCN))+"))"Û
+   Ûm->cTFileSonÛ->(dbGoto(nRecPos))      ð // si ripristina recno() file corrente
+         .endif
+ENDIF
+
+         .*
+      .endif
+      .if m->ctRITyp == "1" .and. dd_rel->RELTYP == "2" ./ NULLIFY IN 1:N
+// NULLIFY CHIAVI STRANIERE FILE ÛcTFileSonÛ
+
+FOR nCnt := 1 to len(aRecPos)
+    ÛcTFileSonÛ->(dbGoto(aRecPos[nCnt]))
+         .foreach nullifyvalue  ./  per tutti i campi da rendere nulli
+    ÛcTFileSonÛ->(dfNullify("Ûtrim(dd_sym->SYM_NAM)Û"))
+         .next  ./  END foreach campi nulli
+NEXT
+
+      .endif
+      .*
+   .next  ./ END foreach relazioni in NULLIFY-CASCADE
+   .*
+   .if oo_trn->(dbSeek(dd_dbf->FILE+"1"))
+
+//IF !lLock
+   Ûm->cTFileFatÛTrn( "ltr",NIL ,.T.)           ð // LOCK THE TRANSACTION
+//ENDIF 
+Ûm->cTFileFatÛTrn( "rtt" )                      ð // REMOVE THE TRANSACTION
+   .endif
+   .if oo_trn->(dbSeek(dd_dbf->FILE+"2"))
+Ûm->cTFileFatÛTrn( "ltt" ,DE_STATE_DEL )        ð // LOG    THE TRANSACTION
+   .endif
+   .if oo_trn->(dbSeek(dd_dbf->FILE+"1"))
+//IF !lLock
+   Ûm->cTFileFatÛTrn( "utr" )                   ð // UNLOCK THE TRANSACTION
+//ENDIF 
+   .endif
+.tPutInj( 0 ,[.inj DFF8] )
+
+Ûm->cTFileFatÛ->(dbGoto(nRecDel))               ð // RIPOSIZIONA RECORD DA CANCELLARE
+Ûm->cTFileFatÛ->(dfNet(NET_RECORDLOCK))         ð // LOCK DEL RECORD 
+Ûm->cTFileFatÛ->(dbDelete())                    ð // MARCA IL RECORD COME CANCELLATO
+
+.tPutInj( 0 ,[.inj DFF9] )
+   .if nTlen > 0
+      .foreach integritysons
+        .if toRelation("refintdel") == "2"          ./ relazioni in CASCADE
+            .if oo_trn->(dbSeek( dd_rel->FILE1+"0" ))
+               .M->cTals := tGetAliasName( dd_rel->FILE1 )
+ÛcTalsÛTrn( "utf" )       ð //  Sblocca i file bloccati dalla transazione
+            .endif
+        .endif
+      .next
+
+dfFileUnlock( aFileLock ) ð //  Sblocca i file bloccati dalla funzione
+   .endif
+
+IF lLock
+   .if oo_trn->(dbSeek(dd_dbf->FILE+"1")) .OR. oo_trn->(dbSeek(dd_dbf->FILE+"2"))
+   Ûm->cTFileFatÛTrn("utr",DE_STATE_MOD)        ð // UNLOCK TRANSACTION RECORD
+   .endif
+   Ûm->cTFileFatÛ->(dbGoto(nRecDel))
+   Ûm->cTFileFatÛ->(dfNet(NET_RECORDUNLOCK))    ð // SBLOCCA IL RECORD
+END
+
+   .if nTlen > 0
+dfClose( aFile, .T., .T. )ð //  Chiude i file aperti in questa funzione
+   .endif
+
+RETURN lRet
+   .endif
+
+.next
+.if !tExistDbf()
+*******************************************************************************
+STATIC FUNCTION dmm_udf() ;RETURN .F.
+*******************************************************************************
+.endif
+.inj rid9  Fine file dbRid - Punto per inserimento funzioni utente
+
+.close
+.dbusrOld()

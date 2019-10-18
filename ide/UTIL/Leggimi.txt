@@ -1,0 +1,74 @@
+- BDE_SETUP.EXE 
+  Installa Borland Database Engine
+  File utilizzato per la distribuzione delle applicazioni create con Visual dBsee 
+  che necessitano del Borland Database Engine
+
+- XML2XIT.EXE
+  Converte un XML language file nel formato XIT (Visual dBsee language file format)
+
+- SAMPLE.XML
+  XML language file da usare con XML2XIT 
+  contiene solo i messaggi usati nella creazione di nuove forms/browse...
+
+- ENGLISH.XML
+  XML language file da usare con XML2XIT 
+  contiene tutti i messaggi usati in Visual dBsee
+
+Come tradurre i messaggi usati in Visual dBsee:
+1) Copiare SAMPLE.XML (o ENGLISH.XML) in USER.XML 
+2) Modificare il file USER.XML, traducendo solo le sezioni in inglese fra i tag 
+   <translated> </translated>. NON cambiare gli altri tag o il testo in italiano.
+   Attenzione: la stringa &apos; Š NECESSARIA e non deve essere cancellata
+   Esempio:
+      <xml>
+         <messagefile>
+            <type>HIT</type>
+            <author>Visual dBsee Property Table</author>
+            <language>English</language>
+            <englishlanguage>English</englishlanguage>
+            <langcode>en_US</langcode>
+            <tablelen>2</tablelen>
+            <table>
+               <message>
+                  <base>&apos;Impossibile lasciare vuoto il campo&apos;</base>
+                  <translated>&apos;Can not leave empty field&apos;</translated>
+               </message>
+               <message>
+                  <base>&apos;A^bbandona&apos;</base>
+                  <translated>&apos;^Cancel&apos;</translated>
+               </message>
+            </table>
+         </messagefile>
+      </xml>
+
+   Tradotto in Spagnolo diventa:
+      <xml>
+         <messagefile>
+            <type>HIT</type>
+            <author>Visual dBsee Property Table</author>
+            <language>English</language>
+            <englishlanguage>English</englishlanguage>
+            <langcode>en_US</langcode>
+            <tablelen>2</tablelen>
+            <table>
+               <message>
+                  <base>&apos;Impossibile lasciare vuoto il campo&apos;</base>
+                  <translated>&apos;Imposible dejar vacio el campo&apos;</translated>
+               </message>
+               <message>
+                  <base>&apos;A^bbandona&apos;</base>
+                  <translated>&apos;^Renuncia&apos;</translated>
+               </message>
+            </table>
+         </messagefile>
+      </xml>
+
+   Quindi la modifica Š limitata alle 2 linee:
+      <translated>&apos;Imposible dejar vacio el campo&apos;</translated>
+      <translated>&apos;^Renuncia&apos;</translated>
+
+3) Lanciare
+   XML2XIT.EXE user.xml user.xit
+4) Copiare il file user.xit nella cartella Visual dBsee\BIN 
+
+ 

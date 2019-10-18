@@ -1,0 +1,20 @@
+-------------
+OGGETTI QUERY
+-------------
+
+Una finestra di query consente di selezionare un sottoinsieme di dati su
+cui effettuare la stampa.  Nella finestra Š possibile porre delle
+condizioni ai dati che devono essere inviati alla stampante.  Grazie agli
+oggetti QUERY, Š possibile utilizzare la stessa gestione di stampa per
+stampare dati di volta in volta diversi.
+
+L'oggetto QUERY, se associato alla gestione di stampa prescelta, viene
+automaticamente attivato prima di effettuare la stampa.
+
+L'oggetto QUERY Š molto simile ad un oggetto FORM, con la differenza che un
+oggetto QUERY viene utilizzato per specificare delle condizioni che devono
+essere soddisfatte dai dati che vengono stampati.
+
+Nell'oggetto vengono presentate una serie di condizioni, collegate da
+connettivi logici AND e OR. Dopo avere specificato i valori desiderati,
+verranno stampati solo quei record che soddisfano le condizioni impostate.

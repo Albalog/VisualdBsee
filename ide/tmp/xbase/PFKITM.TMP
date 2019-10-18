@@ -1,0 +1,52 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : PFKITM
+.* RELEASE      : 4.0
+.* VERSION      : d
+.* DESCRIZIONE  : Carica l'array con i tasti dell'item
+.* ----------------------------------------------------------------------------
+.dd_sym->(dbSetorder(1))
+.foreach pfkitem ! Empty(oo_mnu->PFKACT)
+   .if !oo_mnu->mnuon == '-'     
+   .M->cTpfkAct := alltrim(oo_mnu->PFKACT)
+   .M->cTpfkdes := alltrim(oo_mnu->MNULAB)
+   .M->cTpfkCn1 := ""
+   .if toPfkItem("activeink") == "1"
+      .M->cTpfkCn1 := cTpfkCn1 + "i"
+   .endif
+   .if toPfkItem("activeins") == "1"
+      .M->cTpfkCn1 := cTpfkCn1 + "a"
+   .endif
+   .if toPfkItem("activemod") == "1"
+      .M->cTpfkCn1 := cTpfkCn1 + "m"
+   .endif
+   .M->cTpfkCn1 := ["]+cTpfkCn1+[")]
+   .if !empty(toPfkItem("pfkcondition")) .AND. toPfkItem("pfkcondition")!=".T."
+      .M->cTpfkCn1 := cTpfkCn1 + ".AND. (" + toPfkItem("pfkcondition")+")"
+   .endif
+   .M->bTfun    := toPfkItem("pfkfunction")
+   .if oo_itm->TYP == "lsb"
+      .M->cFileFat := dfGetDbf(toItem("lsbroworigin") ,{||tDbfAliasName()}      )
+      .M->cObjEdr  := dfGetObj(toItem("lsbrowedit")   ,{||ALLTRIM(oo_obj->PRG)} )
+      .M->bTfun    := tObjStrTran( bTfun         ,;
+                                   M->cFileFat   ,;
+                                   M->cTprg      ,;
+                                   tControlId()  ,;
+                                   M->cObjEdr     )
+   .endif
+   .M->bTfun    := Alltrim(tStrTran( bTfun ,alltrim(oo_obj->PRG) ))
+   .M->cTpfkCn2 := iif( empty(toPfkItem("pfkruncond")) ,[.T.] ,toPfkItem("pfkruncond") )
+   .if oo_itm->TYP == "lsb"
+ADDKEY "ÛcTpfkActÛ" TO ÛcIdCÛ:W_KEYBOARDMETHODS ð ; // Tasto su List Box
+   .else
+   .M->nTpfkItm := nTpfkItm + 1
+   .if nTpfkItm == 1
+aPfkItm  := {}
+   .endif
+ADDKEY "ÛcTpfkActÛ" TO aPfkItm        ð ; // Tasto su Get
+   .endif
+       BLOCK   {||ÛbTfunÛ}            ð ; // Funzione sul tasto
+       WHEN    {|s| (s $ ÛcTpfkCn1Û } ð ; // Condizione di stato di attivazione
+       RUNTIME {|cCHILD,cLABEL,cID|ÛcTpfkCn2Û}         ð ; // Condizione di runtime
+       MESSAGE "ÛcTpfkdesÛ"           ð   // Messaggio utente associato
+   .endif
+.next

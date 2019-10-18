@@ -1,0 +1,51 @@
+<CAP> ORGANIZZAZIONE DEL VIDEO
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ ORGANIZZAZIONE DEL VIDEO ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ Tutte le videate dell'applicazione presentano alcune caratteristiche
+ che le accomunano :
+
+
+ Parte   ³ Nella parte alta del video viene presentato il menu
+ alta    ³ della maschera di data entry. Infatti ogni finestra pu•
+         ³ avere un menu per la gestione delle funzionalit… ad esso
+         ³ associate.
+         ³
+ Zona    ³ Nella zona centrale dello schermo vengono visualizzati
+ Centrale³ messaggi di avvertimento nei casi di errata
+         ³ digitazione o in occasione di altre importanti
+         ³ segnalazioni.
+         ³
+         ³ Sempre nella zona centrale verra visualizzata la
+         ³ finestrella per la gestione delle domande.
+         ³ Tale finestrella specifica anche con quali
+         ³ caratteri avrete la possibilita di rispondere.
+         ³
+ Ultima  ³ L'ultima riga dello schermo e riservata alla presentazione
+ riga    ³ dei messaggi relativi alla voce di menu od al control sul
+         ³ quale il cursore si trova posizionato.
+         ³
+<BeginBox>
+         ³ ÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛ
+         ³ Û±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±Û
+         ³ Û±± ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ ±±Û
+         ³ Û±± ³                                            ³ ±±Û
+         ³ Û±± ³                                            ³ ±±Û
+         ³ Û±± ³                                            ³ ±±Û
+         ³ Û±± ³                                            ³ ±±Û
+ Centro  ÄÄÄÄÄ>³    ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿    ³ ±±Û
+ Messaggi³ Û±± ³    ³        Messaggi di errore        ³    ³ ±±Û
+ domande ³ Û±± ³    ³             Domande              ³    ³ ±±Û
+         ³ Û±± ³    ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ    ³ ±±Û
+         ³ Û±± ³                                            ³ ±±Û
+         ³ Û±± ³                                            ³ ±±Û
+         ³ Û±± ³                                            ³ ±±Û
+ Ultima  ÄÄÄÄÄ>³Gestione data entry Clienti  ³OK³HLP³KEY³ESC³ ±±Û
+ riga    ³ Û±± ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ ±±Û
+         ³ Û±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±Û
+         ³ ÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛ
+         ³          Û±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±Û
+
+ <ENDBOX>
+
