@@ -1,0 +1,16 @@
+#
+# Il motore di generazione dei file di dBsee prevede un CRLF come fine riga
+# Per evitare che GIT trasformi il fine riga in LF, forziamo il fine riga in configurazione
+#
+
+# File per creazione dell'help
+*.txt binary
+
+# Template
+*.tmp binary
+
+# Template di grab
+*.tmg binary
+
+# Dialog
+*.dlg binary
