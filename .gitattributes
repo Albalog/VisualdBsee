@@ -14,3 +14,10 @@
 
 # Dialog
 *.dlg binary
+
+#
+# File per i quali serve il supporto dei lfs a causa delle dimensioni
+#
+VisualdBsee1611Update.exe filter=lfs diff=lfs merge=lfs -text
+VisualdBseeSetup168.exe filter=lfs diff=lfs merge=lfs -text
+
