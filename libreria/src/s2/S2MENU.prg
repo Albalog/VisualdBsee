@@ -7,26 +7,32 @@
 #include "dfWin.ch"
 #include "DFMENU.CH"
 
+//FWH: 2021-03-17
+// aggiunto metodo S2Menu:handleEvent per memorizzare 
+// l'ultima voce di menu cliccata
+
+MEMVAR INFOTEL_LAST_MENU_PROMPT
+
 // S2Menu: Gestione Menu
 // ---------------------
 CLASS S2Menu FROM XbpMenuBmp
    EXPORTED:
    VAR id, methods, menuArray //, itemHighLighted
-   METHOD popUp, create //, handleEvent
+   METHOD popUp, create, handleEvent
 ENDCLASS
 
-// 
-// // Gestisce anche l'evento di evidenziazione voce di menu
-// METHOD S2Menu:handleEvent(nEvent, mp1, mp2)
-//    DO CASE
-//       CASE nEvent == xbeMenu_HighLight
-//          IF ! EMPTY(::itemHighLighted)
-//             EVAL(::itemHighLighted, mp1, mp2, self)
-//          ENDIF
-//       OTHERWISE
-//          ::XbpMenu:handleEvent(nEvent, mp1, mp2)
-//    ENDCASE
-// RETURN self
+METHOD S2Menu:handleEvent(nEvent, mp1, mp2)
+	
+	if nEvent == xbeP_ItemSelected
+		// dbmsgw(::XbpMenuBmp:getTitle() + " S2Menu:handleEvent(xbeP_ItemSelected)")
+		// dbmsgw(mp1)
+		// dbmsgw(mp2)
+		// dbmsgw(::XbpMenuBmp:getItem(mp1)[1])
+		INFOTEL_LAST_MENU_PROMPT := ::XbpMenuBmp:getItem(mp1)[1]
+	endif
+   
+   ::XbpMenu:handleEvent(nEvent, mp1, mp2)
+RETURN self
 
 
 METHOD S2Menu:Create(oParent, aPP, lVisible, aMethods, aMenuArray)
