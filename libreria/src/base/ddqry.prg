@@ -137,7 +137,7 @@ IF !EMPTY(aStruct)
 
               ENDCASE
 			  
-			  // FWH: 2020-06-18 -------------------------------------------------
+			  // FWH: 2021-09-02 -------------------------------------------------
 			  // con alcune finestre (tipo quelle con il resize automatico)
               // maxrow() restituisce un numero molto (ma molto) grande. Questo
               // causa un malfunzionamento in dfGetW che, a cascata, impedisce
