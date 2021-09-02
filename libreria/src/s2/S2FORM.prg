@@ -1780,6 +1780,14 @@ METHOD S2Form:ToolBarCreate(nSize, nMessageHeight)
    LOCAL oImgStd, oImgDisabled, oImgFocus
    LOCAL cTbrID
    LOCAL bExe
+   
+   // FWH 2021-03-19
+   // Aggiungo una var local per contare quanti bottoni ho aggiunto
+   // tramite template. I bottoni tramite template hanno ID che inizializza
+   // col carattere '9'
+   LOCAL i
+   LOCAL infotel_buttons := array(0)
+   LOCAL nSeparatori := 0
 
    // Parent della toolbar
    oWin := self
@@ -1834,6 +1842,45 @@ METHOD S2Form:ToolBarCreate(nSize, nMessageHeight)
    // non era lo stesso array passato al :bToolbarHandler (questo procurava il problema 1.)
    //
    // come soluzione inizializzo sempre :aToolbar con l'array ritornato da :_ToolbarDefault()
+   
+
+   // FWH 2021-03-19
+   // devo contare quanti bottoni sono stati aggiunti 
+   // tramite template (hanno id che inizia con '9')
+   
+   IF .not. ::aToolBar == NIL
+
+      FOR i := 1 TO len(::aToolBar)
+		
+		IF len(::aToolBar[i]) == 1
+			nSeparatori += 1
+			LOOP
+		ENDIF
+		
+	    IF len(::aToolBar[i]) >= 5 .and. left(::aToolBar[i][5], 1) == "9"
+		    aadd(infotel_buttons, ::aToolBar[i])
+		ENDIF
+		
+	  NEXT
+
+   ENDIF
+
+   // FWH 2021-03-19
+   // se la toolbar contiene sono bottoni inseriti tramite
+   // template allora ne faccio il merge con la toolbar di default
+   IF .not. ::aToolBar == NIL
+
+	   IF len(::aToolBar) - len(infotel_buttons) - nSeparatori == 0
+		  ::aToolBar := ::_ToolBarDefault()
+		  
+		  FOR i := 1 TO len(infotel_buttons)
+			 aadd(::aToolBar, infotel_buttons[i])
+		  NEXT
+
+	   ENDIF
+	   
+	ENDIF
+   
    IF ::aToolBar==NIL
       ::aToolBar := ::_ToolBarDefault()
    ENDIF
