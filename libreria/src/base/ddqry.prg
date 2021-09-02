@@ -136,10 +136,20 @@ IF !EMPTY(aStruct)
                       cPic := REPLICATE( "X", 50 )
 
               ENDCASE
-              dfGetW( MAXROW()/2, 1, ALLTRIM(aFieldDes[ATAIL(aFilter)[QRY_FIE]]) +" " +;
+			  
+			  // FWH: 2020-06-18 -------------------------------------------------
+			  // con alcune finestre (tipo quelle con il resize automatico)
+              // maxrow() restituisce un numero molto (ma molto) grande. Questo
+              // causa un malfunzionamento in dfGetW che, a cascata, impedisce
+              // il corretto funzionamento delle finestre di stampa. In questi
+              // casi bisognava terminare il programma forzatamente.
+              // Ho sperimentato che 12 e' un valore accettabile quindi prendo
+              // il minore tra 12 e MAXROW()/2			  
+			  // -----------------------------------------------------------------
+              dfGetW( min(12, MAXROW()/2), 1, ALLTRIM(aFieldDes[ATAIL(aFilter)[QRY_FIE]]) +" " +;
                                      ATAIL(aFilter)[QRY_COND],;
                                      {|x|IF(x==NIL,uVar,uVar:=x)}, cPic )
-
+              
               DO CASE
                  CASE M->Act=="esc" .OR.;                    // Ho premuto ESC
                       (EMPTY(uVar) .AND. !VALTYPE(uVar)$"N") // o e' vuoto
