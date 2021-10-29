@@ -95,7 +95,30 @@ MEMVAR ACT, A, SA
 
 
 
-
+// #####################################################################
+// # FWH 2021-10-08
+// #####################################################################
+//
+// esiste un problema in xbase con l'istruzione SUPER
+// che si manifesta quando una classe usa l'ereditarieta' multipla (come S2Form).
+// In particolare le applicazioni vanno in crash quando viene chiamata
+// S2Form:Destroy()
+// esistono tre soluzioni temporanee al momento:
+//
+// 1) utilizzare xbase 2.0.1354 (problemi con univar dopo il passaggio da win7 -> win10)
+//
+// 2) modificare la catena di derivazione di S2Form in questo modo: CLASS S2Form FROM XbpDialogBmpMenu, S2Window, S2FormCompatibility
+//
+// 3) modificare xbparts.prg (2.0.1503) in questo modo:
+//		METHOD XbpDialog:Destroy()
+//		   IF ::GetFrameState() == XBPDLG_FRAMESTAT_KIOSK
+//			  KioskSystemKeyHandler():deinstall()
+//		   ENDIF
+//		RETURN ::XbpBaseDialog:Destroy()
+//
+// Non avendo ricevuto risposta da Baccan sulle conseguenze della soluzione 2
+// procedo con la soluzione 3 che sembra la meno invasiva in attesa di un fix ufficiale
+// da parte di Alaska (ha confermato via email che sono al lavoro per correggere SUPER)
 
 CLASS S2Form FROM S2Window, XbpDialogBmpMenu, S2FormCompatibility //, ServiceDialog //, AutoResize //, DbFilter
 PROTECTED:
