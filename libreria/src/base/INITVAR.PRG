@@ -13,6 +13,9 @@ MEMVAR dfHotFun
 //FWH: 2021-03-17
 MEMVAR INFOTEL_LAST_MENU_PROMPT
 
+//FWH: 2021-10-29
+MEMVAR INFOTEL_DEFAULT_WIN
+
 // Help
 PUBLIC EnvId := ""
 PUBLIC SubId := ""
@@ -26,5 +29,8 @@ PUBLIC dfHotFun := "dfCalc" // Funzione associata al tasto caldo
 
 //FWH: 2021-03-17
 PUBLIC INFOTEL_LAST_MENU_PROMPT := "" // memorizza il nome dell'ultima voce di menu cliccata
+
+//FWH: 2021-10-29
+PUBLIC INFOTEL_DEFAULT_WIN := "" // se valorizzata contiene il nome della finestra da aprire quando si chiama la funzione ddwin
 
 RETURN

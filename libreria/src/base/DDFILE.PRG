@@ -8,6 +8,10 @@
 #include "dfstd.ch"
 #include "dfset.ch"
 
+//FWH: 2021-10-29
+// se valorizzata contiene il nome della finestra da aprire quando si chiama la funzione ddwin
+MEMVAR INFOTEL_DEFAULT_WIN 
+
 * ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 FUNCTION ddFilePos( cFile, lErrMsg )
 * ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -224,6 +228,18 @@ RETURN cS1
 * ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 FUNCTION ddIndexWin()                          // Finestra sull'indice
 * ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+
+//FWH: 2021-10-29
+// la finestra alternativa viene visualizzata solo se
+// INFOTEL_DEFAULT_WIN non e' vuota
+// i primi 6 caratteri del nome della finestra alternativa sono uguali a quelli
+//     impostati attraverso l'indice (es. ANAWIN e ANAWIN1)
+IF .not. empty(INFOTEL_DEFAULT_WIN) 
+	IF LEFT(ALLTRIM(INFOTEL_DEFAULT_WIN),6) = LEFT(ALLTRIM(dbdd->Field_Chk),6)
+		RETURN ALLTRIM(INFOTEL_DEFAULT_WIN)
+	ENDIF
+ENDIF
+
 RETURN ALLTRIM(dbdd->Field_Chk)
 
 * ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
