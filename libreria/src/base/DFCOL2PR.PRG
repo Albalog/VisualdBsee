@@ -8,9 +8,9 @@ Programmer  : Baccan Matteo
 #include "dfMsg.ch"
 #include "common.ch"
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±?
 FUNCTION dfCol2Prn( oTbr, cTitle )
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±?
 LOCAL k,oC,aTag:={},aP:={}
 LOCAL cH
 
@@ -21,6 +21,13 @@ FOR k:=1 to oTbr:COLCOUNT
    //cH:=oC:HEADING
    cH:=tbGetColHeading(oC)
 
+	// FWH: 2020-06-18 -------------------------------------------------
+	// cH potrebbe essere un oggetto (per esempio 'S2CellGroup')
+	if valtype(cH) # "C"
+		cH = var2char(cH)
+	endif
+	// -----------------------------------------------------------------
+
 //Maudp 30/05/2011 In caso di funzione eseguo la compile e poi la eval
    IF !EMPTY(cH) .AND. "_FX_" $ cH
       cH := ALLTRIM(STRTRAN(cH,"!",""))
@@ -29,7 +36,7 @@ FOR k:=1 to oTbr:COLCOUNT
 //   AADD(aP,oC:HEADING)
    /////////////////////////////////////////
    //Mantis 2161
-   //Se l'intestazione delle colonne Š vuoto allora si pu• avere un runtime error.
+   //Se l'intestazione delle colonne ?vuoto allora si pu?avere un runtime error.
    /////////////////////////////////////////
    IF EMPTY(cH)
       cH := "Colonna_"+STRZERO(k,3,0)

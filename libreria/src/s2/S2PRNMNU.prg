@@ -104,8 +104,13 @@ METHOD S2PrintMenu:init( oParent, oOwner, aPos, aSize, aPP, lVisible )
    ::close := {|| ::nAction := 0 }
 
    oXbp     := XbpPushButton():new( ::drawingArea, , {204,12}, {96,24})
-   oXbp:caption := dfStdMsg1(MSG1_S2PRNMNU02) 
-   oXbp:activate := {|u1,u2,o| IIF(o:isVisible(), dfFltRep( ::aBuffer ), NIL) }
+   oXbp:caption := dfStdMsg1(MSG1_S2PRNMNU02)
+   
+   // FWH: 2021-09-02 -------------------------------------------------
+   // mostro il filtro attuale prima di iniziare la procedura per
+   // la creazione di un nuovo filtro 
+   // -----------------------------------------------------------------
+   oXbp:activate := {|u1,u2,o| IIF(o:isVisible(), {dbmsgerr(::aBuffer[REP_QRY_EXP], "filtro attuale", XBPSTATIC_SYSICON_ICONINFORMATION), dfFltRep( ::aBuffer )}, NIL) }
    oXbp:tabStop := .T.
    ::addShortCut(oXbp:caption, oXbp)
    ::addShortCut("A_f", oXbp)
